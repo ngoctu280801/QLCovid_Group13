@@ -1,0 +1,46 @@
+2021-11-24 11:35:53 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:38:20 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:39:24 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:42:14 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:46:05 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:49:21 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:50:30 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:51:18 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:52:42 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:53:58 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:55:15 DEBUG TestLog:45 - Bắt đầu đăng nhập.
+  2021-11-24 11:57:28 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 11:57:44 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 11:57:53 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 11:59:36 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 12:00:09 DEBUG AdminPanel:53 - Successfull. This is Admin Account!
+  2021-11-24 12:04:41 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 12:05:13 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 12:05:18 DEBUG LoginScr:149 - Đăng nhập thất bại!
+  2021-11-24 14:10:17 ERROR TestLog:52 - Không thể kết nối đến CSDL.
+  2021-11-24 14:11:23 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 14:11:31 DEBUG AdminPanel:53 - Successfull. Login Admin Account!
+  2021-11-24 14:14:50 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 14:15:30 DEBUG AdminPanel:53 - Successfull. Login Admin Account!
+  2021-11-24 14:18:50 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 14:18:55 DEBUG AdminPanel:24 - Successfull. Login Admin Account!
+  2021-11-24 14:20:48 DEBUG TestLog:37 - Bắt đầu đăng nhập.
+  2021-11-24 14:21:08 DEBUG PatientPanel:22 - Successfull. Login Patient Account!
+  2021-11-24 14:28:51 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:30:37 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:30:47 DEBUG PatientPanel:22 - Successfull. Login Patient Account!
+  2021-11-24 14:32:00 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:32:17 DEBUG PatientPanel:22 - Successfull. Login Patient Account!
+  2021-11-24 14:32:47 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:33:29 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:33:52 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-24 14:33:58 DEBUG PatientPanel:22 - Successfull. Login Patient Account!
+  2021-11-24 14:34:04 DEBUG TestLog:40 - Bắt đầu đăng nhập.
+  2021-11-27 23:20:29 DEBUG TestLog:34 - Bắt đầu đăng nhập.
+  2021-11-27 23:20:42 DEBUG PatientPanel:22 - Successfull. Login Patient Account!
+  2021-11-27 23:21:38 DEBUG TestLog:34 - Bắt đầu đăng nhập.
+  2021-11-27 23:21:46 DEBUG TestLog:34 - Bắt đầu đăng nhập.
+  2021-11-27 23:22:39 DEBUG TestLog:34 - Bắt đầu đăng nhập.
+  2021-11-27 23:27:34 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
+  2021-11-27 23:27:43 DEBUG AdminPanel:24 - Successfull. Login Admin Account!
+  
