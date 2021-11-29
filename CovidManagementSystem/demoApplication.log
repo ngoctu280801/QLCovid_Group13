@@ -45,4 +45,12 @@
   2021-11-27 23:27:43 DEBUG AdminPanel:24 - Successfull. Login Admin Account!
   2021-11-28 19:48:17 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
   2021-11-28 19:48:25 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
+  2021-11-30 00:14:05 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
+  2021-11-30 00:14:13 DEBUG AdminPanel:65 - Successfull. Login Admin Account!
+  2021-11-30 00:14:44 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
+  2021-11-30 00:14:58 DEBUG AdminPanel:65 - Successfull. Login Admin Account!
+  2021-11-30 00:17:20 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
+  2021-11-30 00:17:27 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
+  2021-11-30 00:17:32 DEBUG CovidSystem:34 - Bắt đầu đăng nhập.
+  2021-11-30 00:17:37 DEBUG AdminPanel:65 - Successfull. Login Admin Account!
   

@@ -1,0 +1,4 @@
+CovidManagementSystem/bin
+PaymentManagementSystem/bin
+CovidManagementSystem/logs/demoApplication.log*
+PaymentManagementSystem/logs/demoApplication.log*

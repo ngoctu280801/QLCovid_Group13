@@ -53,7 +53,40 @@ public class DbInteraction {
 //		}
 		return null;
 	}
-	
+	public int insert(String sql, Statement[] stmt){
+		Statement statement = null;
+		int res = -1;
+		try {
+			statement = con.createStatement();
+			stmt[0] = statement;
+			res = statement.executeUpdate(sql);
+			return res;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Lỗi khi thực hiện thêm vào CSDL");
+		} 
+//		finally {
+//			try {
+//				statement.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+		return -1;
+	}
+	public CallableStatement getStatement(String s){
+		CallableStatement statement = null;
+		try {
+			statement = con.prepareCall(s);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Không thể tạo statement");
+		}
+		return statement;
+	}
 	public void close(){
 		if(con != null){
 			try {
