@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2021 at 08:28 AM
+-- Generation Time: Dec 01, 2021 at 05:18 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -332,7 +332,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getRelatedPersonBeforeByIdCard`(IN 
     NO SQL
 BEGIN
 	SELECT p.full_name, p.id_card, p.date_of_birth, prov.name, t.name, v.name, p.state, qrt.name 
- 	FROM related_persons rp join patients p on p.id = rp.id_related 
+ 	FROM related_persons rp join patients p on p.id = rp.id_patient 
     	join provinces prov on p.id_prov = prov.id 
         join towns t on t.id = p.id_town 
         join villages v on v.id = p.id_vlg 
@@ -435,6 +435,166 @@ BEGIN
 	WHERE id_permission = 1;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `test`(IN `num` INT, INOUT `str` TEXT)
+    NO SQL
+begin
+	if num != 1 then
+    	select concat(str, ' ', num) into str;
+        call test(num - 1, str);
+    end if;
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `testt`()
+    NO SQL
+begin
+	declare state varchar(9);
+    set state = 'F0';
+	if '-1' < 'F1' then
+    	select concat('ok');
+        select RIGHT(state, 1);
+    end if;
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePatientState`(IN `idCard` VARCHAR(12), IN `stateInt` INT, IN `idRelated` INT, IN `usrManager` VARCHAR(20), OUT `code` INT)
+    NO SQL
+begin
+declare currentId int;
+declare currentState varchar(9);
+declare currentStateInt int;
+declare date_now date;
+declare desState varchar(9);
+declare currentIdRelated int;
+declare currentRelatedState varchar(2);
+declare currentRelatedIdCard varchar(12);
+declare counter int;
+declare done1 int default false;
+DECLARE done INT DEFAULT FALSE;
+declare cur_id_related cursor for 
+	select id_patient from related_persons where id_related = 
+    (select id from patients where id_card = idCard limit 1);
+    
+declare cur_id_related_before cursor for
+	select id_related from related_persons where id_patient = 
+    (select id from patients where id_card = idCard limit 1);
+    
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+select -1 into code;
+
+set currentId = (select id from patients where id_card = idCard limit 1);
+set desState = concat('F', stateInt);
+if stateInt = -1 then
+	set desState = N'Khỏi bệnh';
+end if;
+
+set currentState = (select state from patients where id_card = idCard);
+if currentState = N'Khỏi bệnh' then
+	set currentStateInt = -1;
+else
+	set currentStateInt = RIGHT(currentState, 1);
+end if;
+
+
+
+
+if stateInt < currentStateInt and desState != currentState then
+set date_now = now();
+update patients set state = desState 
+where id_card = idCard;
+
+insert into activity_history 
+values (null, usrManager, date_now, idCard, concat('Chuyển ', idCard, ' từ ', currentState, ' thành ', desState));
+
+
+-- if stateInt = -1 then
+	-- select concat('Chuyen CMND', idCard, ' tu ', currentState,' thanh khoi benh');
+    
+    
+-- else
+
+
+
+
+
+
+
+
+if stateInt != -1 then
+open cur_id_related_before;
+iters1: loop
+
+	fetch cur_id_related_before into currentIdRelated;
+    
+    IF done THEN
+    	LEAVE iters1;
+	end if;
+    
+    set currentRelatedIdCard = (select id_card from patients 
+                                       where id = currentIdRelated);
+    
+	call updatePatientState(currentRelatedIdCard, stateInt + 1, currentId, usrManager, code);
+    
+end loop;
+close cur_id_related_before;
+set done = false;
+end if;
+
+delete from related_persons where id_patient = currentId;
+
+if stateInt != -1 then
+	-- select concat('Chuyen CMND ', idCard, ' tu ', currentState, ' thanh ', desState);
+    if idRelated != -1 then
+    	-- select concat('va ghi log: la ', desState, ' cua ', idRelated);
+        
+        insert into related_persons(id_patient, id_related)
+        values (currentId, idRelated);
+    end if;
+end if;
+
+
+
+
+
+open cur_id_related;
+iters: loop
+	fetch cur_id_related into currentIdRelated;
+	IF done THEN
+    	LEAVE iters;
+	end if;
+    
+    -- Cac F1, F2, F3 -> Khoi benh
+    set counter = (select count(*) from related_persons where id_patient = currentIdRelated);
+    
+    set currentRelatedIdCard = (select id_card from patients 
+                                       where id = currentIdRelated);
+    
+    if stateInt = -1 then
+    	if counter > 1 then
+    		-- select concat('Giu nguyen trang thai cua ', currentIdRelated);
+        	-- select concat('Xoa dong trong bang related_persons where ', 'id_patient = ', currentIdRelated, ' and id_related = ', currentId );
+        	delete from related_persons 
+            where id_patient = currentIdRelated and id_related = currentId;
+        
+        else
+        	
+        	-- select concat('De quy ham xuong idCard = ',currentRelatedIdCard, ' ve khoi benh');
+            call updatePatientState(currentRelatedIdCard, -1, -1, usrManager, code);
+        end if;
+    else 
+    	-- select concat('De quy ham xuong idCard = ', currentRelatedIdCard, '  ve F', stateInt + 1);
+        call updatePatientState(currentRelatedIdCard, stateInt + 1, currentId, usrManager, code);
+    end if;
+
+end loop;
+
+close cur_id_related;
+
+end if; -- end if concat(stateInt) < currentState and desState != currentState then
+
+select 1 into code;
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePkg`(IN `pkgName` VARCHAR(50), IN `limitPerPerson` VARCHAR(20), IN `dateLimitIn` DATE, IN `priceIn` VARCHAR(20), IN `usrManager` VARCHAR(20), IN `newPkgN` VARCHAR(50), OUT `code` INT)
     NO SQL
 begin
@@ -470,7 +630,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `pwd` varchar(50) CHARACTER SET ascii NOT NULL,
   `id_permission` int(11) NOT NULL,
   `is_locked` tinyint(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `accounts`
@@ -501,7 +661,20 @@ INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VA
 (0000000037, 'manager3', 'e5486a6670a3f3b6821574c1812be01914b9908a94be89e1c8', 0, 0),
 (0000000038, 'test18', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000039, 'test19', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
-(0000000040, 'test20', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
+(0000000040, 'test20', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000041, 'test21', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000042, 'tu', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000043, 'van', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000044, 'hai', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000045, 'duy', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000046, 'test22', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000047, 'tuf0', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000048, 'vanf1', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000049, 'haif0', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000050, 'af1', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000051, 'bf1', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000052, 'cf2', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
 
 --
 -- Triggers `accounts`
@@ -555,7 +728,7 @@ CREATE TABLE IF NOT EXISTS `activity_history` (
   `date` date NOT NULL,
   `id_card_patient` varchar(12) DEFAULT NULL,
   `description` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `activity_history`
@@ -599,7 +772,39 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 (0000000044, 'manager', '2021-11-15', NULL, 'Thêm gói PACKAGE TEST3, hạn mức 3 gói/ người, bán đến hết ngày 2021-11-15 với giá 19,000 VNĐ'),
 (0000000045, 'manager', '2021-11-15', NULL, 'Cập nhật gói PACKAGE TEST2 thành gói PACKAGE TEST2, hạn mức 5 gói/ người, bán đến hết ngày 2021-11-16 với giá 69,000 VNĐ'),
 (0000000046, 'manager', '2021-11-17', '190119919', 'Thêm 190119919 làm F0 tại Bệnh viện Bạch Mai'),
-(0000000047, 'manager', '2021-11-17', '200120011', 'Thêm 200120011 làm F0 tại Bệnh viện Bạch Mai');
+(0000000047, 'manager', '2021-11-17', '200120011', 'Thêm 200120011 làm F0 tại Bệnh viện Bạch Mai'),
+(0000000048, 'manager', '2021-11-23', '210119999', 'Thêm 210119999 làm F2 tại Bệnh viện Bạch Mai'),
+(0000000049, 'manager', '2021-11-24', '010120011', 'Thêm 010120011 làm F0 tại Bệnh viện Bạch Mai'),
+(0000000050, 'manager', '2021-11-25', '020120011', 'Thêm 020120011 làm F1 tại Bệnh viện Bạch Mai'),
+(0000000051, 'manager', '2021-11-25', '030120011', 'Thêm 030120011 làm F2 tại Bệnh viện Bạch Mai'),
+(0000000052, 'manager', '2021-11-25', '040120011', 'Thêm 040120011 làm F3 tại Bệnh viện Bạch Mai'),
+(0000000053, 'manager', '2021-11-25', '221219922', 'Thêm 221219922 làm F2 tại Bệnh viện Bạch Mai'),
+(0000000054, 'manager', '2021-11-25', '010120012', 'Thêm 010120012 làm F0 tại Bệnh viện Bạch Mai'),
+(0000000055, 'manager', '2021-11-25', '020120012', 'Thêm 020120012 làm F1 tại Bệnh viện Bạch Mai'),
+(0000000056, 'manager', '2021-11-25', '030120012', 'Thêm 030120012 làm F0 tại Bệnh viện Bạch Mai'),
+(0000000057, 'manager', '2021-11-25', '010111111', 'Thêm 010111111 làm F1 tại Bệnh viện Bạch Mai'),
+(0000000058, 'manager', '2021-11-25', '020111111', 'Thêm 020111111 làm F1 tại Bệnh viện Bạch Mai'),
+(0000000059, 'manager', '2021-11-25', '030111111', 'Thêm 030111111 làm F2 tại Bệnh viện Bạch Mai'),
+(0000000060, 'manager', '2021-11-25', '040111111', 'Thêm 040111111 làm F3 tại Bệnh viện Bạch Mai'),
+(0000000069, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000070, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000071, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000072, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000073, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000074, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000075, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000076, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000077, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1'),
+(0000000078, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000079, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1'),
+(0000000080, 'manager', '2021-11-26', '010120012', 'Chuyển 010120012 từ F0 thành Khỏi bệnh'),
+(0000000081, 'manager', '2021-11-26', '020120011', 'Chuyển 020120011 từ F1 thành F0'),
+(0000000082, 'manager', '2021-11-26', '030120011', 'Chuyển 030120011 từ F2 thành F1'),
+(0000000083, 'manager', '2021-11-26', '040120011', 'Chuyển 040120011 từ F3 thành F2'),
+(0000000084, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000085, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1'),
+(0000000086, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
+(0000000087, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1');
 
 -- --------------------------------------------------------
 
@@ -653,7 +858,7 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS `debt` (
 `id_patient` int(10) unsigned zerofill NOT NULL,
   `debt` int(10) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `debt`
@@ -679,7 +884,20 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000036, 38000),
 (0000000038, 0),
 (0000000039, 0),
-(0000000040, 440000);
+(0000000040, 420000),
+(0000000041, 0),
+(0000000042, 0),
+(0000000043, 0),
+(0000000044, 0),
+(0000000045, 0),
+(0000000046, 0),
+(0000000047, 0),
+(0000000048, 0),
+(0000000049, 0),
+(0000000050, 0),
+(0000000051, 0),
+(0000000052, 0),
+(0000000053, 0);
 
 -- --------------------------------------------------------
 
@@ -711,9 +929,9 @@ CREATE TABLE IF NOT EXISTS `management_history` (
 `id` int(10) unsigned zerofill NOT NULL,
   `id_patient` int(10) unsigned zerofill NOT NULL,
   `date` date NOT NULL,
-  `state` varchar(2) NOT NULL,
+  `state` varchar(9) NOT NULL,
   `id_qrt_pos` int(10) unsigned zerofill NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `management_history`
@@ -734,7 +952,52 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 (0000000018, 0000000036, '2021-11-15', 'F1', 0000000002),
 (0000000019, 0000000038, '2021-11-15', 'F0', 0000000001),
 (0000000020, 0000000039, '2021-11-17', 'F0', 0000000001),
-(0000000021, 0000000040, '2021-11-17', 'F0', 0000000001);
+(0000000021, 0000000040, '2021-11-17', 'F0', 0000000001),
+(0000000022, 0000000041, '2021-11-23', 'F2', 0000000001),
+(0000000023, 0000000042, '2021-11-24', 'F0', 0000000001),
+(0000000024, 0000000043, '2021-11-25', 'F1', 0000000001),
+(0000000025, 0000000044, '2021-11-25', 'F2', 0000000001),
+(0000000026, 0000000045, '2021-11-25', 'F3', 0000000001),
+(0000000027, 0000000046, '2021-11-25', 'F2', 0000000001),
+(0000000028, 0000000047, '2021-11-25', 'F0', 0000000001),
+(0000000029, 0000000048, '2021-11-25', 'F1', 0000000001),
+(0000000032, 0000000049, '2021-11-25', 'F0', 0000000001),
+(0000000034, 0000000050, '2021-11-25', 'F1', 0000000001),
+(0000000035, 0000000051, '2021-11-25', 'F1', 0000000001),
+(0000000038, 0000000052, '2021-11-25', 'F2', 0000000001),
+(0000000041, 0000000053, '2021-11-25', 'F3', 0000000001),
+(0000000055, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000056, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000057, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000058, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000059, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000060, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000061, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000062, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000063, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000064, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000065, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000066, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000067, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000068, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000069, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000070, 0000000052, '2021-11-26', 'F1', 0000000001),
+(0000000071, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000072, 0000000052, '2021-11-26', 'F2', 0000000001),
+(0000000073, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000074, 0000000052, '2021-11-26', 'F1', 0000000001),
+(0000000075, 0000000047, '2021-11-26', 'Khỏi bệnh', 0000000001),
+(0000000076, 0000000043, '2021-11-26', 'F0', 0000000001),
+(0000000077, 0000000044, '2021-11-26', 'F1', 0000000001),
+(0000000078, 0000000045, '2021-11-26', 'F2', 0000000001),
+(0000000079, 0000000052, '2021-11-26', 'F2', 0000000001),
+(0000000080, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000081, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000082, 0000000052, '2021-11-26', 'F1', 0000000001),
+(0000000083, 0000000053, '2021-11-26', 'F3', 0000000001),
+(0000000084, 0000000052, '2021-11-26', 'F2', 0000000001),
+(0000000085, 0000000053, '2021-11-26', 'F0', 0000000001),
+(0000000086, 0000000052, '2021-11-26', 'F1', 0000000001);
 
 -- --------------------------------------------------------
 
@@ -776,7 +1039,7 @@ CREATE TABLE IF NOT EXISTS `patients` (
   `id_prov` int(10) unsigned zerofill NOT NULL,
   `id_town` int(10) unsigned zerofill NOT NULL,
   `id_vlg` int(10) unsigned zerofill NOT NULL,
-  `state` varchar(2) NOT NULL,
+  `state` varchar(9) NOT NULL,
   `id_pos` int(10) unsigned zerofill NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -804,7 +1067,20 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000036, 'ĐÂY LÀ TEST MƯỜI BẢY', '170919999', '1999-09-17', 0000000001, 0000000001, 0000000001, 'F1', 0000000002),
 (0000000038, 'ĐÂY LÀ TEST MƯỜI TÁM', '180819988', '1998-08-18', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000039, 'ĐÂY LÀ TEST MƯỜI CHÍN', '190119919', '1991-01-19', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
+(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000041, 'ĐÂY LÀ TEST HAI MỐT', '210119999', '1999-01-21', 0000000001, 0000000001, 0000000001, 'F2', 0000000001),
+(0000000042, 'TÚ', '010120011', '2001-01-01', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000043, 'VĂN', '020120011', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000044, 'HẢI', '030120011', '2001-01-03', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000045, 'DUY', '040120011', '2001-01-04', 0000000001, 0000000001, 0000000001, 'F2', 0000000001),
+(0000000046, 'TEST HAI HAI', '221219922', '1992-12-22', 0000000001, 0000000001, 0000000001, 'F2', 0000000001),
+(0000000047, 'TÚ F0', '010120012', '2001-01-01', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
+(0000000048, 'VĂN F1', '020120012', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000049, 'HẢI F0', '030120012', '2001-01-03', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000050, 'A F1', '010111111', '1111-01-01', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000051, 'B F1', '020111111', '1111-01-02', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000052, 'C F2 LIÊN QUAN A VÀ B', '030111111', '1111-01-03', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000053, 'D F3 LIÊN QUAN C', '040111111', '1111-01-04', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
 
 --
 -- Triggers `patients`
@@ -826,9 +1102,10 @@ CREATE TRIGGER `addMngmHis_update` AFTER UPDATE ON `patients`
  FOR EACH ROW BEGIN
     	declare date_now date;
         set date_now = now();
+        if new.state != old.state or new.id_pos != old.id_pos then
         INSERT INTO management_history(id_patient,date, state, id_qrt_pos)
         VALUES (new.id, date_now, new.state, new.id_pos);
-    
+    	end if;
 END
 //
 DELIMITER ;
@@ -866,9 +1143,22 @@ CREATE TABLE IF NOT EXISTS `payment_acc` (
 --
 
 INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
-(0000000020, '60000'),
+(0000000020, '80000'),
 (0000000039, '10000000'),
-(0000000040, '9940000');
+(0000000040, '9920000'),
+(0000000041, '10000000'),
+(0000000042, '10000000'),
+(0000000043, '10000000'),
+(0000000044, '10000000'),
+(0000000045, '10000000'),
+(0000000046, '10000000'),
+(0000000047, '10000000'),
+(0000000048, '10000000'),
+(0000000049, '10000000'),
+(0000000050, '10000000'),
+(0000000051, '10000000'),
+(0000000052, '10000000'),
+(0000000053, '10000000');
 
 -- --------------------------------------------------------
 
@@ -926,7 +1216,7 @@ CREATE TABLE IF NOT EXISTS `quarantinepos` (
 --
 
 INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUES
-(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000910),
+(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000924),
 (0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104);
 
 -- --------------------------------------------------------
@@ -950,8 +1240,18 @@ INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
 (0000000014, 0000000013),
 (0000000019, 0000000013),
 (0000000024, 0000000019),
+(0000000041, 0000000019),
+(0000000024, 0000000021),
+(0000000046, 0000000021),
+(0000000021, 0000000023),
+(0000000050, 0000000030),
+(0000000051, 0000000030),
 (0000000035, 0000000034),
-(0000000036, 0000000034);
+(0000000036, 0000000034),
+(0000000044, 0000000043),
+(0000000045, 0000000044),
+(0000000048, 0000000049),
+(0000000052, 0000000053);
 
 -- --------------------------------------------------------
 
@@ -1003,7 +1303,7 @@ CREATE TABLE IF NOT EXISTS `transaction_history` (
   `date_trans` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `remaining_debt` decimal(10,0) unsigned NOT NULL,
   `remaining_balance` decimal(10,0) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `transaction_history`
@@ -1012,7 +1312,8 @@ CREATE TABLE IF NOT EXISTS `transaction_history` (
 INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `date_trans`, `remaining_debt`, `remaining_balance`) VALUES
 (0000000002, 0000000040, 0000000020, '20000', '2021-11-17 09:44:11', '480000', '9980000'),
 (0000000003, 0000000040, 0000000020, '20000', '2021-11-17 10:11:56', '460000', '9960000'),
-(0000000004, 0000000040, 0000000020, '20000', '2021-11-17 11:00:00', '440000', '9940000');
+(0000000004, 0000000040, 0000000020, '20000', '2021-11-17 11:00:00', '440000', '9940000'),
+(0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000');
 
 --
 -- Triggers `transaction_history`
@@ -1172,12 +1473,12 @@ ALTER TABLE `villages`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=41;
+MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT for table `activity_history`
 --
 ALTER TABLE `activity_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=48;
+MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `bought_pkg_history`
 --
@@ -1187,12 +1488,12 @@ MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `debt`
 --
 ALTER TABLE `debt`
-MODIFY `id_patient` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=41;
+MODIFY `id_patient` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT for table `management_history`
 --
 ALTER TABLE `management_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=87;
 --
 -- AUTO_INCREMENT for table `necessary_packages`
 --
@@ -1217,7 +1518,7 @@ MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `villages`
 --
