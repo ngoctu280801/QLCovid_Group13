@@ -1,38 +1,26 @@
 package view;
 
-import java.awt.BorderLayout;
 
+
+import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import org.apache.log4j.Logger;
-
 import javax.swing.JLabel;
-
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.BoxLayout;
-
 import java.awt.FlowLayout;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
 import javax.swing.JPasswordField;
-
-
-import view.AdminPanel;
-import view.ManagerPanel;
-import view.AdminPanel;
-import view.PatientPanel;
 import model.DbInteraction;
 import model.Encrypt;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
@@ -43,19 +31,20 @@ public class LoginScr extends JFrame {
 	private JPanel pnContent;
 	private JTextField txtUsrname;
 	private JPasswordField txtPwd;
-	private JButton btnLogin;
-	private static final Logger logger = Logger.getLogger(LoginScr.class); 
+	private static JButton btnLogin;
+	private static ImageIcon loading;
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public LoginScr(DbInteraction dbi) {
 		this.dbi = dbi;
-		setTitle("H\u1EC7 th\u1ED1ng qu\u1EA3n l\u00FD Covid");
+		setTitle("Hệ thống quản lý Covid");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setBounds(100, 100, 392, 188);
+		setSize(400, 200);
 		addControls();
 		addEvents();
 		
@@ -102,10 +91,13 @@ public class LoginScr extends JFrame {
 		JPanel pnLoginBtn = new JPanel();
 		pnLoginForm.add(pnLoginBtn);
 		pnLoginBtn.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		btnLogin = new JButton("Login");
+		btnLogin = new JButton("Đăng nhập");
+		btnLogin.setBackground(Color.WHITE);
 		pnLoginBtn.add(btnLogin);
 		
-		getRootPane().setDefaultButton(btnLogin);
+		loading = new ImageIcon("resources/loading.gif");
+		
+		pnContent.getRootPane().setDefaultButton(btnLogin);
 	}
 	
 	private void addEvents(){
@@ -113,7 +105,10 @@ public class LoginScr extends JFrame {
 
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				btnLogin.setIcon(loading);
 				doLogin();
+				
 			}
 		});
 		addWindowListener(new WindowAdapter() {
@@ -132,7 +127,7 @@ public class LoginScr extends JFrame {
 				isContainUnicode(txtPwd.getText()) || isContainUnicode(txtUsrname.getText()) ||
 				txtPwd.getText().contains(" ") || txtUsrname.getText().contains(" ")){
 			JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu");
-			logger.debug("Đăng nhập thất bại!"); 
+			btnLogin.setIcon(null);
 			return;
 		}
 		
@@ -180,7 +175,7 @@ public class LoginScr extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
+		} finally{
 			try {
 				if(stmt[0] != null){
 					stmt[0].close();

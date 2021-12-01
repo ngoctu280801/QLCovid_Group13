@@ -198,7 +198,6 @@ public class AdmRegister extends JDialog {
 				}
 			});
 			cbProvinces.addItemListener(new ItemListener() {
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					// TODO Auto-generated method stub
 					cbTown.setEnabled(false);
@@ -233,7 +232,6 @@ public class AdmRegister extends JDialog {
 				}
 			});
 			cbTown.addItemListener(new ItemListener() {
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					// TODO Auto-generated method stub
 					if(cbTown.isEnabled()){
@@ -262,7 +260,6 @@ public class AdmRegister extends JDialog {
 				}
 			});
 			cbState.addItemListener(new ItemListener() {
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					if(cbState.getSelectedItem().toString().equals("F0")){
 						btnFind.setEnabled(false);

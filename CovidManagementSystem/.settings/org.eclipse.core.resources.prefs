@@ -1,8 +1,10 @@
 eclipse.preferences.version=1
 encoding//src/CovidSystem.java=UTF-8
 encoding//src/model/DbInteraction.java=UTF-8
+encoding//src/view/ActivityHistory.java=UTF-8
 encoding//src/view/AdmRegister.java=UTF-8
 encoding//src/view/AdminPanel.java=UTF-8
 encoding//src/view/LoginScr.java=UTF-8
 encoding//src/view/ManagerPanel.java=UTF-8
 encoding//src/view/PatientPanel.java=UTF-8
+encoding/<project>=UTF-8

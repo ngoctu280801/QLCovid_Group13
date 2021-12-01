@@ -2,10 +2,9 @@ package model;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+//import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.ArrayList;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -14,7 +13,7 @@ public class Encrypt {
 	public static String toPBKDF2(String pwd, int length){
 		if(length <= 0)
 			return null;
-		SecureRandom random = new SecureRandom();
+//		SecureRandom random = new SecureRandom();
 		byte[] salt = new byte[16];
 		byte[] hash = null;
 		//random.nextBytes(salt);

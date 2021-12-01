@@ -59,10 +59,7 @@ public class AdminPanel extends JFrame {
 	 * Create the frame.
 	 */
 	public AdminPanel(DbInteraction dbi) {
-		this.dbi = dbi;
-		JOptionPane.showMessageDialog(null, 
-				"Successfull. This is Admin Account!");
-		logger.debug("Successfull. Login Admin Account!"); 
+		this.dbi = dbi; 
 		setTitle("Quản trị hệ thống");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 1155, 520);
@@ -236,7 +233,17 @@ public class AdminPanel extends JFrame {
 	        }
 	    });
 
-		//btnActivityHis
+		btnActivityHis.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(btnActivityHis.isEnabled()){
+					ActivityHistory actHis = new ActivityHistory(dbi, tblManagerL.getValueAt(
+							tblManagerL.getSelectedRow(), 0) + "");
+					actHis.setModal(true);
+					actHis.setVisible(true);
+				}
+			}
+		});
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -244,8 +251,35 @@ public class AdminPanel extends JFrame {
 			}
 		});
 
-		//btnLockAcc
-
+		btnLockAcc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(!btnLockAcc.isEnabled()){
+					return;
+				}
+				if(btnLockAcc.getText().equals("Khoá tài khoản này")){
+					if(LockOrUnlock(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 0) + "", 1)){
+						dtmManagerL.setValueAt("Bị khoá", tblManagerL.getSelectedRow(), 1);
+						btnLockAcc.setText("Mở khoá tài khoản này");
+						JOptionPane.showMessageDialog(null, "Khoá tài khoản này thành công");
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "Có lỗi khi thực hiện khoá tài khoản này");
+					}
+					
+				}
+				else{
+					if(LockOrUnlock(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 0) + "", 0)){
+						btnLockAcc.setText("Khoá tài khoản này");
+						dtmManagerL.setValueAt("Hoạt động", tblManagerL.getSelectedRow(), 1);
+						JOptionPane.showMessageDialog(null, "Mở khoá tài khoản này thành công");
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "Có lỗi khi thực hiện mở khoá tài khoản này");
+					}
+				}
+			}
+		});
 		txtQrtName.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {

@@ -1,5 +1,3 @@
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -8,11 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-
-import view.AdminPanel;
 import view.LoginScr;
-import view.ManagerPanel;
-import view.PatientPanel;
 import model.DbInteraction;
 
 public class CovidSystem {
@@ -34,14 +28,6 @@ public class CovidSystem {
 					logger.debug("Bắt đầu đăng nhập.");  
 				}
 			});
-			
-			
-			
-			//new Packages(dbi, "", "987123546", null).setVisible(true);
-			//new ManagerPanel(dbi, "manager").setVisible(true);
-			//new AdminPanel(dbi).setVisible(true);
-			//new AdmRegister(dbi, 0, "manager").setVisible(true);
-			//new PatientPanel(dbi, "test8").setVisible(true);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
