@@ -1,13 +1,15 @@
 package view;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import org.apache.log4j.Logger;
-import model.DbInteraction;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Vector;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,15 +17,25 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
+
+import model.DbInteraction;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
+import org.apache.log4j.Logger;
 
 public class PatientPanel extends JFrame {
 	private DbInteraction dbi;
 	private String usrname;
 	private DefaultTableModel dtm;
+	private JPanel contentPane;
 	private JTable tblBoughtPkg;
 	private String  idCard;
 	JButton btnInfo, btnMngmHis, btnPkg, btnPayment;
@@ -43,6 +55,8 @@ public class PatientPanel extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 500);
 		addControls();
+		addEvents();
+		getDataFromDb();
 		setLocationRelativeTo(null);
 	}
 	private void addControls() {
@@ -87,8 +101,60 @@ public class PatientPanel extends JFrame {
 		pnBoughtPkg.setLayout(new BorderLayout());
 		pnBoughtPkg.add(scrollPane, BorderLayout.CENTER);
 	}
-
+	private void addEvents(){
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				dbi.close();
+			}
+		});
+		
+		
+//		btnInfo.addMouseListener();
+		
+		
+		
+//		btnMngmHis.addMouseListener();
+//		btnPkg.addMouseListener();
+//		btnPayment.addMouseListener();
+//		btnChangePwd.addMouseListener();
+	}
 	
+	private void getDataFromDb(){
+		String sql = "select bph.date, p.pkg_name, bph.quantity, bph.price from bought_pkg_history bph "
+				+ "join accounts a on a.id = bph.id_patient "
+				+ "join necessary_packages p on p.id = bph.id_pkg "
+				+ "where a.usrname = '" + this.usrname + "' and a.id_permission = 2";
+		Statement[] stmt = new Statement[] {null};
+		ResultSet rs = dbi.query(sql, stmt);
+		try {
+			if(rs.isBeforeFirst()){
+				
+				while(rs.next()){
+					Vector<String> rowData = new Vector<String>();
+					rowData.add(rs.getString(1));
+					rowData.add(rs.getString(2));
+					rowData.add(validateNum(new StringBuilder(rs.getString(3))));
+					rowData.add(validateNum(new StringBuilder(rs.getString(4))));
+					dtm.addRow(rowData);
+				}
+			}
+			else{
+				//JOptionPane.showMessageDialog(null, "Bạn chưa mua gói nhu yếu phẩm nào");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if(stmt[0] != null){
+					stmt[0].close();
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	
 
@@ -135,5 +201,7 @@ public class PatientPanel extends JFrame {
 		}
 		return s.toString();
 	}
+	
+	//private void isFirstLogin()
 
 }
