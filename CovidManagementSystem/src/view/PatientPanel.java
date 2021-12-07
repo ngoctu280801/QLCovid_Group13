@@ -49,7 +49,7 @@ public class PatientPanel extends JFrame {
 
 		this.dbi = dbi;
 		this.usrname = usrname;
-		JOptionPane.showMessageDialog(null, "Successfull. This is Patient Account!");
+		isFirstLogin();
 		getIdCard(usrname);
 		setTitle("Phân hệ người dùng");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,14 +110,39 @@ public class PatientPanel extends JFrame {
 		});
 		
 		
-//		btnInfo.addMouseListener();
-		
-		
-		
-//		btnMngmHis.addMouseListener();
-//		btnPkg.addMouseListener();
+		btnInfo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PatientInfo pInfo = new PatientInfo(dbi, null, null, idCard, 1);
+				pInfo.setModal(true);
+				pInfo.setVisible(true);
+			}
+		});
+		btnMngmHis.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ManagementHistory mngmHis = new ManagementHistory(dbi, idCard);
+				mngmHis.setModal(true);
+				mngmHis.setVisible(true);
+			}
+		});
+		btnPkg.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Packages pkg = new Packages(dbi, "", idCard, dtm);
+				pkg.setModal(true);
+				pkg.setVisible(true);
+			}
+		});
 //		btnPayment.addMouseListener();
-//		btnChangePwd.addMouseListener();
+		btnChangePwd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ChangePwd cPwd = new ChangePwd(dbi, usrname, false);
+				cPwd.setModal(true);
+				cPwd.setVisible(true);
+			}
+		});
 	}
 	
 	private void getDataFromDb(){
@@ -202,6 +227,32 @@ public class PatientPanel extends JFrame {
 		return s.toString();
 	}
 	
-	//private void isFirstLogin()
+	private void isFirstLogin(){
+		Statement[] stmt = new Statement[] {null};
+		ResultSet rs = dbi.query("select count(*) from logon l "
+				+ "join accounts a on a.id = l.id_patient "
+				+ "where a.usrname = '" + usrname + "'", stmt);
+		try {
+			rs.next();
+			if(rs.getString(1).equals("0")){
+				ChangePwd cPwd = new ChangePwd(dbi, usrname, true);
+				cPwd.setModal(true);
+				cPwd.setVisible(true);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra");
+		} finally {
+			try {
+				if(stmt[0] != null){
+					stmt[0].close();
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 
 }
