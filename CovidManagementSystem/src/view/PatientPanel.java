@@ -134,7 +134,14 @@ public class PatientPanel extends JFrame {
 				pkg.setVisible(true);
 			}
 		});
-//		btnPayment.addMouseListener();
+		btnPayment.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Payment paymentScr = new Payment(dbi, usrname, "cert/truststore", "88888888", "localhost", 9009);
+				paymentScr.setModal(true);
+				paymentScr.setVisible(true);
+			}
+		});
 		btnChangePwd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
