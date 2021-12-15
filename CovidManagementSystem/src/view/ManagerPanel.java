@@ -77,7 +77,7 @@ public class ManagerPanel extends JFrame {
 		logger.debug("Successfull. Login Manager Account!");
 		dbi.close();
 		addControls();
-//		getDataFromDb();
+		getDataFromDb();
 //		addEvents();
 		System.exit(0);
 	}
@@ -214,6 +214,119 @@ public class ManagerPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	private void getDataFromDb(){
+		Statement[] stmt = new Statement[] {null};
+		ResultSet rs = dbi.query("call getAllPatients();", stmt);
+		try {
+			if(rs.isBeforeFirst()){
+				while(rs.next()){
+					Vector<String> rowData = new Vector<String>();
+					//rowData.add(rs.getString(1));
+					rowData.add(rs.getString(2));
+					rowData.add(rs.getString(3));
+					rowData.add(rs.getString(4));
+					rowData.add(rs.getString(7));
+					rowData.add(rs.getString(6));
+					rowData.add(rs.getString(5));
+					rowData.add(rs.getString(9));
+					rowData.add(rs.getString(8));
+					dtm.addRow(rowData);
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Chưa tồn tại người nào trong hệ thống");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if(stmt[0] != null){
+					stmt[0].close();
+				}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private void search(String s) {
+		if (s.length() != 0) {
+			sorter.setRowFilter(RowFilter.regexFilter(s));
+
+		} else {
+			sorter.setRowFilter(null);
+		}
+	}
+	private void updateQrtPos(String currQrtPos, String newQrtPos, String userIdCard, String userManager) {
+		Statement[] stmt1 = new Statement[] {null};
+		Statement[] stmt2 = new Statement[] {null};
+		Statement[] stmt3 = new Statement[] {null};
+		CallableStatement st = null;
+		try {
+			st = dbi.getStatement("{call changeQrtPos(?, ?, ?, ?, ?, ?)}");
+			ResultSet idNewPos = dbi.query("SELECT QP.id FROM quarantinepos QP WHERE QP.name = n'" + newQrtPos + "';", stmt1);
+			ResultSet currCap = dbi.query("SELECT QP.current_capacity FROM quarantinepos QP WHERE QP.name = n'" + newQrtPos + "';", stmt2);
+			ResultSet possibleCap = dbi.query("SELECT QP.capacity FROM quarantinepos QP WHERE QP.name = n'" + newQrtPos + "';", stmt3);
+
+			currCap.next();
+			possibleCap.next();
+			if(currCap.getInt(1) == possibleCap.getInt(1)){
+				JOptionPane.showMessageDialog(null, "Nơi điều trị này đã đầy, vui lòng chọn nơi khác");
+				return;
+			}
+
+			idNewPos.next();
+			st.registerOutParameter(6, Types.INTEGER);
+			st.setString(1, userManager);
+			st.setString(2, userIdCard);
+			st.setString(3,currQrtPos);
+			st.setLong(4, idNewPos.getInt(1));
+			st.setString(5,newQrtPos);
+			st.execute();
+			int code = st.getInt("code");
+			if(code == 1){
+				int row = tblPatients.getSelectedRow();
+				tblPatients.setValueAt(cbPos.getSelectedItem().toString(), row, 7);
+				pnShow.setVisible(false);
+				pnShow.setVisible(false);
+				btnPkgManage.setEnabled(true);
+				btnStat.setEnabled(true);
+				btnFind.setEnabled(true);
+				btnAddNew.setEnabled(true);
+				btnRPer.setEnabled(true);
+				btnMHistory.setEnabled(true);
+				btnChangePwd.setEnabled(true);
+				tblPatients.setEnabled(true);
+				btnShowChangeQrtPos.setText("Chuyển trạng nơi điều trị / cách ly");
+				JOptionPane.showMessageDialog(null, "Chuyển nơi điều trị/cách ly thành công");
+				return;
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Thất bại. Xin vui lòng thử lại sau");
+				return;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}  finally {
+			try {
+				if(stmt1[0] != null){
+					stmt1[0].close();
+				}
+				if(stmt2[0] != null){
+					stmt2[0].close();
+				}
+				if(stmt3[0] != null){
+					stmt3[0].close();
+				}
+				if(st != null){
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
