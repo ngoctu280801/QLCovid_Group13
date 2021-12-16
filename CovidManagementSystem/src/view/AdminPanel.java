@@ -82,26 +82,28 @@ public class AdminPanel extends JFrame {
 		
 		JPanel pnManageManager = new JPanel();
 		splitPane.setLeftComponent(pnManageManager);
-		pnManageManager.setLayout(new BorderLayout(0, 0));
+		pnManageManager.setLayout(
+				new BorderLayout(0, 0));
 		
 		JPanel pnManagerList = new JPanel();
-		pnManageManager.add(pnManagerList, BorderLayout.CENTER);
+		pnManageManager.add(pnManagerList,
+				BorderLayout.CENTER);
 		pnManagerList.setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnUtilsManager = new JPanel();
-		pnUtilsManager.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Qu\u1EA3n l\u00FD th\u00F4ng tin ng\u01B0\u1EDDi qu\u1EA3n l\u00FD", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnManageManager.add(pnUtilsManager, BorderLayout.SOUTH);
-		pnUtilsManager.setLayout(new BoxLayout(pnUtilsManager, BoxLayout.Y_AXIS));
+		pnUtilsManager.setBorder(new TitledBorder(
+				new LineBorder(new Color(0, 0, 0), 1, true),
+				"Qu\u1EA3n l\u00FD th\u00F4ng tin ng\u01B0\u1EDDi qu\u1EA3n l\u00FD",
+				TitledBorder.LEADING,
+				TitledBorder.TOP,
+				null,
+				new Color(0, 0, 0)));
+		pnManageManager.add(pnUtilsManager,
+				BorderLayout.SOUTH);
+		pnUtilsManager.setLayout(new BoxLayout(pnUtilsManager,
+								BoxLayout.Y_AXIS));
 		
-		btnLockAcc = new JButton("Khoá tài khoản này");
-		btnLockAcc.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnLockAcc.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		pnUtilsManager.add(btnLockAcc);
 		
-		btnActivityHis = new JButton("Lịch sử hoạt động của tài khoản này");
-		btnActivityHis.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnActivityHis.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		pnUtilsManager.add(btnActivityHis);
 		
 		JPanel pnManageQrtPos = new JPanel();
 		splitPane.setRightComponent(pnManageQrtPos);
@@ -112,9 +114,17 @@ public class AdminPanel extends JFrame {
 		pnQrtPosList.setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnUtilsQrtPos = new JPanel();
-		pnUtilsQrtPos.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Qu\u1EA3n l\u00FD \u0111\u1ECBa \u0111i\u1EC3m \u0111i\u1EC1u tr\u1ECB/ c\u00E1ch ly", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnManageQrtPos.add(pnUtilsQrtPos, BorderLayout.SOUTH);
-		pnUtilsQrtPos.setLayout(new BoxLayout(pnUtilsQrtPos, BoxLayout.Y_AXIS));
+		pnUtilsQrtPos.setBorder(new TitledBorder(
+				new LineBorder(new Color(0, 0, 0), 1, true),
+				"Qu\u1EA3n l\u00FD \u0111\u1ECBa \u0111i\u1EC3m \u0111i\u1EC1u tr\u1ECB/ c\u00E1ch ly",
+				TitledBorder.LEADING,
+				TitledBorder.TOP,
+				null, null));
+		
+		pnManageQrtPos.add(pnUtilsQrtPos,
+							BorderLayout.SOUTH);
+		pnUtilsQrtPos.setLayout(new BoxLayout(pnUtilsQrtPos,
+								BoxLayout.Y_AXIS));
 		
 		
 		dtmManagerL = new DefaultTableModel();
@@ -150,6 +160,17 @@ public class AdminPanel extends JFrame {
 		btnActivityHis.setEnabled(false);
 		//btnAddQrtPos.setEnabled(false);
 		btnLockAcc.setEnabled(false);
+		
+		btnLockAcc = new JButton("Khoá tài khoản này");
+		btnLockAcc.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnLockAcc.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		pnUtilsManager.add(btnLockAcc);
+		
+		btnActivityHis = new JButton("Lịch sử hoạt động của tài khoản này");
+		btnActivityHis.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnActivityHis.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		pnUtilsManager.add(btnActivityHis);
+		
 		
 		btnAddManager = new JButton("Thêm một tài khoản người quản lý mới");
 		btnAddManager.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -191,9 +212,10 @@ public class AdminPanel extends JFrame {
 		pnUtilsQrtPos.add(pnQrtPosInteracter);
 		
 		btnAddQrtPos = new JButton("Thêm địa điểm mới");
+		btnUpdateQrtPos = new JButton("Sửa địa điểm");
+		
 		pnQrtPosInteracter.add(btnAddQrtPos);
 		
-		btnUpdateQrtPos = new JButton("Sửa địa điểm");
 		pnQrtPosInteracter.add(btnUpdateQrtPos);
 		btnUpdateQrtPos.setEnabled(false);
 		
