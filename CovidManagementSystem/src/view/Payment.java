@@ -26,9 +26,7 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
@@ -62,7 +60,7 @@ public class Payment extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		File f = new File(path);
 		if(!f.exists()){
-			//JOptionPane.showMessageDialog(null, "Không tìm thấy " + path);
+			JOptionPane.showMessageDialog(null, "Không tìm thấy " + path);
 			dispose();
 		}
 		this.dbi = dbi;
@@ -173,22 +171,22 @@ public class Payment extends JDialog {
 	}
 	private void addEvents(){
 		
-//		btnPay.addMouseListener(new MouseAdapter() {
-//			@Override
-//			
-//			public void mouseClicked(MouseEvent arg0) {
-//				if(btnPay.isEnabled()) { 
-//				Runnable connect = new Runnable(){
-//					public void run(){
-//						connectToServer();
-//					}
-//				};
-//				Thread t = new Thread(connect);
-//				t.start();
-//				reloadData();
-//				}
-//			}
-//		});
+		btnPay.addMouseListener(new MouseAdapter() {
+			@Override
+			
+			public void mouseClicked(MouseEvent arg0) {
+				if(btnPay.isEnabled()) { 
+				Runnable connect = new Runnable(){
+					public void run(){
+						connectToServer();
+					}
+				};
+				Thread t = new Thread(connect);
+				t.start();
+				reloadData();
+				}
+			}
+		});
 		
 		
 		txtCredit.addKeyListener(new KeyAdapter() {
@@ -199,7 +197,7 @@ public class Payment extends JDialog {
 				txtCredit.setText(validateNum(new StringBuilder(txtCredit.getText())));
 				String credit = txtCredit.getText();
 				if(credit.equals("") || Integer.parseInt(credit.replace(",","")) < 20000 || 
-						 isDebtSmallerThanCreditMin()) {
+						isCreditLargerThanBalance() || isCreditLargerThanDebt() || isDebtSmallerThanCreditMin()) {
 					btnPay.setEnabled(false);
 				}
 				else {btnPay.setEnabled(true);}
@@ -223,7 +221,7 @@ public class Payment extends JDialog {
 			BufferedReader bfr = new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
 			String code = bfr.readLine();
 			sslSocket.close();
-			//codeToMessage(Integer.parseInt(code));
+			codeToMessage(Integer.parseInt(code));
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -239,28 +237,28 @@ public class Payment extends JDialog {
 			reloadData();
 		}
 	}
-//	private void codeToMessage(int code){
-//		if(code == 1){
-//			txtCredit.setText("");
-//			JOptionPane.showMessageDialog(null, "Thanh toán thành công");
-//		}
-//		else if(code == -1){
-//			JOptionPane.showMessageDialog(null, "Thanh toán thất bại");
-//		}
-//	}
-//	private void onOffPaymentBtn(){
-//		if(lblDebt.getText().equals("0 (VNĐ)")){
-//			txtCredit.setEnabled(false);
-//			btnPay.setEnabled(false);
-//		}
-//		else{
-//			txtCredit.setEnabled(true);
-//			btnPay.setEnabled(true);
-//		}
-//		if(txtCredit.getText().equals("")){
-//			btnPay.setEnabled(false);
-//		}
-//	}
+	private void codeToMessage(int code){
+		if(code == 1){
+			txtCredit.setText("");
+			JOptionPane.showMessageDialog(null, "Thanh toán thành công");
+		}
+		else if(code == -1){
+			JOptionPane.showMessageDialog(null, "Thanh toán thất bại");
+		}
+	}
+	private void onOffPaymentBtn(){
+		if(lblDebt.getText().equals("0 (VNĐ)")){
+			txtCredit.setEnabled(false);
+			btnPay.setEnabled(false);
+		}
+		else{
+			txtCredit.setEnabled(true);
+			btnPay.setEnabled(true);
+		}
+		if(txtCredit.getText().equals("")){
+			btnPay.setEnabled(false);
+		}
+	}
 	private String validateNum(StringBuilder s){
 		for(int i = 0; i < s.length(); i++){
 			if(!Character.isDigit(s.charAt(i))){
@@ -303,7 +301,7 @@ public class Payment extends JDialog {
 			e.printStackTrace();
 		}
 		finally{
-			//onOffPaymentBtn();
+			onOffPaymentBtn();
 		}
 	}
 	private void getDataFromDb(){
@@ -375,6 +373,18 @@ public class Payment extends JDialog {
 				e.printStackTrace();
 			}
 		}
+	}
+	private boolean isCreditLargerThanBalance(){
+		if(Integer.parseInt(txtCredit.getText().replace(",", "")) > lblToInt(lblBalance.getText())){
+			return true;
+		}
+		return false;
+	}
+	private boolean isCreditLargerThanDebt(){
+		if(Integer.parseInt(txtCredit.getText().replace(",", "")) > lblToInt(lblDebt.getText())){
+			return true;
+		}
+		return false;
 	}
 	private boolean isDebtSmallerThanCreditMin(){
 		if(20000 > lblToInt(lblDebt.getText())){
