@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import org.apache.log4j.Logger;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 
 import model.DbInteraction;
 
@@ -37,10 +39,13 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
 
 import model.DbInteraction;
 
@@ -49,7 +54,7 @@ public class ManagerPanel extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtIdCard2Find;
 	private JTable tblPatients;
-	private JPanel pnShow;
+	private JPanel pnShow, pnChangeState;
 	private DefaultTableModel dtm;
 	JButton btnPkgManage, btnStat, btnFind, btnAddNew,
 	btnRPer, btnMHistory;
@@ -57,32 +62,31 @@ public class ManagerPanel extends JFrame {
 	private String usrManager;
 	private TableRowSorter sorter;
 	private JLabel currPosLab, newPosLab;
-	private JTextField currPosField;
-	private JComboBox cbPos;
-	private JButton saveButton;
-	private JButton btnShowChangeQrtPos;
+	private JTextField currPosField, txtCurState;
+	private JComboBox cbPos, cbState;
+	private JButton saveButton, btnSaveState;
+	private JButton btnShowChangeQrtPos, btnShowChangeState;
 	private static final Logger logger = Logger.getLogger(ManagerPanel.class);
 
 	/**
 	 * Create the frame.
 	 */
 	public ManagerPanel(DbInteraction dbi, String usrManager) {
+		setBackground(Color.WHITE);
 		this.usrManager = usrManager;
 		this.dbi = dbi;
 		setTitle("Quản lý");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 940, 481);
-		setLocationRelativeTo(null);
-		JOptionPane.showMessageDialog(null, "Successfull. This is Manager Account!");
-		logger.debug("Successfull. Login Manager Account!");
-		dbi.close();
+		//setBounds(100, 100, 940, 481);
+		setMinimumSize(new Dimension(1200, 500));
 		addControls();
 		getDataFromDb();
-//		addEvents();
-		System.exit(0);
+		addEvents();
+		setLocationRelativeTo(null);
 	}
 	private void addControls(){
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -156,9 +160,29 @@ public class ManagerPanel extends JFrame {
 		contentPane.add(pnUtils);
 		pnUtils.setLayout(new BoxLayout(pnUtils, BoxLayout.Y_AXIS));
 
+		pnChangeState = new JPanel();
+		pnUtils.add(pnChangeState);
+		JLabel lblCurState = new JLabel("Hiện là:");
+		pnChangeState.add(lblCurState);
+		txtCurState = new JTextField();
+		txtCurState.setEditable(false);
+		txtCurState.setColumns(6);
+		pnChangeState.add(txtCurState);
+		JLabel lblNewState = new JLabel("Chuyển sang:");
+		pnChangeState.add(lblNewState);
+		cbState = new JComboBox();
+		cbState.addItem(" ");
+		cbState.addItem("F0");
+		cbState.addItem("Khỏi bệnh");
+		pnChangeState.add(cbState);
+		btnSaveState = new JButton("Thay đổi");
+		btnSaveState.setEnabled(false);
+		pnChangeState.add(btnSaveState);
+		pnChangeState.setVisible(false);
+
 		pnShow = new JPanel();
 		pnUtils.add(pnShow);
-		currPosLab = new JLabel("Nơi điều trị hiện tại");
+		currPosLab = new JLabel("Nơi điều trị hiện tại:");
 		currPosField = new JTextField();
 		currPosField.setEditable(false);
 		currPosField.setColumns(12);
@@ -179,6 +203,7 @@ public class ManagerPanel extends JFrame {
 		pnShow.add(newPosLab);
 		pnShow.add(cbPos);
 		saveButton = new JButton("Thay đổi");
+		saveButton.setEnabled(false);
 		pnShow.add(saveButton);
 		pnShow.setVisible(false);
 
@@ -199,10 +224,222 @@ public class ManagerPanel extends JFrame {
 		pnFuncs.add(btnMHistory);
 
 
-		btnShowChangeQrtPos = new JButton("Chuyển trạng nơi điều trị / cách ly");
+		btnShowChangeQrtPos = new JButton("Chuyển nơi điều trị / cách ly");
 		btnShowChangeQrtPos.setEnabled(false);
 		pnFuncs.add(btnShowChangeQrtPos);
 
+
+		btnShowChangeState = new JButton("Chuyển trạng thái");
+		btnShowChangeState.setEnabled(false);
+		pnFuncs.add(btnShowChangeState);
+
+	}
+	private void addEvents(){
+		txtIdCard2Find.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(txtIdCard2Find.getText().equals("Nhập CMND/ CCCD")){
+					txtIdCard2Find.setText("");
+				}
+			}
+		});
+		tblPatients.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			public void valueChanged(ListSelectionEvent event) {
+				if(tblPatients.getRowCount() == 0){
+					return;
+				}
+				if(tblPatients.getSelectedRowCount() > 1) {
+					btnShowChangeQrtPos.setEnabled(false);
+					btnShowChangeState.setEnabled(false);
+					btnMHistory.setEnabled(false);
+					btnRPer.setEnabled(false);
+				}
+				else {
+					btnMHistory.setEnabled(true);
+					btnRPer.setEnabled(true);
+					btnShowChangeQrtPos.setEnabled(true);
+					btnShowChangeState.setEnabled(true);
+					if(tblPatients.getSelectedRowCount() == 1){
+						txtIdCard2Find.setText((String) tblPatients.getValueAt(
+								tblPatients.getSelectedRow(), 1));
+					}
+				}
+			}
+		});
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				dbi.close();
+			}
+		});
+		
+		//		Bỏ luôn
+		//		tblPatients.getTableHeader().addMouseListener(new MouseAdapter() {
+		//		    @Override
+		//		    public void mouseClicked(MouseEvent e) {
+		//		        int col = tblPatients.columnAtPoint(e.getPoint());
+		//		        String name = tblPatients.getColumnName(col);
+		//		        
+		//		    }
+		//		});
+		
+		
+		btnChangePwd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ChangePwd cPwd = new ChangePwd(dbi, usrManager, false);
+				cPwd.setModal(true);
+				cPwd.setVisible(true);
+			}
+		});
+		btnAddNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				AdmRegister addPer = new AdmRegister(dbi, 0, usrManager, null, dtm);
+				addPer.setModal(true);
+				addPer.setVisible(true);
+			}
+		});
+//		btnRPer.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				RelatedPersons rp = new RelatedPersons(dbi, (String) tblPatients.getValueAt(
+//						tblPatients.getSelectedRow(), 1));
+//				rp.setVisible(true);
+//			}
+//		});
+		btnFind.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(!txtIdCard2Find.getText().equals("") && btnFind.isEnabled()){
+					String s = "select * from patients where id_card ='"
+							+ txtIdCard2Find.getText() + "';";
+					Statement[] stmt = new Statement[] {null};
+					ResultSet rs = dbi.query(s, stmt);
+					try {
+						if(!rs.isBeforeFirst()){
+							JOptionPane.showMessageDialog(null, "Không tồn tại người này trong hệ thống");
+							return;
+						}
+						else{
+							PatientInfo pIn4 = new PatientInfo(dbi, dtm, null, txtIdCard2Find.getText(), 1);
+							pIn4.setModal(true);
+							pIn4.setVisible(true);
+							//JOptionPane.showMessageDialog(null,
+							//		((Vector)dtm.getDataVector().elementAt(row)).elementAt(col));
+
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} finally {
+						try {
+							if(stmt[0] != null){
+								stmt[0].close();
+							}				
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+
+		btnPkgManage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Packages pkgMngmPn = new Packages(dbi, usrManager, "", null);
+				pkgMngmPn.setModal(true);
+				pkgMngmPn.setVisible(true);
+			}
+		});
+
+		btnMHistory.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String idCardPatient = (String) tblPatients.getValueAt(tblPatients.getSelectedRow(), 1);
+				ManagementHistory mngmHis = new ManagementHistory(dbi, idCardPatient);
+				mngmHis.setModal(true);
+				mngmHis.setVisible(true);
+			}
+		});
+
+		btnShowChangeQrtPos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(btnShowChangeQrtPos.isEnabled()){
+					if(btnShowChangeQrtPos.getText().equals("Chuyển nơi điều trị / cách ly")) {
+						pnShow.setVisible(true);
+						btnPkgManage.setEnabled(false);
+						btnStat.setEnabled(false);
+						btnFind.setEnabled(false);
+						btnAddNew.setEnabled(false);
+						btnRPer.setEnabled(false);
+						btnMHistory.setEnabled(false);
+						btnChangePwd.setEnabled(false);
+						tblPatients.setEnabled(false);
+						btnShowChangeState.setEnabled(false);
+						String currPos = (String) tblPatients.getValueAt(tblPatients.getSelectedRow(), 7);
+						currPosField.setText(currPos);
+						btnShowChangeQrtPos.setText("Huỷ chuyển");
+					}
+					else {
+						pnShow.setVisible(false);
+						btnPkgManage.setEnabled(true);
+						btnStat.setEnabled(true);
+						btnFind.setEnabled(true);
+						btnAddNew.setEnabled(true);
+						btnRPer.setEnabled(true);
+						btnMHistory.setEnabled(true);
+						btnChangePwd.setEnabled(true);
+						tblPatients.setEnabled(true);
+						btnShowChangeState.setEnabled(true);
+						cbPos.setSelectedIndex(0);
+						btnShowChangeQrtPos.setText("Chuyển nơi điều trị / cách ly");
+					}
+				}
+			}
+		});
+//		saveButton.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent arg0) {
+//				if(saveButton.isEnabled()){
+//				if(cbPos.getSelectedItem().toString().equals(" ")) {
+//					JOptionPane.showMessageDialog(null,"Vui lòng chọn nơi muốn chuyển");
+//					return;
+//				}
+//				else {
+//					String currPos = (String) tblPatients.getValueAt(tblPatients.getSelectedRow(), 7);
+//					String userIdCard = (String) tblPatients.getValueAt(tblPatients.getSelectedRow(), 1);
+//					Runnable runUpdate = new Runnable(){
+//						public void run(){
+//							updateQrtPos(currPos, cbPos.getSelectedItem().toString(),userIdCard,usrManager);
+//						}
+//					};
+//					Thread t = new Thread(runUpdate);
+//					t.start();
+//				}}
+//			}
+//		});
+		
+//		cbPos.addItemListener(new ItemListener() {
+//			@Override
+//			public void itemStateChanged(ItemEvent e) {
+//				if(cbPos.getSelectedItem().toString().equals(
+//						tblPatients.getValueAt(tblPatients.getSelectedRow(), 7)) ||
+//						cbPos.getSelectedItem().toString().equals(" ")){
+//					saveButton.setEnabled(false);
+//				}
+//				else{
+//					saveButton.setEnabled(true);
+//				}
+//			}
+//		});
+		
+//		btnShowChangeState.addMouseListener();
+//		cbState.addItemListener();
+//		btnSaveState.addMouseListener();
+		
+//		btnStat.addMouseListener();
 	}
 	private void setComboBox(ResultSet rs, JComboBox cb){
 		try {
@@ -299,7 +536,7 @@ public class ManagerPanel extends JFrame {
 				btnMHistory.setEnabled(true);
 				btnChangePwd.setEnabled(true);
 				tblPatients.setEnabled(true);
-				btnShowChangeQrtPos.setText("Chuyển trạng nơi điều trị / cách ly");
+				btnShowChangeQrtPos.setText("Chuyển nơi điều trị / cách ly");
 				JOptionPane.showMessageDialog(null, "Chuyển nơi điều trị/cách ly thành công");
 				return;
 			}
@@ -328,5 +565,15 @@ public class ManagerPanel extends JFrame {
 				e.printStackTrace();
 			}
 		}
+	}
+	private int stateToInt(String state){
+		int res;
+		if(state.equals("Khỏi bệnh")){
+			res = -1;
+		}
+		else{
+			res = Integer.parseInt(state.charAt(1) + "");
+		}
+		return res;
 	}
 }
