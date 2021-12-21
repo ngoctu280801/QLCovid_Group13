@@ -499,7 +499,14 @@ public class ManagerPanel extends JFrame {
 			}
 		});
 		
-//		btnStat.addMouseListener();
+		btnStat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				StatisticView stat = new StatisticView(dbi);
+				stat.setModal(true);
+				stat.setVisible(true);
+			}
+		});
 	}
 	private void setComboBox(ResultSet rs, JComboBox cb){
 		try {
