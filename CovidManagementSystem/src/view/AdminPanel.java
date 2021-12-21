@@ -76,148 +76,150 @@ public class AdminPanel extends JFrame {
 		//dtmQrtPosL.addRow(new String[] {"1", "2", "3"});
 	}
 	private void addControls(){
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.05);
-		pnContent.add(splitPane);
-		
-		JPanel pnManageManager = new JPanel();
-		splitPane.setLeftComponent(pnManageManager);
-		pnManageManager.setLayout(
-				new BorderLayout(0, 0));
-		
-		JPanel pnManagerList = new JPanel();
-		pnManageManager.add(pnManagerList,
-				BorderLayout.CENTER);
-		pnManagerList.setLayout(new BorderLayout(0, 0));
-		
-		JPanel pnUtilsManager = new JPanel();
-		pnUtilsManager.setBorder(new TitledBorder(
-				new LineBorder(new Color(0, 0, 0), 1, true),
-				"Qu\u1EA3n l\u00FD th\u00F4ng tin ng\u01B0\u1EDDi qu\u1EA3n l\u00FD",
-				TitledBorder.LEADING,
-				TitledBorder.TOP,
-				null,
-				new Color(0, 0, 0)));
-		pnManageManager.add(pnUtilsManager,
-				BorderLayout.SOUTH);
-		pnUtilsManager.setLayout(new BoxLayout(pnUtilsManager,
-								BoxLayout.Y_AXIS));
-		
-		
-		
-		JPanel pnManageQrtPos = new JPanel();
-		splitPane.setRightComponent(pnManageQrtPos);
-		pnManageQrtPos.setLayout(new BorderLayout(0, 0));
-		
-		JPanel pnQrtPosList = new JPanel();
-		pnManageQrtPos.add(pnQrtPosList);
-		pnQrtPosList.setLayout(new BorderLayout(0, 0));
-		
-		JPanel pnUtilsQrtPos = new JPanel();
-		pnUtilsQrtPos.setBorder(new TitledBorder(
-				new LineBorder(new Color(0, 0, 0), 1, true),
-				"Qu\u1EA3n l\u00FD \u0111\u1ECBa \u0111i\u1EC3m \u0111i\u1EC1u tr\u1ECB/ c\u00E1ch ly",
-				TitledBorder.LEADING,
-				TitledBorder.TOP,
-				null, null));
-		
-		pnManageQrtPos.add(pnUtilsQrtPos,
-							BorderLayout.SOUTH);
-		pnUtilsQrtPos.setLayout(new BoxLayout(pnUtilsQrtPos,
-								BoxLayout.Y_AXIS));
-		
-		
-		dtmManagerL = new DefaultTableModel();
-		dtmManagerL.addColumn("Tên tài khoản");
-		dtmManagerL.addColumn("Trạng thái");
-		tblManagerL = new JTable(dtmManagerL);
-		// Prevent manager edit this table
-		tblManagerL.setDefaultEditor(Object.class, null);
-		
-		JScrollPane scrPManagerL = new JScrollPane(
-				tblManagerL,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pnManagerList.setLayout(new BorderLayout());
-		pnManagerList.add(scrPManagerL, BorderLayout.CENTER);
-		
-		
-		dtmQrtPosL = new DefaultTableModel();
-		dtmQrtPosL.addColumn("Tên địa điểm");
-		dtmQrtPosL.addColumn("Sức chứa tối đa");
-		dtmQrtPosL.addColumn("Sức chứa hiện tại");
-		tblQrtPosL = new JTable(dtmQrtPosL);
-		// Prevent manager edit this table
-		tblQrtPosL.setDefaultEditor(Object.class, null);
-		
-		JScrollPane scrPQrtPosL = new JScrollPane(
-				tblQrtPosL,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		pnQrtPosList.setLayout(new BorderLayout());
-		pnQrtPosList.add(scrPQrtPosL, BorderLayout.CENTER);
-		
-		btnActivityHis.setEnabled(false);
-		//btnAddQrtPos.setEnabled(false);
-		btnLockAcc.setEnabled(false);
-		
-		btnLockAcc = new JButton("Khoá tài khoản này");
-		btnLockAcc.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnLockAcc.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		pnUtilsManager.add(btnLockAcc);
-		
-		btnActivityHis = new JButton("Lịch sử hoạt động của tài khoản này");
-		btnActivityHis.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnActivityHis.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		pnUtilsManager.add(btnActivityHis);
-		
-		
-		btnAddManager = new JButton("Thêm một tài khoản người quản lý mới");
-		btnAddManager.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnAddManager.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		pnUtilsManager.add(btnAddManager);
-		
-		JPanel panel = new JPanel();
-		pnUtilsManager.add(panel);
-		
-		pnQrtPosMngm = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) pnQrtPosMngm.getLayout();
-		pnUtilsQrtPos.add(pnQrtPosMngm);
-		
-		JLabel lblQrtName = new JLabel("Tên địa điểm điều trị/ cách ly:");
-		pnQrtPosMngm.add(lblQrtName);
-		
-		txtQrtName = new JTextField();
-		pnQrtPosMngm.add(txtQrtName);
-		txtQrtName.setColumns(10);
-		
-		JLabel lblCapacity = new JLabel("Sức chứa tối đa:");
-		pnQrtPosMngm.add(lblCapacity);
-		
-		txtCapacity = new JTextField();
-		pnQrtPosMngm.add(txtCapacity);
-		txtCapacity.setColumns(6);
-		
-		JLabel lblCurCapacity = new JLabel("Sức chứa hiện tại");
-		pnQrtPosMngm.add(lblCurCapacity);
-		
-		txtCurCapacity = new JTextField();
-		pnQrtPosMngm.add(txtCurCapacity);
-		txtCurCapacity.setColumns(6);
-		
-		btnAdd_Update = new JButton("Thêm");
-		pnQrtPosMngm.add(btnAdd_Update);
-		pnQrtPosMngm.setVisible(false);
-		JPanel pnQrtPosInteracter = new JPanel();
-		pnUtilsQrtPos.add(pnQrtPosInteracter);
-		
-		btnAddQrtPos = new JButton("Thêm địa điểm mới");
-		btnUpdateQrtPos = new JButton("Sửa địa điểm");
-		
-		pnQrtPosInteracter.add(btnAddQrtPos);
-		
-		pnQrtPosInteracter.add(btnUpdateQrtPos);
-		btnUpdateQrtPos.setEnabled(false);
+			JSplitPane splitPane = new JSplitPane();
+			splitPane.setResizeWeight(0.05);
+			pnContent.add(splitPane);
+			
+			JPanel pnManageManager = new JPanel();
+			splitPane.setLeftComponent(pnManageManager);
+			pnManageManager.setLayout(
+					new BorderLayout(0, 0));
+			
+			JPanel pnManagerList = new JPanel();
+			pnManageManager.add(pnManagerList,
+					BorderLayout.CENTER);
+			pnManagerList.setLayout(new BorderLayout(0, 0));
+			
+			JPanel pnUtilsManager = new JPanel();
+			pnUtilsManager.setBorder(new TitledBorder(
+					new LineBorder(new Color(0, 0, 0), 1, true),
+					"Qu\u1EA3n l\u00FD th\u00F4ng tin ng\u01B0\u1EDDi qu\u1EA3n l\u00FD",
+					TitledBorder.LEADING,
+					TitledBorder.TOP,
+					null,
+					new Color(0, 0, 0)));
+			pnManageManager.add(pnUtilsManager,
+					BorderLayout.SOUTH);
+			pnUtilsManager.setLayout(new BoxLayout(pnUtilsManager,
+									BoxLayout.Y_AXIS));
+			
+			
+			
+			JPanel pnManageQrtPos = new JPanel();
+			splitPane.setRightComponent(pnManageQrtPos);
+			pnManageQrtPos.setLayout(new BorderLayout(0, 0));
+			
+			JPanel pnQrtPosList = new JPanel();
+			pnManageQrtPos.add(pnQrtPosList);
+			pnQrtPosList.setLayout(new BorderLayout(0, 0));
+			
+			JPanel pnUtilsQrtPos = new JPanel();
+			pnUtilsQrtPos.setBorder(new TitledBorder(
+					new LineBorder(new Color(0, 0, 0), 1, true),
+					"Qu\u1EA3n l\u00FD \u0111\u1ECBa \u0111i\u1EC3m \u0111i\u1EC1u tr\u1ECB/ c\u00E1ch ly",
+					TitledBorder.LEADING,
+					TitledBorder.TOP,
+					null, null));
+			
+			pnManageQrtPos.add(pnUtilsQrtPos,
+								BorderLayout.SOUTH);
+			pnUtilsQrtPos.setLayout(new BoxLayout(pnUtilsQrtPos,
+									BoxLayout.Y_AXIS));
+			
+			
+			dtmManagerL = new DefaultTableModel();
+			dtmManagerL.addColumn("Tên tài khoản");
+			dtmManagerL.addColumn("Trạng thái");
+			tblManagerL = new JTable(dtmManagerL);
+			// Prevent manager edit this table
+			tblManagerL.setDefaultEditor(Object.class, null);
+			
+			JScrollPane scrPManagerL = new JScrollPane(
+					tblManagerL,
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			pnManagerList.setLayout(new BorderLayout());
+			pnManagerList.add(scrPManagerL, BorderLayout.CENTER);
+			
+			
+			dtmQrtPosL = new DefaultTableModel();
+			dtmQrtPosL.addColumn("Tên địa điểm");
+			dtmQrtPosL.addColumn("Sức chứa tối đa");
+			dtmQrtPosL.addColumn("Sức chứa hiện tại");
+			tblQrtPosL = new JTable(dtmQrtPosL);
+			// Prevent manager edit this table
+			tblQrtPosL.setDefaultEditor(Object.class, null);
+			
+			JScrollPane scrPQrtPosL = new JScrollPane(
+					tblQrtPosL,
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			pnQrtPosList.setLayout(new BorderLayout());
+			pnQrtPosList.add(scrPQrtPosL, BorderLayout.CENTER);
+			
+			
+			//btnAddQrtPos.setEnabled(false);
+			
+			
+			btnLockAcc = new JButton("Khoá tài khoản này");
+			btnLockAcc.setEnabled(false);
+			btnLockAcc.setAlignmentX(Component.CENTER_ALIGNMENT);
+			btnLockAcc.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+			pnUtilsManager.add(btnLockAcc);
+			
+			btnActivityHis = new JButton("Lịch sử hoạt động của tài khoản này");
+			btnActivityHis.setEnabled(false);
+			btnActivityHis.setAlignmentX(Component.CENTER_ALIGNMENT);
+			btnActivityHis.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+			pnUtilsManager.add(btnActivityHis);
+			
+			
+			btnAddManager = new JButton("Thêm một tài khoản người quản lý mới");
+			btnAddManager.setAlignmentX(Component.CENTER_ALIGNMENT);
+			btnAddManager.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+			pnUtilsManager.add(btnAddManager);
+			
+			JPanel panel = new JPanel();
+			pnUtilsManager.add(panel);
+			
+			pnQrtPosMngm = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnQrtPosMngm.getLayout();
+			pnUtilsQrtPos.add(pnQrtPosMngm);
+			
+			JLabel lblQrtName = new JLabel("Tên địa điểm điều trị/ cách ly:");
+			pnQrtPosMngm.add(lblQrtName);
+			
+			txtQrtName = new JTextField();
+			pnQrtPosMngm.add(txtQrtName);
+			txtQrtName.setColumns(10);
+			
+			JLabel lblCapacity = new JLabel("Sức chứa tối đa:");
+			pnQrtPosMngm.add(lblCapacity);
+			
+			txtCapacity = new JTextField();
+			pnQrtPosMngm.add(txtCapacity);
+			txtCapacity.setColumns(6);
+			
+			JLabel lblCurCapacity = new JLabel("Sức chứa hiện tại");
+			pnQrtPosMngm.add(lblCurCapacity);
+			
+			txtCurCapacity = new JTextField();
+			pnQrtPosMngm.add(txtCurCapacity);
+			txtCurCapacity.setColumns(6);
+			
+			btnAdd_Update = new JButton("Thêm");
+			pnQrtPosMngm.add(btnAdd_Update);
+			pnQrtPosMngm.setVisible(false);
+			JPanel pnQrtPosInteracter = new JPanel();
+			pnUtilsQrtPos.add(pnQrtPosInteracter);
+			
+			btnAddQrtPos = new JButton("Thêm địa điểm mới");
+			btnUpdateQrtPos = new JButton("Sửa địa điểm");
+			
+			pnQrtPosInteracter.add(btnAddQrtPos);
+			
+			pnQrtPosInteracter.add(btnUpdateQrtPos);
+			btnUpdateQrtPos.setEnabled(false);
 		
 	}
 	private void addEvents(){
