@@ -9,8 +9,12 @@ import javax.swing.JButton;
 import model.Server;
 
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
-
+import java.io.IOException;
 public class PaymentServer extends JFrame {
 
 	private JPanel contentPane;
@@ -50,49 +54,61 @@ public class PaymentServer extends JFrame {
 		contentPane.add(btnOnOff);
 	}
 	private void addEvents(){
-//		btnOnOff.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent arg0) {
-//				if(isOn){
-//					closeServer();
-//					isOn = false;
-//					btnOnOff.setText("Bật Server");
-//				}
-//				else{
-//					isOn = true;
-//					btnOnOff.setText("Tắt Server");
-//					
-//					Runnable startSV = new Runnable(){
-//						public void run(){
-//							try {
-//								server.stop = false;
-//								server.start(port);
-//
-//							} catch (IOException e) {
-//								// TODO Auto-generated catch block
-//								e.printStackTrace();
-//								isOn = false;
-//								btnOnOff.setText("Bật Server");
-//								System.out.println("Đã tắt server thành công");
-//							}
-//						}
-//					};
-//					Thread t = new Thread(startSV);
-//					t.start();
-//						
-//					
-//				}
-//			}
-//		});
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosing(WindowEvent arg0) {
-//				closeServer();
-//				
-//			}
-//		});
+		btnOnOff.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(isOn){
+					closeServer();
+					isOn = false;
+					btnOnOff.setText("Bật Server");
+				}
+				else{
+					isOn = true;
+					btnOnOff.setText("Tắt Server");
+					
+					Runnable startSV = new Runnable(){
+						public void run(){
+							try {
+								server.stop = false;
+								server.start(port);
+
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								isOn = false;
+								btnOnOff.setText("Bật Server");
+								System.out.println("Đã tắt server thành công");
+							}
+						}
+					};
+					Thread t = new Thread(startSV);
+					t.start();
+						
+					
+				}
+			}
+		});
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				closeServer();
+				
+			}
+		});
 	}
-	
+	private void closeServer(){
+		if(server.serverSocket != null){
+			try {
+				server.stop = true;
+				server.serverSocket.close();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				server.serverSocket = null;
+				System.out.println("Đã tắt server thành công");
+			}
+		}
+	}
 	private void setSSLProp(){
 		System.setProperty("javax.net.ssl.keyStore", pathToSSL);
 		System.setProperty("javax.net.ssl.keyStorePassword", pwd);
