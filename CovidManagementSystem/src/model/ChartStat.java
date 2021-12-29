@@ -78,6 +78,38 @@ public class ChartStat {
 		return dataset;
 	}
 
+	public CategoryDataset numberOfCuredPatients(int nDays) {
+		String curedPatientsStr = "";
+		String days = "";
+		try {
+			CallableStatement st = dbi.getStatement("{call countCuredPatientsLastNDay(?, ?, ?)}");
+			st.setInt(1, nDays);
+			st.registerOutParameter(2, Types.LONGVARCHAR);
+			st.registerOutParameter(3, Types.LONGVARCHAR);
+			st.execute();
+			
+			curedPatientsStr = st.getString("curedPatients");
+			days = st.getString("days");
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return createNumOfCuredPatientsDataset(curedPatientsStr, days);
+	}
+	private CategoryDataset createNumOfCuredPatientsDataset(String curedPatientsStr,String days){
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		String[] curedPatients = curedPatientsStr.split(";");
+		String[] date = days.split(";");
+		
+		for (int i = 0; i < curedPatients.length; i++) {
+			dataset.addValue(Integer.parseInt(curedPatients[i]), "Khỏi bệnh", date[i]);
+		}
+		
+		return dataset;
+	}
+	
+	
 	public PieDataset numOfPkgConsumed(){
 		String pkgNList = "";
 		String quanList = "";

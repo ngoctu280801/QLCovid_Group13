@@ -1,20 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
--- http://www.phpmyadmin.net
+-- version 5.1.1
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2021 at 05:18 AM
--- Server version: 5.6.21
--- PHP Version: 5.6.3
+-- Generation Time: Dec 29, 2021 at 11:32 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.4.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 CREATE DATABASE `qlcovid` CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `qlcovid`;
@@ -26,8 +27,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addPatient`(IN `usrNameIn` VARCHAR(20), IN `fName` VARCHAR(50), IN `DOB` DATE, IN `idCard` VARCHAR(12), IN `qrtPos` VARCHAR(50), IN `stateF` VARCHAR(2), IN `prov` VARCHAR(50), IN `townN` VARCHAR(50), IN `vlg` VARCHAR(50), IN `usrManager` VARCHAR(20), OUT `code` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addPatient` (IN `usrNameIn` VARCHAR(20), IN `fName` VARCHAR(50), IN `DOB` DATE, IN `idCard` VARCHAR(12), IN `qrtPos` VARCHAR(50), IN `stateF` VARCHAR(2), IN `prov` VARCHAR(50), IN `townN` VARCHAR(50), IN `vlg` VARCHAR(50), IN `usrManager` VARCHAR(20), OUT `code` INT)  BEGIN
 	declare id_acc int;
     declare id_prov int; 
     declare id_town int;
@@ -55,8 +55,7 @@ BEGIN
      
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addPkg`(IN `pkgName` VARCHAR(50), IN `limitPerPerson` VARCHAR(20), IN `dateLimitIn` DATE, IN `priceIn` VARCHAR(20), IN `usrManager` VARCHAR(20), OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addPkg` (IN `pkgName` VARCHAR(50), IN `limitPerPerson` VARCHAR(20), IN `dateLimitIn` DATE, IN `priceIn` VARCHAR(20), IN `usrManager` VARCHAR(20), OUT `code` INT)  NO SQL
 begin
     declare date_now date;
     declare priceDecimal decimal;
@@ -75,8 +74,7 @@ begin
     select 1 into code;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addRelatedPerson`(IN `idCard` VARCHAR(12), IN `listRPer` MEDIUMTEXT, OUT `code` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addRelatedPerson` (IN `idCard` VARCHAR(12), IN `listRPer` MEDIUMTEXT, OUT `code` INT)  BEGIN
 
 DECLARE _next varchar(20) DEFAULT NULL;
 DECLARE _nextlen INT DEFAULT NULL;
@@ -109,8 +107,7 @@ END LOOP;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `changeQrtPos`(IN `userManager` VARCHAR(20), IN `id_card_patient` VARCHAR(12), IN `currQrtPos` VARCHAR(50), IN `newQrtPosId` INT(10), IN `newQrtPos` VARCHAR(50), OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `changeQrtPos` (IN `userManager` VARCHAR(20), IN `id_card_patient` VARCHAR(12), IN `currQrtPos` VARCHAR(50), IN `newQrtPosId` INT(10), IN `newQrtPos` VARCHAR(50), OUT `code` INT)  NO SQL
 begin
         declare date_now date;
         declare priceDecimal decimal;
@@ -128,8 +125,41 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `countDebt`(OUT `idCardList` TEXT, OUT `debtList` TEXT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countCuredPatientsLastNDay` (IN `nDays` INT, OUT `curedPatients` TEXT, OUT `days` TEXT)  NO SQL
+begin
+	declare date_now date;
+    declare temp_date date;
+    declare i int;
+    declare cured int;
+    
+    set date_now = now();
+    set i = nDays - 1;
+    
+    select '' into curedPatients;
+    select '' into days;
+    
+    iters: LOOP
+    	if i < 0 then
+        	leave iters;
+        end if;
+        
+        set temp_date = date_now - interval i day;
+        
+        set cured = (select count(*) from activity_history where description like N'Chuyển % thành Khỏi bệnh' and date = temp_date);
+      	        
+        select concat(curedPatients, cured, ';') into curedPatients;
+        select concat(days, (select date_format(temp_date, '%d/%m')), ';') into days;
+        
+        set i = i - 1;
+    
+    
+    END LOOP;
+    
+	select LEFT(curedPatients, LENGTH(curedPatients) - 1) into curedPatients;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countDebt` (OUT `idCardList` TEXT, OUT `debtList` TEXT)  NO SQL
 begin
 declare idCard varchar(12);
 declare debt_temp decimal;
@@ -162,8 +192,7 @@ select LEFT(debtList, LENGTH(debtList) - 1) into debtList;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `countPatientLastNDay`(IN `nDays` INT, OUT `f0State` TEXT, OUT `f1State` TEXT, OUT `f2State` TEXT, OUT `f3State` TEXT, OUT `days` TEXT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countPatientLastNDay` (IN `nDays` INT, OUT `f0State` TEXT, OUT `f1State` TEXT, OUT `f2State` TEXT, OUT `f3State` TEXT, OUT `days` TEXT)  NO SQL
 begin
 	declare date_now date;
     declare temp_date date;
@@ -174,7 +203,7 @@ begin
     declare F3 int;
     
     set date_now = now();
-    set i = nDays;
+    set i = nDays - 1;
     
     select '' into f0State;
     select '' into f1State;
@@ -183,7 +212,7 @@ begin
     select '' into days;
     
     iters: LOOP
-    	if i <= 0 then
+    	if i < 0 then
         	leave iters;
         end if;
         
@@ -213,8 +242,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `countPkgConsumed`(OUT `pkgNList` TEXT, OUT `quanList` TEXT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countPkgConsumed` (OUT `pkgNList` TEXT, OUT `quanList` TEXT)  NO SQL
 begin
 
 DECLARE done INT DEFAULT FALSE;
@@ -254,8 +282,7 @@ select LEFT(quanList, LENGTH(quanList) - 1) into quanList;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delPkg`(IN `pkgNList` TEXT, IN `usrManager` VARCHAR(20), OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delPkg` (IN `pkgNList` TEXT, IN `usrManager` VARCHAR(20), OUT `code` INT)  NO SQL
 begin
     declare date_now date;
     DECLARE _next varchar(50) DEFAULT NULL;
@@ -288,8 +315,7 @@ END LOOP;
     
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `doTransaction`(IN `usrNameIn` VARCHAR(20), IN `creditIn` DECIMAL, OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `doTransaction` (IN `usrNameIn` VARCHAR(20), IN `creditIn` DECIMAL, OUT `code` INT)  NO SQL
 begin
 	declare from_id int;
     declare to_id int;
@@ -308,8 +334,7 @@ begin
 	select 1 into code;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPatients`()
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllPatients` ()  BEGIN
 	SELECT p.id, p.full_name, p.id_card, p.date_of_birth, prov.name, t.name, v.name, qrt.name, p.state 
  	FROM patients p join provinces prov on prov.id = p.id_prov 
     	join towns t on p.id_town = t.id 
@@ -317,8 +342,7 @@ BEGIN
         join quarantinepos qrt on qrt.id = p.id_pos;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getNextRelatedPersonByIdCard`(IN `idCard` VARCHAR(12))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getNextRelatedPersonByIdCard` (IN `idCard` VARCHAR(12))  BEGIN
 	SELECT p.full_name, p.id_card, p.date_of_birth, prov.name, t.name, v.name, p.state, qrt.name 
  	FROM related_persons rp join patients p on p.id = rp.id_related 
     	join provinces prov on p.id_prov = prov.id 
@@ -328,8 +352,7 @@ BEGIN
 	WHERE rp.id_patient = (select id from patients where id_card = idCard limit 1);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRelatedPersonBeforeByIdCard`(IN `idCard` VARCHAR(12))
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRelatedPersonBeforeByIdCard` (IN `idCard` VARCHAR(12))  NO SQL
 BEGIN
 	SELECT p.full_name, p.id_card, p.date_of_birth, prov.name, t.name, v.name, p.state, qrt.name 
  	FROM related_persons rp join patients p on p.id = rp.id_patient 
@@ -340,18 +363,14 @@ BEGIN
 	WHERE rp.id_related = (select id from patients where id_card = idCard limit 1);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getTowns`(
-	IN provName NVARCHAR(50)
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTowns` (IN `provName` NVARCHAR(50))  BEGIN
 	select t.name from provinces_towns pt join provinces p on pt.id_prov = p.id 
     		join towns t on t.id = pt.id_town 
     where p.name = provName
     order by t.name;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUsrInfoByIdCard`(IN `idCard` VARCHAR(12))
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUsrInfoByIdCard` (IN `idCard` VARCHAR(12))  BEGIN
 	select p.full_name, p.id_card, p.date_of_birth, v.name, t.name, prov.name, p.state, q.name, p.id
     from patients p join quarantinepos q on p.id_pos = q.id 
     	join provinces prov on prov.id = p.id_prov
@@ -361,11 +380,7 @@ BEGIN
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getVillages`(
-	IN provName NVARCHAR(50),
-	IN townName Nvarchar(50)
-)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getVillages` (IN `provName` NVARCHAR(50), IN `townName` NVARCHAR(50))  BEGIN
 	select v.name from towns_villages tv join villages v on tv.id_vlg = v.id 
     		join towns t on t.id = tv.id_town 
             join provinces_towns pt on pt.id_town = t.id
@@ -374,8 +389,7 @@ BEGIN
     order by v.name;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertIntoBoughtPkgHis`(IN `idCard` VARCHAR(12), IN `listPkgN` MEDIUMTEXT, IN `listQuan` MEDIUMTEXT, OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertIntoBoughtPkgHis` (IN `idCard` VARCHAR(12), IN `listPkgN` MEDIUMTEXT, IN `listQuan` MEDIUMTEXT, OUT `code` INT)  NO SQL
 BEGIN
 declare _nextPkgN varchar(50) default null;
 DECLARE _nextQuan varchar(20) DEFAULT NULL;
@@ -428,35 +442,13 @@ END LOOP;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `isFirstInit`()
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `isFirstInit` ()  BEGIN
 	SELECT count(*)
  	FROM accounts
 	WHERE id_permission = 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `test`(IN `num` INT, INOUT `str` TEXT)
-    NO SQL
-begin
-	if num != 1 then
-    	select concat(str, ' ', num) into str;
-        call test(num - 1, str);
-    end if;
-end$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `testt`()
-    NO SQL
-begin
-	declare state varchar(9);
-    set state = 'F0';
-	if '-1' < 'F1' then
-    	select concat('ok');
-        select RIGHT(state, 1);
-    end if;
-end$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePatientState`(IN `idCard` VARCHAR(12), IN `stateInt` INT, IN `idRelated` INT, IN `usrManager` VARCHAR(20), OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePatientState` (IN `idCard` VARCHAR(12), IN `stateInt` INT, IN `idRelated` INT, IN `usrManager` VARCHAR(20), OUT `code` INT)  NO SQL
 begin
 declare currentId int;
 declare currentState varchar(9);
@@ -595,8 +587,7 @@ select 1 into code;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePkg`(IN `pkgName` VARCHAR(50), IN `limitPerPerson` VARCHAR(20), IN `dateLimitIn` DATE, IN `priceIn` VARCHAR(20), IN `usrManager` VARCHAR(20), IN `newPkgN` VARCHAR(50), OUT `code` INT)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePkg` (IN `pkgName` VARCHAR(50), IN `limitPerPerson` VARCHAR(20), IN `dateLimitIn` DATE, IN `priceIn` VARCHAR(20), IN `usrManager` VARCHAR(20), IN `newPkgN` VARCHAR(50), OUT `code` INT)  NO SQL
 begin
         declare date_now date;
         declare priceDecimal decimal;
@@ -624,13 +615,13 @@ DELIMITER ;
 -- Table structure for table `accounts`
 --
 
-CREATE TABLE IF NOT EXISTS `accounts` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `accounts` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `usrname` varchar(20) CHARACTER SET ascii NOT NULL,
   `pwd` varchar(50) CHARACTER SET ascii NOT NULL,
   `id_permission` int(11) NOT NULL,
   `is_locked` tinyint(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `accounts`
@@ -674,14 +665,15 @@ INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VA
 (0000000050, 'af1', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000051, 'bf1', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000052, 'cf2', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
-(0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
+(0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000054, 'manager4', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 0, 0),
+(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
 
 --
 -- Triggers `accounts`
 --
-DELIMITER //
-CREATE TRIGGER `addNewDebtAndPaymentAcc` AFTER INSERT ON `accounts`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `addNewDebtAndPaymentAcc` AFTER INSERT ON `accounts` FOR EACH ROW BEGIN
     declare isExisted int;
     set isExisted = (select count(*) from accounts where id_permission = 1);
     
@@ -696,11 +688,10 @@ CREATE TRIGGER `addNewDebtAndPaymentAcc` AFTER INSERT ON `accounts`
     end if;
     
 END
-//
+$$
 DELIMITER ;
-DELIMITER //
-CREATE TRIGGER `isFirstLogin` AFTER UPDATE ON `accounts`
- FOR EACH ROW begin
+DELIMITER $$
+CREATE TRIGGER `isFirstLogin` AFTER UPDATE ON `accounts` FOR EACH ROW begin
 	declare isExisted int;
     set isExisted = (select count(*) from logon where id_patient = old.id );
     if old.id_permission = 2 and isExisted = 0 then
@@ -713,7 +704,7 @@ CREATE TRIGGER `isFirstLogin` AFTER UPDATE ON `accounts`
 
 
 end
-//
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -722,13 +713,13 @@ DELIMITER ;
 -- Table structure for table `activity_history`
 --
 
-CREATE TABLE IF NOT EXISTS `activity_history` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `activity_history` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `usr_manager` varchar(20) CHARACTER SET ascii NOT NULL,
   `date` date NOT NULL,
   `id_card_patient` varchar(12) DEFAULT NULL,
   `description` varchar(200) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `activity_history`
@@ -804,7 +795,13 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 (0000000084, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
 (0000000085, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1'),
 (0000000086, 'manager', '2021-11-26', '040111111', 'Chuyển 040111111 từ F3 thành F0'),
-(0000000087, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1');
+(0000000087, 'manager', '2021-11-26', '030111111', 'Chuyển 030111111 từ F2 thành F1'),
+(0000000088, 'manager', '2021-12-27', '010111111', 'Chuyển 010111111 từ F1 thành Khỏi bệnh'),
+(0000000089, 'manager', '2021-12-27', '999999999', 'Chuyển 999999999 từ F0 thành Khỏi bệnh'),
+(0000000090, 'manager', '2021-12-27', '123456789', 'Chuyển 123456789 từ F0 thành Khỏi bệnh'),
+(0000000091, 'manager', '2021-12-29', '211219922', 'Thêm 211219922 làm F0 tại Bệnh viện Bạch Mai'),
+(0000000092, 'manager', '2021-12-29', '444444444', 'Chuyển 444444444 từ F1 thành Khỏi bệnh'),
+(0000000093, 'manager', '2021-12-29', '210119999', 'Chuyển 210119999 từ F2 thành Khỏi bệnh');
 
 -- --------------------------------------------------------
 
@@ -812,14 +809,14 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 -- Table structure for table `bought_pkg_history`
 --
 
-CREATE TABLE IF NOT EXISTS `bought_pkg_history` (
-`id` int(10) unsigned zerofill NOT NULL,
-  `id_patient` int(10) unsigned zerofill NOT NULL,
-  `id_pkg` int(10) unsigned zerofill NOT NULL,
-  `quantity` int(10) unsigned NOT NULL,
+CREATE TABLE `bought_pkg_history` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_pkg` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `quantity` int(10) UNSIGNED NOT NULL,
   `date` date NOT NULL,
-  `price` decimal(10,0) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+  `price` decimal(10,0) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `bought_pkg_history`
@@ -836,9 +833,8 @@ INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `dat
 --
 -- Triggers `bought_pkg_history`
 --
-DELIMITER //
-CREATE TRIGGER `checkDebtWhenBuyPkg` AFTER INSERT ON `bought_pkg_history`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `checkDebtWhenBuyPkg` AFTER INSERT ON `bought_pkg_history` FOR EACH ROW BEGIN
 	declare credit decimal;
     set credit = (select debt from debt where id_patient = new.id_patient limit 1);
     set credit = credit + new.price;
@@ -846,7 +842,7 @@ CREATE TRIGGER `checkDebtWhenBuyPkg` AFTER INSERT ON `bought_pkg_history`
     update debt set debt = credit where id_patient = new.id_patient;
 
 END
-//
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -855,10 +851,10 @@ DELIMITER ;
 -- Table structure for table `debt`
 --
 
-CREATE TABLE IF NOT EXISTS `debt` (
-`id_patient` int(10) unsigned zerofill NOT NULL,
-  `debt` int(10) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+CREATE TABLE `debt` (
+  `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `debt` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `debt`
@@ -897,7 +893,8 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000050, 0),
 (0000000051, 0),
 (0000000052, 0),
-(0000000053, 0);
+(0000000053, 0),
+(0000000055, 0);
 
 -- --------------------------------------------------------
 
@@ -905,8 +902,8 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 -- Table structure for table `logon`
 --
 
-CREATE TABLE IF NOT EXISTS `logon` (
-  `id_patient` int(10) unsigned zerofill NOT NULL
+CREATE TABLE `logon` (
+  `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -925,13 +922,13 @@ INSERT INTO `logon` (`id_patient`) VALUES
 -- Table structure for table `management_history`
 --
 
-CREATE TABLE IF NOT EXISTS `management_history` (
-`id` int(10) unsigned zerofill NOT NULL,
-  `id_patient` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `management_history` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL,
   `date` date NOT NULL,
   `state` varchar(9) NOT NULL,
-  `id_qrt_pos` int(10) unsigned zerofill NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
+  `id_qrt_pos` int(10) UNSIGNED ZEROFILL NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `management_history`
@@ -997,7 +994,13 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 (0000000083, 0000000053, '2021-11-26', 'F3', 0000000001),
 (0000000084, 0000000052, '2021-11-26', 'F2', 0000000001),
 (0000000085, 0000000053, '2021-11-26', 'F0', 0000000001),
-(0000000086, 0000000052, '2021-11-26', 'F1', 0000000001);
+(0000000086, 0000000052, '2021-11-26', 'F1', 0000000001),
+(0000000087, 0000000050, '2021-12-27', 'Khỏi bệnh', 0000000001),
+(0000000088, 0000000028, '2021-12-27', 'Khỏi bệnh', 0000000001),
+(0000000089, 0000000007, '2021-12-27', 'Khỏi bệnh', 0000000001),
+(0000000090, 0000000055, '2021-12-29', 'F0', 0000000001),
+(0000000091, 0000000019, '2021-12-29', 'Khỏi bệnh', 0000000001),
+(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001);
 
 -- --------------------------------------------------------
 
@@ -1005,21 +1008,21 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 -- Table structure for table `necessary_packages`
 --
 
-CREATE TABLE IF NOT EXISTS `necessary_packages` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `necessary_packages` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `pkg_name` varchar(50) NOT NULL,
-  `limit_quantity_per_person` int(10) unsigned NOT NULL,
+  `limit_quantity_per_person` int(10) UNSIGNED NOT NULL,
   `date_limit` date NOT NULL,
-  `price` decimal(10,0) unsigned NOT NULL,
-  `is_deleted` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+  `price` decimal(10,0) UNSIGNED NOT NULL,
+  `is_deleted` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `necessary_packages`
 --
 
 INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`, `date_limit`, `price`, `is_deleted`) VALUES
-(0000000002, 'PACKAGE TEST', 3, '2021-11-14', '19000', 0),
+(0000000002, 'PACKAGE TEST', 3, '2021-12-14', '19000', 0),
 (0000000003, 'PACKAGE TEST2', 5, '2021-11-16', '69000', 0),
 (0000000004, 'PACKAGE TEST3', 3, '2021-11-16', '19000', 1),
 (0000000005, 'PACKAGE TEST4', 6, '2021-11-16', '19000', 1),
@@ -1031,16 +1034,16 @@ INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`,
 -- Table structure for table `patients`
 --
 
-CREATE TABLE IF NOT EXISTS `patients` (
-  `id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `patients` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `full_name` varchar(50) NOT NULL,
   `id_card` varchar(12) NOT NULL,
   `date_of_birth` date NOT NULL,
-  `id_prov` int(10) unsigned zerofill NOT NULL,
-  `id_town` int(10) unsigned zerofill NOT NULL,
-  `id_vlg` int(10) unsigned zerofill NOT NULL,
+  `id_prov` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_town` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_vlg` int(10) UNSIGNED ZEROFILL NOT NULL,
   `state` varchar(9) NOT NULL,
-  `id_pos` int(10) unsigned zerofill NOT NULL
+  `id_pos` int(10) UNSIGNED ZEROFILL NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1048,15 +1051,15 @@ CREATE TABLE IF NOT EXISTS `patients` (
 --
 
 INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`, `id_town`, `id_vlg`, `state`, `id_pos`) VALUES
-(0000000007, 'OKLA', '123456789', '1991-03-12', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000007, 'OKLA', '123456789', '1991-03-12', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000013, 'Test cái procedure', '987651234', '2012-12-31', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000014, 'Lại là Testt', '222222222', '2012-12-31', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
-(0000000019, 'TEST4', '444444444', '1992-12-13', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000019, 'TEST4', '444444444', '1992-12-13', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000021, 'Đây Là Test5', '555111555', '1991-07-09', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
 (0000000023, 'Test test6', '444455555', '1992-11-13', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000024, 'ĐÂY LÀ TEST 7', '111111119', '1991-11-11', 0000000001, 0000000001, 0000000001, 'F2', 0000000001),
 (0000000025, 'ĐÂY LÀ NGTEST', '987123546', '1991-11-11', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000028, 'TESTTTTTTTTTT', '999999999', '2000-09-09', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000028, 'TESTTTTTTTTTT', '999999999', '2000-09-09', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000029, 'ĐÂY LÀ TEST', '101010101', '2000-10-10', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000030, 'TEST THỨ MƯỜI MỘT', '111111199', '1911-11-11', 0000000001, 0000000001, 0000000001, 'F0', 0000000002),
 (0000000031, 'ĐÂY LÀ TEST MƯỜI HAI', '121212121', '1992-12-12', 0000000001, 0000000001, 0000000001, 'F0', 0000000002),
@@ -1068,7 +1071,7 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000038, 'ĐÂY LÀ TEST MƯỜI TÁM', '180819988', '1998-08-18', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000039, 'ĐÂY LÀ TEST MƯỜI CHÍN', '190119919', '1991-01-19', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000041, 'ĐÂY LÀ TEST HAI MỐT', '210119999', '1999-01-21', 0000000001, 0000000001, 0000000001, 'F2', 0000000001),
+(0000000041, 'ĐÂY LÀ TEST HAI MỐT', '210119999', '1999-01-21', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000042, 'TÚ', '010120011', '2001-01-01', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000043, 'VĂN', '020120011', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000044, 'HẢI', '030120011', '2001-01-03', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
@@ -1077,17 +1080,17 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000047, 'TÚ F0', '010120012', '2001-01-01', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000048, 'VĂN F1', '020120012', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
 (0000000049, 'HẢI F0', '030120012', '2001-01-03', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000050, 'A F1', '010111111', '1111-01-01', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
+(0000000050, 'A F1', '010111111', '1111-01-01', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000051, 'B F1', '020111111', '1111-01-02', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
 (0000000052, 'C F2 LIÊN QUAN A VÀ B', '030111111', '1111-01-03', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
-(0000000053, 'D F3 LIÊN QUAN C', '040111111', '1111-01-04', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
+(0000000053, 'D F3 LIÊN QUAN C', '040111111', '1111-01-04', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000055, 'TEST THỨ HAI BA', '211219922', '1992-12-21', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
 
 --
 -- Triggers `patients`
 --
-DELIMITER //
-CREATE TRIGGER `addMngmHis_insert` AFTER INSERT ON `patients`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `addMngmHis_insert` AFTER INSERT ON `patients` FOR EACH ROW BEGIN
 	
  declare date_now date;
 set date_now = now();
@@ -1095,11 +1098,10 @@ set date_now = now();
  values (new.id, date_now, new.state, new.id_pos);
 
 END
-//
+$$
 DELIMITER ;
-DELIMITER //
-CREATE TRIGGER `addMngmHis_update` AFTER UPDATE ON `patients`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `addMngmHis_update` AFTER UPDATE ON `patients` FOR EACH ROW BEGIN
     	declare date_now date;
         set date_now = now();
         if new.state != old.state or new.id_pos != old.id_pos then
@@ -1107,11 +1109,10 @@ CREATE TRIGGER `addMngmHis_update` AFTER UPDATE ON `patients`
         VALUES (new.id, date_now, new.state, new.id_pos);
     	end if;
 END
-//
+$$
 DELIMITER ;
-DELIMITER //
-CREATE TRIGGER `checkWhenAddPatient` BEFORE INSERT ON `patients`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `checkWhenAddPatient` BEFORE INSERT ON `patients` FOR EACH ROW BEGIN
 declare cur_cap int;
 declare max_cap int;
 set cur_cap = (select current_capacity from quarantinepos where id = new.id_pos limit 1);
@@ -1124,7 +1125,7 @@ if cur_cap <= max_cap then
 end if;
 
 END
-//
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -1133,8 +1134,8 @@ DELIMITER ;
 -- Table structure for table `payment_acc`
 --
 
-CREATE TABLE IF NOT EXISTS `payment_acc` (
-  `id_acc` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `payment_acc` (
+  `id_acc` int(10) UNSIGNED ZEROFILL NOT NULL,
   `balance` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1158,7 +1159,8 @@ INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
 (0000000050, '10000000'),
 (0000000051, '10000000'),
 (0000000052, '10000000'),
-(0000000053, '10000000');
+(0000000053, '10000000'),
+(0000000055, '10000000');
 
 -- --------------------------------------------------------
 
@@ -1166,10 +1168,10 @@ INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
 -- Table structure for table `provinces`
 --
 
-CREATE TABLE IF NOT EXISTS `provinces` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `provinces` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `provinces`
@@ -1186,9 +1188,9 @@ INSERT INTO `provinces` (`id`, `name`) VALUES
 -- Table structure for table `provinces_towns`
 --
 
-CREATE TABLE IF NOT EXISTS `provinces_towns` (
-  `id_prov` int(10) unsigned zerofill NOT NULL,
-  `id_town` int(10) unsigned zerofill NOT NULL
+CREATE TABLE `provinces_towns` (
+  `id_prov` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_town` int(10) UNSIGNED ZEROFILL NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1204,19 +1206,19 @@ INSERT INTO `provinces_towns` (`id_prov`, `id_town`) VALUES
 -- Table structure for table `quarantinepos`
 --
 
-CREATE TABLE IF NOT EXISTS `quarantinepos` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `quarantinepos` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `name` varchar(50) NOT NULL,
-  `capacity` int(10) unsigned zerofill NOT NULL,
-  `current_capacity` int(10) unsigned zerofill NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+  `capacity` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `current_capacity` int(10) UNSIGNED ZEROFILL NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `quarantinepos`
 --
 
 INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUES
-(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000924),
+(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000925),
 (0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104);
 
 -- --------------------------------------------------------
@@ -1225,9 +1227,9 @@ INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUE
 -- Table structure for table `related_persons`
 --
 
-CREATE TABLE IF NOT EXISTS `related_persons` (
-  `id_patient` int(10) unsigned zerofill NOT NULL,
-  `id_related` int(10) unsigned zerofill NOT NULL
+CREATE TABLE `related_persons` (
+  `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_related` int(10) UNSIGNED ZEROFILL NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1235,22 +1237,16 @@ CREATE TABLE IF NOT EXISTS `related_persons` (
 --
 
 INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
-(0000000014, 0000000007),
-(0000000019, 0000000007),
 (0000000014, 0000000013),
-(0000000019, 0000000013),
-(0000000024, 0000000019),
-(0000000041, 0000000019),
-(0000000024, 0000000021),
-(0000000046, 0000000021),
 (0000000021, 0000000023),
-(0000000050, 0000000030),
-(0000000051, 0000000030),
+(0000000024, 0000000021),
 (0000000035, 0000000034),
 (0000000036, 0000000034),
 (0000000044, 0000000043),
 (0000000045, 0000000044),
+(0000000046, 0000000021),
 (0000000048, 0000000049),
+(0000000051, 0000000030),
 (0000000052, 0000000053);
 
 -- --------------------------------------------------------
@@ -1259,10 +1255,10 @@ INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
 -- Table structure for table `towns`
 --
 
-CREATE TABLE IF NOT EXISTS `towns` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `towns` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `towns`
@@ -1277,9 +1273,9 @@ INSERT INTO `towns` (`id`, `name`) VALUES
 -- Table structure for table `towns_villages`
 --
 
-CREATE TABLE IF NOT EXISTS `towns_villages` (
-  `id_town` int(10) unsigned zerofill NOT NULL,
-  `id_vlg` int(10) unsigned zerofill NOT NULL
+CREATE TABLE `towns_villages` (
+  `id_town` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `id_vlg` int(10) UNSIGNED ZEROFILL NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1295,15 +1291,15 @@ INSERT INTO `towns_villages` (`id_town`, `id_vlg`) VALUES
 -- Table structure for table `transaction_history`
 --
 
-CREATE TABLE IF NOT EXISTS `transaction_history` (
-`id` int(10) unsigned zerofill NOT NULL,
-  `from_id_acc` int(10) unsigned zerofill NOT NULL,
-  `to_id_acc` int(10) unsigned zerofill NOT NULL,
-  `credit` decimal(10,0) unsigned NOT NULL,
-  `date_trans` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `remaining_debt` decimal(10,0) unsigned NOT NULL,
-  `remaining_balance` decimal(10,0) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+CREATE TABLE `transaction_history` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `from_id_acc` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `to_id_acc` int(10) UNSIGNED ZEROFILL NOT NULL,
+  `credit` decimal(10,0) UNSIGNED NOT NULL,
+  `date_trans` timestamp NOT NULL DEFAULT current_timestamp(),
+  `remaining_debt` decimal(10,0) UNSIGNED NOT NULL,
+  `remaining_balance` decimal(10,0) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `transaction_history`
@@ -1318,9 +1314,8 @@ INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `
 --
 -- Triggers `transaction_history`
 --
-DELIMITER //
-CREATE TRIGGER `updateBalanceAndDebt` BEFORE INSERT ON `transaction_history`
- FOR EACH ROW begin
+DELIMITER $$
+CREATE TRIGGER `updateBalanceAndDebt` BEFORE INSERT ON `transaction_history` FOR EACH ROW begin
 	update payment_acc 
     set balance = balance - new.credit 
     where id_acc = new.from_id_acc;
@@ -1338,7 +1333,7 @@ CREATE TRIGGER `updateBalanceAndDebt` BEFORE INSERT ON `transaction_history`
 
 
 end
-//
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -1347,10 +1342,10 @@ DELIMITER ;
 -- Table structure for table `villages`
 --
 
-CREATE TABLE IF NOT EXISTS `villages` (
-`id` int(10) unsigned zerofill NOT NULL,
+CREATE TABLE `villages` (
+  `id` int(10) UNSIGNED ZEROFILL NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `villages`
@@ -1367,103 +1362,121 @@ INSERT INTO `villages` (`id`, `name`) VALUES
 -- Indexes for table `accounts`
 --
 ALTER TABLE `accounts`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `usrname` (`usrname`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `usrname` (`usrname`);
 
 --
 -- Indexes for table `activity_history`
 --
 ALTER TABLE `activity_history`
- ADD PRIMARY KEY (`id`), ADD KEY `FK_actHis_patients` (`id_card_patient`), ADD KEY `fk_acthis_account` (`usr_manager`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_actHis_patients` (`id_card_patient`),
+  ADD KEY `fk_acthis_account` (`usr_manager`);
 
 --
 -- Indexes for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_bpkghis_patient` (`id_patient`), ADD KEY `fk_bpkghis_pkg` (`id_pkg`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_bpkghis_patient` (`id_patient`),
+  ADD KEY `fk_bpkghis_pkg` (`id_pkg`);
 
 --
 -- Indexes for table `debt`
 --
 ALTER TABLE `debt`
- ADD PRIMARY KEY (`id_patient`);
+  ADD PRIMARY KEY (`id_patient`);
 
 --
 -- Indexes for table `logon`
 --
 ALTER TABLE `logon`
- ADD PRIMARY KEY (`id_patient`);
+  ADD PRIMARY KEY (`id_patient`);
 
 --
 -- Indexes for table `management_history`
 --
 ALTER TABLE `management_history`
- ADD PRIMARY KEY (`id`), ADD KEY `fk_mgmthis_patient` (`id_patient`), ADD KEY `fk_mgmthis_qrtpos` (`id_qrt_pos`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_mgmthis_patient` (`id_patient`),
+  ADD KEY `fk_mgmthis_qrtpos` (`id_qrt_pos`);
 
 --
 -- Indexes for table `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `patients`
 --
 ALTER TABLE `patients`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `id_card` (`id_card`), ADD KEY `fk_patients_qrtpos` (`id_pos`), ADD KEY `fk_patients_prov` (`id_prov`), ADD KEY `fk_patients_town` (`id_town`), ADD KEY `fk_patients_vlg` (`id_vlg`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_card` (`id_card`),
+  ADD KEY `fk_patients_qrtpos` (`id_pos`),
+  ADD KEY `fk_patients_prov` (`id_prov`),
+  ADD KEY `fk_patients_town` (`id_town`),
+  ADD KEY `fk_patients_vlg` (`id_vlg`);
 
 --
 -- Indexes for table `payment_acc`
 --
 ALTER TABLE `payment_acc`
- ADD PRIMARY KEY (`id_acc`);
+  ADD PRIMARY KEY (`id_acc`);
 
 --
 -- Indexes for table `provinces`
 --
 ALTER TABLE `provinces`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
- ADD PRIMARY KEY (`id_prov`,`id_town`), ADD KEY `fk_provtown_town` (`id_town`);
+  ADD PRIMARY KEY (`id_prov`,`id_town`),
+  ADD KEY `fk_provtown_town` (`id_town`);
 
 --
 -- Indexes for table `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `name` (`name`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `related_persons`
 --
 ALTER TABLE `related_persons`
- ADD PRIMARY KEY (`id_patient`,`id_related`), ADD KEY `fk_rltper_patient_to` (`id_related`);
+  ADD PRIMARY KEY (`id_patient`,`id_related`),
+  ADD KEY `fk_rltper_patient_to` (`id_related`);
 
 --
 -- Indexes for table `towns`
 --
 ALTER TABLE `towns`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `towns_villages`
 --
 ALTER TABLE `towns_villages`
- ADD PRIMARY KEY (`id_town`,`id_vlg`), ADD KEY `fk_townvlg_vlg` (`id_vlg`);
+  ADD PRIMARY KEY (`id_town`,`id_vlg`),
+  ADD KEY `fk_townvlg_vlg` (`id_vlg`);
 
 --
 -- Indexes for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
- ADD PRIMARY KEY (`id`), ADD KEY `FK_transHis_fromIDAcc` (`from_id_acc`), ADD KEY `FK_transHis_toIDAcc` (`to_id_acc`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_transHis_fromIDAcc` (`from_id_acc`),
+  ADD KEY `FK_transHis_toIDAcc` (`to_id_acc`);
 
 --
 -- Indexes for table `villages`
 --
 ALTER TABLE `villages`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1473,57 +1486,68 @@ ALTER TABLE `villages`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
 --
 -- AUTO_INCREMENT for table `activity_history`
 --
 ALTER TABLE `activity_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=88;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+
 --
 -- AUTO_INCREMENT for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
 --
 -- AUTO_INCREMENT for table `debt`
 --
 ALTER TABLE `debt`
-MODIFY `id_patient` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
+  MODIFY `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
 --
 -- AUTO_INCREMENT for table `management_history`
 --
 ALTER TABLE `management_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=87;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+
 --
 -- AUTO_INCREMENT for table `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
 -- AUTO_INCREMENT for table `provinces`
 --
 ALTER TABLE `provinces`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `towns`
 --
 ALTER TABLE `towns`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `villages`
 --
 ALTER TABLE `villages`
-MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- Constraints for dumped tables
 --
@@ -1532,78 +1556,79 @@ MODIFY `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- Constraints for table `activity_history`
 --
 ALTER TABLE `activity_history`
-ADD CONSTRAINT `FK_actHis_patients` FOREIGN KEY (`id_card_patient`) REFERENCES `patients` (`id_card`),
-ADD CONSTRAINT `fk_acthis_account` FOREIGN KEY (`usr_manager`) REFERENCES `accounts` (`usrname`);
+  ADD CONSTRAINT `FK_actHis_patients` FOREIGN KEY (`id_card_patient`) REFERENCES `patients` (`id_card`),
+  ADD CONSTRAINT `fk_acthis_account` FOREIGN KEY (`usr_manager`) REFERENCES `accounts` (`usrname`);
 
 --
 -- Constraints for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
-ADD CONSTRAINT `fk_bpkghis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
-ADD CONSTRAINT `fk_bpkghis_pkg` FOREIGN KEY (`id_pkg`) REFERENCES `necessary_packages` (`id`);
+  ADD CONSTRAINT `fk_bpkghis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
+  ADD CONSTRAINT `fk_bpkghis_pkg` FOREIGN KEY (`id_pkg`) REFERENCES `necessary_packages` (`id`);
 
 --
 -- Constraints for table `debt`
 --
 ALTER TABLE `debt`
-ADD CONSTRAINT `debt_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
+  ADD CONSTRAINT `debt_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
 -- Constraints for table `logon`
 --
 ALTER TABLE `logon`
-ADD CONSTRAINT `FK_logon_acc` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
+  ADD CONSTRAINT `FK_logon_acc` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
 -- Constraints for table `management_history`
 --
 ALTER TABLE `management_history`
-ADD CONSTRAINT `fk_mgmthis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
-ADD CONSTRAINT `fk_mgmthis_qrtpos` FOREIGN KEY (`id_qrt_pos`) REFERENCES `quarantinepos` (`id`);
+  ADD CONSTRAINT `fk_mgmthis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
+  ADD CONSTRAINT `fk_mgmthis_qrtpos` FOREIGN KEY (`id_qrt_pos`) REFERENCES `quarantinepos` (`id`);
 
 --
 -- Constraints for table `patients`
 --
 ALTER TABLE `patients`
-ADD CONSTRAINT `fk_patients_acc` FOREIGN KEY (`id`) REFERENCES `accounts` (`id`),
-ADD CONSTRAINT `fk_patients_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
-ADD CONSTRAINT `fk_patients_qrtpos` FOREIGN KEY (`id_pos`) REFERENCES `quarantinepos` (`id`),
-ADD CONSTRAINT `fk_patients_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
-ADD CONSTRAINT `fk_patients_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
+  ADD CONSTRAINT `fk_patients_acc` FOREIGN KEY (`id`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `fk_patients_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
+  ADD CONSTRAINT `fk_patients_qrtpos` FOREIGN KEY (`id_pos`) REFERENCES `quarantinepos` (`id`),
+  ADD CONSTRAINT `fk_patients_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
+  ADD CONSTRAINT `fk_patients_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
 -- Constraints for table `payment_acc`
 --
 ALTER TABLE `payment_acc`
-ADD CONSTRAINT `FK_paymentAcc_Accounts` FOREIGN KEY (`id_acc`) REFERENCES `accounts` (`id`);
+  ADD CONSTRAINT `FK_paymentAcc_Accounts` FOREIGN KEY (`id_acc`) REFERENCES `accounts` (`id`);
 
 --
 -- Constraints for table `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
-ADD CONSTRAINT `fk_provtown_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
-ADD CONSTRAINT `fk_provtown_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`);
+  ADD CONSTRAINT `fk_provtown_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
+  ADD CONSTRAINT `fk_provtown_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`);
 
 --
 -- Constraints for table `related_persons`
 --
 ALTER TABLE `related_persons`
-ADD CONSTRAINT `fk_rltper_patient_from` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
-ADD CONSTRAINT `fk_rltper_patient_to` FOREIGN KEY (`id_related`) REFERENCES `patients` (`id`);
+  ADD CONSTRAINT `fk_rltper_patient_from` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
+  ADD CONSTRAINT `fk_rltper_patient_to` FOREIGN KEY (`id_related`) REFERENCES `patients` (`id`);
 
 --
 -- Constraints for table `towns_villages`
 --
 ALTER TABLE `towns_villages`
-ADD CONSTRAINT `fk_townvlg_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
-ADD CONSTRAINT `fk_townvlg_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
+  ADD CONSTRAINT `fk_townvlg_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
+  ADD CONSTRAINT `fk_townvlg_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
 -- Constraints for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-ADD CONSTRAINT `FK_transHis_fromIDAcc` FOREIGN KEY (`from_id_acc`) REFERENCES `accounts` (`id`),
-ADD CONSTRAINT `FK_transHis_toIDAcc` FOREIGN KEY (`to_id_acc`) REFERENCES `accounts` (`id`);
+  ADD CONSTRAINT `FK_transHis_fromIDAcc` FOREIGN KEY (`from_id_acc`) REFERENCES `accounts` (`id`),
+  ADD CONSTRAINT `FK_transHis_toIDAcc` FOREIGN KEY (`to_id_acc`) REFERENCES `accounts` (`id`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
