@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2021 at 11:32 AM
+-- Generation Time: Jan 02, 2022 at 10:26 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.26
 
@@ -122,6 +122,39 @@ begin
         insert into activity_history(usr_manager, date, id_card_patient, description) 
         values (userManager, date_now, id_card_patient, concat(N'Chuyển nơi điều trị của ', id_card_patient, N' từ ', currQrtPos, N', đến ', newQrtPos));
 		select 1 into code;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `countChangedStatePatientsLastNDay` (IN `nDays` INT, OUT `changedStatePatients` TEXT, OUT `days` TEXT)  begin
+	declare date_now date;
+    declare temp_date date;
+    declare i int;
+    declare changed int;
+    
+    set date_now = now();
+    set i = nDays - 1;
+    
+    select '' into changedStatePatients;
+    select '' into days;
+    
+    iters: LOOP
+    	if i < 0 then
+        	leave iters;
+        end if;
+        
+        set temp_date = date_now - interval i day;
+        
+        set changed = (select count(*) from activity_history where description like N'Chuyển% thành %' and date = temp_date);
+      	        
+        select concat(changedStatePatients, changed, ';') into changedStatePatients;
+        select concat(days, (select date_format(temp_date, '%d/%m')), ';') into days;
+        
+        set i = i - 1;
+    
+    
+    END LOOP;
+    
+	select LEFT(changedStatePatients, LENGTH(changedStatePatients) - 1) into changedStatePatients;
 
 end$$
 

@@ -95,6 +95,7 @@ public class StatisticView extends JDialog {
 				}
 			}
 		});
+		
 		btnNumOfCuredPatients.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -110,6 +111,21 @@ public class StatisticView extends JDialog {
 			}
 		});
 
+		btnNumOfChangedStatePatients.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(btnNumOfChangedStatePatients.isEnabled()){
+					Runnable getChart = new Runnable(){
+						public void run(){
+							getNumOfChangedStatePatients();
+						}
+					};
+					Thread t = new Thread(getChart);
+					t.start();
+				}
+			}
+		});
+		
 		btnNumOfPkgConsumed.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -163,7 +179,18 @@ public class StatisticView extends JDialog {
 		btnNumOfPkgConsumed.setEnabled(true);
 		btnDebt.setEnabled(true);
 	}
-
+	private void getNumOfChangedStatePatients(){
+		disableBtn();
+		JFreeChart chart = chartStat.createBarChart(
+				"Số lượng người chuyển trạng thái trong 14 ngày vừa qua", 
+				"Ngày", "Số lượng (người)", chartStat.numberOfChangedStatePatients(14));
+		rePaint(chart);
+		
+		btnNumOfCuredPatients.setEnabled(true);
+		btnNumOfPersonByTime.setEnabled(true);
+		btnNumOfPkgConsumed.setEnabled(true);
+		btnDebt.setEnabled(true);
+	}
 	private void getNumOfPkgConsumed(){
 		disableBtn();
 		
