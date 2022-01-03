@@ -37,6 +37,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Vector;
 
@@ -310,13 +311,22 @@ public class Packages extends JDialog {
 						Thread t = new Thread(runUpdate);
 						t.start();
 					}
-					else{
+					else if(btnAddPkg.getText().equals("Thêm")){
 						Runnable runAdd = new Runnable(){
+							public void run(){
+								addPkg();
+							}
+						};
+						Thread t = new Thread(runAdd);
+						t.start();
+					}
+					else{
+						Runnable runPay = new Runnable(){
 							public void run(){
 								payPkg();
 							}
 						};
-						Thread t = new Thread(runAdd);
+						Thread t = new Thread(runPay);
 						t.start();
 
 					}
