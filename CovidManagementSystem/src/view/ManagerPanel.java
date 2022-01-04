@@ -644,58 +644,59 @@ public class ManagerPanel extends JFrame {
 	}
 	
 	private void updateState(String idCard, String newState, String usrManager){
-//		int stateInt = stateToInt(newState);
-//		CallableStatement st = null;
-//		Statement[] stmt = new Statement[] {null};
-//		int code = -1;
-//		try {
-//			ResultSet rs = dbi.query("SET @@session.max_sp_recursion_depth = 5;", stmt);
-//			st = dbi.getStatement("{call updatePatientState(?, ?, ?, ?, ?)}");
-//			st.registerOutParameter(5, Types.INTEGER);
-//			st.setString(1, idCard);
-//			st.setInt(2, stateInt);
-//			st.setInt(3, -1);
-//			st.setString(4, usrManager);
-//			st.execute();
-//			code  = st.getInt("code");
-//			
-//			if(code != -1){
-//				
-//				JOptionPane.showMessageDialog(null, "Chuyển trạng thái thành công");
-//			}
-//			else{
-//				JOptionPane.showMessageDialog(null, "Chuyển trạng thái thất bại. Vui lòng thử lại sau");
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} finally{
-//			try {
-//				SwingUtilities.invokeLater(new Runnable() {
-//					public void run() {
-//						pnChangeState.setVisible(false);
-//						btnPkgManage.setEnabled(true);
-//						btnStat.setEnabled(true);
-//						btnFind.setEnabled(true);
-//						btnAddNew.setEnabled(true);
-//						btnRPer.setEnabled(true);
-//						btnMHistory.setEnabled(true);
-//						btnChangePwd.setEnabled(true);
-//						tblPatients.setEnabled(true);
-//						btnShowChangeQrtPos.setEnabled(true);
-//						cbState.setSelectedIndex(0);
-//						btnShowChangeState.setText("Chuyển trạng thái");
-//						dtm.setRowCount(0);
-//						getDataFromDb();
-//					}
-//				});
-//				if(st != null){
-//					st.close();}
-//				stmt[0].close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
+
+		int stateInt = stateToInt(newState);
+		CallableStatement st = null;
+		Statement[] stmt = new Statement[] {null};
+		int code = -1;
+		try {
+			ResultSet rs = dbi.query("SET @@session.max_sp_recursion_depth = 5;", stmt);
+			st = dbi.getStatement("{call updatePatientState(?, ?, ?, ?, ?)}");
+			st.registerOutParameter(5, Types.INTEGER);
+			st.setString(1, idCard);
+			st.setInt(2, stateInt);
+			st.setInt(3, -1);
+			st.setString(4, usrManager);
+			st.execute();
+			code  = st.getInt("code");
+			
+			if(code != -1){
+				
+				JOptionPane.showMessageDialog(null, "Chuyển trạng thái thành công");
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Chuyển trạng thái thất bại. Vui lòng thử lại sau");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			try {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						pnChangeState.setVisible(false);
+						btnPkgManage.setEnabled(true);
+						btnStat.setEnabled(true);
+						btnFind.setEnabled(true);
+						btnAddNew.setEnabled(true);
+						btnRPer.setEnabled(true);
+						btnMHistory.setEnabled(true);
+						btnChangePwd.setEnabled(true);
+						tblPatients.setEnabled(true);
+						btnShowChangeQrtPos.setEnabled(true);
+						cbState.setSelectedIndex(0);
+						btnShowChangeState.setText("Chuyển trạng thái");
+						dtm.setRowCount(0);
+						getDataFromDb();
+					}
+				});
+				if(st != null){
+					st.close();}
+				stmt[0].close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	private int stateToInt(String state){
 		int res;
