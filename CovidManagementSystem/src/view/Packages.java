@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 import javax.swing.BoxLayout;
@@ -23,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -54,38 +56,30 @@ public class Packages extends JDialog {
 	private DbInteraction dbi;
 	private String idCard;
 	private final JPanel pnContent = new JPanel();
-	private JTextField txtPkgName;
-	private JTextField txtLimit;
+	private JTextField 	txtPkgName, 
+						txtLimit, txtPrice;
 	private JFormattedTextField txtDate;
-	private JTextField txtPrice;
-	private JPanel pnUtils;
+	private JPanel 	pnUtils, 
+					pnFind, pnCart, 
+					pnMain, pnCartTitle, 
+					pnCartFunc,
+					pnCartUtils,
+					pnPay, pnCost, panel;
 	private JButton btnShowAddPkg, btnDelPkg;
 	private JButton btnAddPkg;
-	private JPanel pnFind;
 	private JTextField txtPkgName2Find;
 	private JTable tblPkg, tblCart;
 	private DefaultTableModel dtm, dtmCart, dtmBPH;
 	private JButton btnShowChangePkg;
 	private SimpleDateFormat df;
 	private String usrManager;
-	private TableRowSorter sorter;
-	private JLabel lblFind;
-	private JPanel pnCart;
-	private JPanel pnMain;
-	private JPanel pnCartTitle;
-	private JPanel pnCartFunc;
-	private JLabel lblCart;
+	private TableRowSorter<TableModel> sorter;
+	private JLabel 	lblFind, 
+					lblCart, lblAmount, 
+					lblCost, lblQuantity;
 	private JButton btnRemoveFromCart;
-	private JLabel lblAmount;
-	private JLabel lblCost;
-	private JLabel lblQuantity;
 	private JComboBox cbQuantity;
-	private JButton btnAddToCart;
-	private JPanel pnCartUtils;
-	private JPanel pnPay;
-	private JPanel pnCost;
-	private JButton btnPay;
-	private JPanel panel;
+	private JButton btnAddToCart, btnPay;
 	private Vector<Integer> quantityOfBoughtPkgL;
 
 	/**
@@ -514,7 +508,7 @@ public class Packages extends JDialog {
 		dtm.addColumn("Bán đến hết ngày");
 		dtm.addColumn("Giá thành");
 		//tblPkg.setAutoCreateRowSorter(true);
-		sorter = new TableRowSorter<>(dtm);
+		sorter = new TableRowSorter<TableModel>(dtm);
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
 		pnMain = new JPanel();
@@ -564,7 +558,12 @@ public class Packages extends JDialog {
 		txtPkgName2Find.setColumns(12);
 		pnUtils.setVisible(false);
 		tblPkg = new JTable(dtm);
+		
+		sorter = new TableRowSorter<TableModel>(dtm);
 		tblPkg.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			sorter.setComparator(i, new MyComparator<String>());
+		}
 		tblPkg.getRowSorter().toggleSortOrder(0);
 		// Prevent manager edit this table
 		tblPkg.setDefaultEditor(Object.class, null);

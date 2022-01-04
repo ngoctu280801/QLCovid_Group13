@@ -16,8 +16,11 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 public class RelatedPersons extends JDialog {
 
@@ -26,10 +29,9 @@ public class RelatedPersons extends JDialog {
 	private DefaultTableModel dtm;
 	private JTable tblRPer;
 	private DbInteraction dbi;
+	private TableRowSorter<TableModel> sorter;
 
-	/**
-	 * Create the dialog.
-	 */
+	
 	public RelatedPersons(DbInteraction dbi, String idCard) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.idCard = idCard;
@@ -86,6 +88,12 @@ public class RelatedPersons extends JDialog {
 		tblRPer.getRowSorter().toggleSortOrder(0);
 		// Prevent manager edit this table
 		tblRPer.setDefaultEditor(Object.class, null);
+		
+		sorter = new TableRowSorter<TableModel>(dtm);
+		tblRPer.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			sorter.setComparator(i, new MyComparator<String>());
+		}
 		
 		JScrollPane scrollPane = new JScrollPane(
 				tblRPer,

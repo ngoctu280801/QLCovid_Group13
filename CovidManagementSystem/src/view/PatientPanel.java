@@ -16,9 +16,12 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.JButton;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -38,6 +41,7 @@ public class PatientPanel extends JFrame {
 	private String usrname, idCard;
 	JButton btnInfo, btnMngmHis, btnPkg, btnPayment;
 	private JButton btnChangePwd;
+	private TableRowSorter<TableModel> sorter;
 
 	/**
 	 * Create the frame.
@@ -92,6 +96,12 @@ public class PatientPanel extends JFrame {
 		tblBoughtPkg = new JTable(dtm);
 		// Prevent manager edit this table
 		tblBoughtPkg.setDefaultEditor(Object.class, null);
+		
+		sorter = new TableRowSorter<TableModel>(dtm);
+		tblBoughtPkg.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			sorter.setComparator(i, new MyComparator<String>());
+		}
 		
 		JScrollPane scrollPane = new JScrollPane(
 				tblBoughtPkg,

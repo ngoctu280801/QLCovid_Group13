@@ -1,21 +1,28 @@
-2021-12-01 20:37:27 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:37:34 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-01 20:37:38 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:38:24 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:38:32 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-01 20:38:36 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:38:49 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-01 20:38:52 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:39:05 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-01 20:39:11 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-01 20:39:19 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-08 15:24:56 ERROR CovidSystem:35 - Không thể kết nối đến CSDL.
-  2021-12-08 15:25:13 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-08 15:25:29 DEBUG ManagerPanel:22 - Successfull. Login Manager Account!
-  2021-12-08 15:26:06 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-19 09:31:39 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-19 09:35:39 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-19 09:38:56 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-19 09:40:49 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  2021-12-21 23:09:35 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+2021-12-01 11:50:37 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-01 11:50:42 DEBUG LoginScr:135 - Đăng nhập thất bại!
+  2021-12-01 11:50:50 DEBUG AdminPanel:65 - Successfull. Login Admin Account!
+  2021-12-01 11:59:01 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-01 12:02:35 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-07 18:49:10 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-07 19:02:08 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-07 19:07:55 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-07 19:08:16 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:37:19 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:37:49 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:38:44 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:39:42 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:40:21 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:41:53 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:44:51 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:48:08 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:50:23 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-21 15:52:41 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:39:48 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:44:29 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:45:06 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:49:50 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:51:14 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:52:21 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2021-12-29 17:53:29 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-02 16:24:36 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
   

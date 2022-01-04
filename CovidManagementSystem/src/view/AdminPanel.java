@@ -23,8 +23,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -49,10 +52,11 @@ public class AdminPanel extends JFrame {
 	private JPanel pnContent;
 	private JTable tblManagerL, tblQrtPosL;
 	private DefaultTableModel dtmManagerL, dtmQrtPosL;
-	private JButton btnActivityHis, btnLockAcc, btnAddQrtPos, btnUpdateQrtPos, btnAdd_Update, btnAddManager;
-	private JTextField txtQrtName;
-	private JTextField txtCapacity;
-	private JTextField txtCurCapacity;
+	private JButton btnActivityHis, 
+					btnLockAcc, btnAddQrtPos, 
+					btnUpdateQrtPos, btnAdd_Update, 
+					btnAddManager;
+	private JTextField txtQrtName, txtCapacity, txtCurCapacity;
 	private JPanel pnQrtPosMngm;
 	
 	/**
@@ -134,6 +138,12 @@ public class AdminPanel extends JFrame {
 			// Prevent manager edit this table
 			tblManagerL.setDefaultEditor(Object.class, null);
 			
+			TableRowSorter<TableModel> managerLSorter = new TableRowSorter<TableModel>(dtmManagerL);
+			tblManagerL.setRowSorter(managerLSorter);
+			for (int i = 0; i < dtmManagerL.getColumnCount(); i++) {
+				managerLSorter.setComparator(i, new MyComparator<String>());
+			}
+			
 			JScrollPane scrPManagerL = new JScrollPane(
 					tblManagerL,
 					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -149,6 +159,12 @@ public class AdminPanel extends JFrame {
 			tblQrtPosL = new JTable(dtmQrtPosL);
 			// Prevent manager edit this table
 			tblQrtPosL.setDefaultEditor(Object.class, null);
+			
+			TableRowSorter<TableModel> qrtPosLSorter = new TableRowSorter<TableModel>(dtmQrtPosL);
+			tblQrtPosL.setRowSorter(qrtPosLSorter);
+			for (int i = 0; i < dtmQrtPosL.getColumnCount(); i++) {
+				qrtPosLSorter.setComparator(i, new MyComparator<String>());
+			}
 			
 			JScrollPane scrPQrtPosL = new JScrollPane(
 					tblQrtPosL,

@@ -16,8 +16,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 public class ManagementHistory extends JDialog {
 
@@ -25,6 +28,7 @@ public class ManagementHistory extends JDialog {
 	private JTable tblHistory;
 	private DefaultTableModel dtm;
 	private DbInteraction dbi;
+	private TableRowSorter<TableModel> sorter;
 
 	/**
 	 * Create the dialog.
@@ -65,6 +69,12 @@ public class ManagementHistory extends JDialog {
 		//tblHistory.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );
 		pnContent.setLayout(new BorderLayout(0, 0));
 
+		sorter = new TableRowSorter<TableModel>(dtm);
+		tblHistory.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			sorter.setComparator(i, new MyComparator<String>());
+		}
+		
 		JScrollPane scrollPane = new JScrollPane(
 				tblHistory,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,

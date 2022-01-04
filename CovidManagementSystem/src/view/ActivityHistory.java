@@ -16,8 +16,11 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 public class ActivityHistory extends JDialog {
 
@@ -25,10 +28,9 @@ public class ActivityHistory extends JDialog {
 	private JTable tblActHis;
 	private DefaultTableModel dtm;
 	private DbInteraction dbi;
+	private TableRowSorter<TableModel> sorter;
 
-	/**
-	 * Create the dialog.
-	 */
+
 	public ActivityHistory(DbInteraction dbi, String usrManager) {
 		this.dbi = dbi;
 		setTitle("Lịch sử hoạt động của tài khoản người quản lý : " + usrManager);
@@ -47,6 +49,12 @@ public class ActivityHistory extends JDialog {
 		tblActHis = new JTable(dtm);
 		// Prevent manager edit this table
 		tblActHis.setDefaultEditor(Object.class, null);
+		
+		sorter = new TableRowSorter<TableModel>(dtm);
+		tblActHis.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			sorter.setComparator(i, new MyComparator<String>());
+		}
 		
 		JScrollPane scrollPane = new JScrollPane(
 				tblActHis,

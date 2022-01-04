@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JTextField;
 
@@ -28,6 +29,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
 import model.DbInteraction;
+import model.MyComparator;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,7 +59,7 @@ public class ManagerPanel extends JFrame {
 					btnRPer, btnMHistory;
 	private JButton btnChangePwd;
 	private String usrManager;
-	private TableRowSorter sorter;
+	private TableRowSorter<TableModel> sorter;
 	private JLabel currPosLab, newPosLab;
 	private JTextField currPosField, txtCurState;
 	private JComboBox cbPos, cbState;
@@ -129,7 +131,11 @@ public class ManagerPanel extends JFrame {
 			dtm.addColumn("Hiện là");
 			dtm.addColumn("Nơi điều trị/ cách ly");
 			tblPatients = new JTable(dtm);
-			sorter = new TableRowSorter<>(dtm);
+			sorter = new TableRowSorter<TableModel>(dtm);
+			tblPatients.setRowSorter(sorter);
+			for (int i = 0; i < dtm.getColumnCount(); i++) {
+				sorter.setComparator(i, new MyComparator<String>());
+			}
 			tblPatients.setRowSorter(sorter);
 			//tblPatients.setAutoCreateRowSorter(true);
 			tblPatients.getRowSorter().toggleSortOrder(0);
