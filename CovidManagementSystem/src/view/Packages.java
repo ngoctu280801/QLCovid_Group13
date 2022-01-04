@@ -39,7 +39,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Vector;
 
@@ -47,7 +46,6 @@ import javax.swing.SwingConstants;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.CardLayout;
 import java.awt.Font;
 
 import javax.swing.JComboBox;
@@ -56,15 +54,9 @@ public class Packages extends JDialog {
 	private DbInteraction dbi;
 	private String idCard;
 	private final JPanel pnContent = new JPanel();
-	private JTextField 	txtPkgName, 
-						txtLimit, txtPrice;
+	private JTextField txtPkgName, txtLimit, txtPrice;
 	private JFormattedTextField txtDate;
-	private JPanel 	pnUtils, 
-					pnFind, pnCart, 
-					pnMain, pnCartTitle, 
-					pnCartFunc,
-					pnCartUtils,
-					pnPay, pnCost, panel;
+	private JPanel pnUtils, pnFind, pnCart, pnMain, pnCartTitle, pnCartFunc, pnCartUtils, pnPay, pnCost, panel;
 	private JButton btnShowAddPkg, btnDelPkg;
 	private JButton btnAddPkg;
 	private JTextField txtPkgName2Find;
@@ -74,9 +66,7 @@ public class Packages extends JDialog {
 	private SimpleDateFormat df;
 	private String usrManager;
 	private TableRowSorter<TableModel> sorter;
-	private JLabel 	lblFind, 
-					lblCart, lblAmount, 
-					lblCost, lblQuantity;
+	private JLabel lblFind, lblCart, lblAmount, lblCost, lblQuantity;
 	private JButton btnRemoveFromCart;
 	private JComboBox cbQuantity;
 	private JButton btnAddToCart, btnPay;
@@ -95,7 +85,7 @@ public class Packages extends JDialog {
 		setBounds(100, 100, 1020, 550);
 		addControls();
 		addEvents();
-		if(usrManager.equals("")){
+		if (usrManager.equals("")) {
 			quantityOfBoughtPkgL = new Vector<Integer>();
 			pnUtils.setVisible(false);
 			btnShowAddPkg.setVisible(false);
@@ -107,20 +97,22 @@ public class Packages extends JDialog {
 		}
 		setLocationRelativeTo(null);
 	}
+
 	private void addEvents() {
 
 		txtPkgName2Find.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent arg0){
-				if(txtPkgName2Find.getText().equals("Nhập tên gói")){
+			public void keyPressed(KeyEvent arg0) {
+				if (txtPkgName2Find.getText().equals("Nhập tên gói")) {
 					txtPkgName2Find.setText("");
 				}
 			}
+
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				if(!txtPkgName2Find.getText().equals("")){
+				if (!txtPkgName2Find.getText().equals("")) {
 					String space = "";
 					String txtPkgN = txtPkgName2Find.getText();
-					if(txtPkgN.charAt(txtPkgN.length() - 1) == ' '){
+					if (txtPkgN.charAt(txtPkgN.length() - 1) == ' ') {
 						space = " ";
 					}
 					txtPkgName2Find.setText(txtPkgN.trim().toUpperCase() + space);
@@ -135,14 +127,14 @@ public class Packages extends JDialog {
 				txtPkgName2Find.setText("");
 			}
 		});
-		tblPkg.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		tblPkg.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
-				if(!usrManager.equals("")){
-					if(!btnShowAddPkg.getText().equals("Huỷ thêm")){
+				if (!usrManager.equals("")) {
+					if (!btnShowAddPkg.getText().equals("Huỷ thêm")) {
 						btnShowChangePkg.setEnabled(true);
 					}
-					if( tblPkg.getSelectedRowCount() > 1){
-						if(!btnShowAddPkg.getText().equals("Huỷ thêm")){
+					if (tblPkg.getSelectedRowCount() > 1) {
+						if (!btnShowAddPkg.getText().equals("Huỷ thêm")) {
 							btnShowAddPkg.setEnabled(true);
 							pnUtils.setVisible(false);
 							txtDate.setText("");
@@ -152,45 +144,42 @@ public class Packages extends JDialog {
 							btnShowChangePkg.setText("Sửa gói");
 						}
 						btnShowChangePkg.setEnabled(false);
-					}
-					else{
-						if(btnShowChangePkg.isEnabled() && btnShowChangePkg.getText().equals("Huỷ sửa")){
+					} else {
+						if (btnShowChangePkg.isEnabled() && btnShowChangePkg.getText().equals("Huỷ sửa")) {
 							saveOldLine();
 						}
 					}
 					btnDelPkg.setEnabled(true);
-				}
-				else{
-					if(tblPkg.getSelectedRowCount() > 1 || isExistedInCart(getValInTableAt(0))){
+				} else {
+					if (tblPkg.getSelectedRowCount() > 1 || isExistedInCart(getValInTableAt(0))) {
 						btnAddToCart.setEnabled(false);
-					}
-					else{
+					} else {
 						btnAddToCart.setEnabled(true);
 					}
 				}
 			}
 		});
-		if(!usrManager.equals("")){
+		if (!usrManager.equals("")) {
 			txtPrice.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
-					txtPrice.setText(validateNum(new StringBuilder(txtPrice.getText())));;
+					txtPrice.setText(validateNum(new StringBuilder(txtPrice.getText())));
+					;
 					onOffChangeBtn();
 				}
 			});
 			btnShowAddPkg.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(btnShowAddPkg.isEnabled()){
+					if (btnShowAddPkg.isEnabled()) {
 						btnAddPkg.setEnabled(false);
-						if(btnShowAddPkg.getText().equals("Thêm gói")){
+						if (btnShowAddPkg.getText().equals("Thêm gói")) {
 							btnShowAddPkg.setText("Huỷ thêm");
 							btnAddPkg.setText("Thêm");
 							btnShowChangePkg.setEnabled(false);
-							pnUtils.setVisible(true);							
-						}
-						else{
-							if(tblPkg.getSelectedRowCount() == 1){
+							pnUtils.setVisible(true);
+						} else {
+							if (tblPkg.getSelectedRowCount() == 1) {
 								btnShowChangePkg.setEnabled(true);
 							}
 							pnUtils.setVisible(false);
@@ -206,16 +195,17 @@ public class Packages extends JDialog {
 			txtLimit.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent arg0) {
-					txtLimit.setText(validateNum(new StringBuilder(txtLimit.getText())));;
+					txtLimit.setText(validateNum(new StringBuilder(txtLimit.getText())));
+					;
 					onOffChangeBtn();
 				}
 			});
 			btnShowChangePkg.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(btnShowChangePkg.isEnabled()){
+					if (btnShowChangePkg.isEnabled()) {
 
-						if(btnShowChangePkg.getText().equals("Sửa gói")){						
+						if (btnShowChangePkg.getText().equals("Sửa gói")) {
 							btnShowChangePkg.setText("Huỷ sửa");
 							btnAddPkg.setText("Thay đổi");
 							saveOldLine();
@@ -223,8 +213,7 @@ public class Packages extends JDialog {
 							btnShowAddPkg.setEnabled(false);
 							btnDelPkg.setEnabled(false);
 							btnAddPkg.setEnabled(false);
-						}
-						else{
+						} else {
 							btnDelPkg.setEnabled(true);
 							btnShowAddPkg.setEnabled(true);
 							pnUtils.setVisible(false);
@@ -234,19 +223,18 @@ public class Packages extends JDialog {
 							txtPrice.setText("");
 							btnShowChangePkg.setText("Sửa gói");
 						}
-					}				
-				}			
+					}
+				}
 			});
 			btnDelPkg.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(btnDelPkg.isEnabled() && tblPkg.getSelectedRowCount() > 0){
-						int dialogResult = JOptionPane.showConfirmDialog (null, 
-								"Bạn có chắc chắn muốn xoá?", "Xoá", 2);
-						if(dialogResult == JOptionPane.YES_OPTION){
+					if (btnDelPkg.isEnabled() && tblPkg.getSelectedRowCount() > 0) {
+						int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xoá?", "Xoá", 2);
+						if (dialogResult == JOptionPane.YES_OPTION) {
 							StringBuilder pkgNList = new StringBuilder("");
 							int counter = 0;
-							while(!tblPkg.getSelectionModel().isSelectionEmpty()){
+							while (!tblPkg.getSelectionModel().isSelectionEmpty()) {
 								counter++;
 								pkgNList.append(tblPkg.getValueAt(tblPkg.getSelectedRow(), 0) + ";");
 
@@ -255,14 +243,13 @@ public class Packages extends JDialog {
 							pkgNList = pkgNList.deleteCharAt(pkgNList.length() - 1);
 							final String pkgL = pkgNList.toString();
 							final int total = counter;
-							Runnable runLogin = new Runnable(){
-								public void run(){
+							Runnable runLogin = new Runnable() {
+								public void run() {
 									deletePkg(pkgL, total);
 								}
 							};
 							Thread t = new Thread(runLogin);
 							t.start();
-
 
 						}
 					}
@@ -271,52 +258,49 @@ public class Packages extends JDialog {
 			btnAddPkg.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(!btnAddPkg.isEnabled()){
+					if (!btnAddPkg.isEnabled()) {
 						return;
 					}
 
-					if(txtPkgName.getText().equals("")){
+					if (txtPkgName.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Vui lòng xem lại tên gói");
 						return;
 					}
-					if(txtLimit.getText().equals("")){
+					if (txtLimit.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Vui lòng xem lại giới hạn gói cho mỗi người");
 						return;
 					}
-					if(txtDate.getText().equals("")){
+					if (txtDate.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Vui lòng xem lại ngày cuối mở bán");
 						return;
 					}
-					if(txtPrice.getText().equals("")){
+					if (txtPrice.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Vui lòng xem lại giá của gói");
 						return;
 					}
-					if(isPkgNameExisted(txtPkgName.getText()) && 
-							!btnAddPkg.getText().equals("Thay đổi")){
+					if (isPkgNameExisted(txtPkgName.getText()) && !btnAddPkg.getText().equals("Thay đổi")) {
 						JOptionPane.showMessageDialog(null, "Tên gói này đã tồn tại, vui lòng chọn tên khác");
 						return;
 					}
-					if(btnAddPkg.getText().equals("Thay đổi")){
-						Runnable runUpdate = new Runnable(){
-							public void run(){
+					if (btnAddPkg.getText().equals("Thay đổi")) {
+						Runnable runUpdate = new Runnable() {
+							public void run() {
 								changePkg();
 							}
 						};
 						Thread t = new Thread(runUpdate);
 						t.start();
-					}
-					else if(btnAddPkg.getText().equals("Thêm")){
-						Runnable runAdd = new Runnable(){
-							public void run(){
+					} else if (btnAddPkg.getText().equals("Thêm")) {
+						Runnable runAdd = new Runnable() {
+							public void run() {
 								addPkg();
 							}
 						};
 						Thread t = new Thread(runAdd);
 						t.start();
-					}
-					else{
-						Runnable runPay = new Runnable(){
-							public void run(){
+					} else {
+						Runnable runPay = new Runnable() {
+							public void run() {
 								payPkg();
 							}
 						};
@@ -329,16 +313,16 @@ public class Packages extends JDialog {
 			txtDate.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent arg0) {
-					if(txtDate.getText().contains(" ")){
+					if (txtDate.getText().contains(" ")) {
 						txtDate.setValue(null);
-						if(btnAddPkg.getText().equals("Thay đổi")){
+						if (btnAddPkg.getText().equals("Thay đổi")) {
 							txtDate.setText(getValInTableAt(2));
 							onOffChangeBtn();
 						}
 						return;
 					}
-					//if(!txtDate.getText().equals("  /  /    ")){
-					//JOptionPane.showMessageDialog(null, txtDate.getValue());
+					// if(!txtDate.getText().equals(" / / ")){
+					// JOptionPane.showMessageDialog(null, txtDate.getValue());
 					try {
 						Date d = df.parse(txtDate.getText());
 					} catch (ParseException e1) {
@@ -346,16 +330,16 @@ public class Packages extends JDialog {
 						JOptionPane.showMessageDialog(null, "Không tồn tại ngày này");
 						txtDate.setValue(null);
 						return;
-					} 
+					}
 
 					Date d = new Date(swapDayWithMon(txtDate.getText()));
-					if(d.before(new Date())){
+					if (d.before(new Date())) {
 						JOptionPane.showMessageDialog(null, "Ngày cuối mở bán phải từ hôm nay trở đi");
 						txtDate.setValue(null);
 						return;
 					}
 
-					//}
+					// }
 
 				}
 			});
@@ -368,9 +352,9 @@ public class Packages extends JDialog {
 			txtPkgName.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					if(!txtPkgName.getText().equals("")){
+					if (!txtPkgName.getText().equals("")) {
 						txtPkgName.setText(txtPkgName.getText().trim().toUpperCase());
-						//onOffChangeBtn();
+						// onOffChangeBtn();
 					}
 				}
 			});
@@ -380,23 +364,21 @@ public class Packages extends JDialog {
 					onOffChangeBtn();
 				}
 			});
-		}
-		else{
+		} else {
 
 			btnAddToCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					if(btnAddToCart.isEnabled()){
-						if(canBuy(getValInTableAt(0))){
-							dtmCart.addRow(new String[] {getValInTableAt(0), "1", getValInTableAt(3)});
+					if (btnAddToCart.isEnabled()) {
+						if (canBuy(getValInTableAt(0))) {
+							dtmCart.addRow(new String[] { getValInTableAt(0), "1", getValInTableAt(3) });
 							updateCost(Integer.parseInt(getValInTableAt(3).replace(",", "")));
 							btnAddToCart.setEnabled(false);
 							btnPay.setEnabled(true);
-						}
-						else{
+						} else {
 							return;
 						}
-						if(!pnCart.isVisible()){
+						if (!pnCart.isVisible()) {
 							lblQuantity.setVisible(false);
 							cbQuantity.setVisible(false);
 							btnRemoveFromCart.setEnabled(false);
@@ -407,15 +389,14 @@ public class Packages extends JDialog {
 					}
 				}
 			});
-			tblCart.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+			tblCart.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent event) {
-					if(tblCart.getSelectedRowCount() == 1){
+					if (tblCart.getSelectedRowCount() == 1) {
 						lblQuantity.setVisible(true);
 						updateQuantitySelection();
 						cbQuantity.setEnabled(true);
 						cbQuantity.setVisible(true);
-					}
-					else{
+					} else {
 						cbQuantity.removeAllItems();
 						cbQuantity.setEnabled(false);
 					}
@@ -426,15 +407,13 @@ public class Packages extends JDialog {
 			cbQuantity.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					if(cbQuantity.isEnabled() && tblCart.getSelectedRowCount() == 1){
-						String priceSelectedPkg = tblCart.getValueAt(
-								tblCart.getSelectedRow(), 2).toString().replace(",", "");
-						int oldCostSelectedPkg = Integer.parseInt(
-								tblCart.getValueAt(tblCart.getSelectedRow(), 1) + "") * 
-								Integer.parseInt(priceSelectedPkg);
+					if (cbQuantity.isEnabled() && tblCart.getSelectedRowCount() == 1) {
+						String priceSelectedPkg = tblCart.getValueAt(tblCart.getSelectedRow(), 2).toString()
+								.replace(",", "");
+						int oldCostSelectedPkg = Integer.parseInt(tblCart.getValueAt(tblCart.getSelectedRow(), 1) + "")
+								* Integer.parseInt(priceSelectedPkg);
 						int newQuan = Integer.parseInt(cbQuantity.getSelectedItem().toString());
-						int newCostSelectedPkg = newQuan *
-								Integer.parseInt(priceSelectedPkg);
+						int newCostSelectedPkg = newQuan * Integer.parseInt(priceSelectedPkg);
 						tblCart.setValueAt(newQuan, tblCart.getSelectedRow(), 1);
 						updateCost(newCostSelectedPkg - oldCostSelectedPkg);
 					}
@@ -443,16 +422,15 @@ public class Packages extends JDialog {
 			btnRemoveFromCart.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					if(btnRemoveFromCart.isEnabled()){
-						int dialogResult = JOptionPane.showConfirmDialog (null, 
-								"Bạn có chắc chắn muốn xoá?", "Xoá", 2);
-						if(dialogResult == JOptionPane.YES_OPTION){
+					if (btnRemoveFromCart.isEnabled()) {
+						int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xoá?", "Xoá", 2);
+						if (dialogResult == JOptionPane.YES_OPTION) {
 							cbQuantity.setEnabled(false);
 							int credit = 0;
-							//JOptionPane.showMessageDialog(null, quantityOfBoughtPkgL);
-							while(!tblCart.getSelectionModel().isSelectionEmpty()){
-								String priceSelected = tblCart.getValueAt(
-										tblCart.getSelectedRow(), 2).toString().replace(",", "");
+							// JOptionPane.showMessageDialog(null, quantityOfBoughtPkgL);
+							while (!tblCart.getSelectionModel().isSelectionEmpty()) {
+								String priceSelected = tblCart.getValueAt(tblCart.getSelectedRow(), 2).toString()
+										.replace(",", "");
 								String quanSelected = tblCart.getValueAt(tblCart.getSelectedRow(), 1).toString();
 								credit += (Integer.parseInt(quanSelected) * Integer.parseInt(priceSelected));
 
@@ -464,10 +442,10 @@ public class Packages extends JDialog {
 							btnRemoveFromCart.setEnabled(false);
 							cbQuantity.removeAllItems();
 							cbQuantity.setEnabled(false);
-							if(tblCart.getRowCount() == 0){
+							if (tblCart.getRowCount() == 0) {
 								btnPay.setEnabled(false);
 							}
-							//JOptionPane.showMessageDialog(null, quantityOfBoughtPkgL);
+							// JOptionPane.showMessageDialog(null, quantityOfBoughtPkgL);
 						}
 					}
 				}
@@ -475,15 +453,15 @@ public class Packages extends JDialog {
 			btnPay.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					if(btnPay.isEnabled()){
-						Runnable run = new Runnable(){
-							public void run(){
+					if (btnPay.isEnabled()) {
+						Runnable run = new Runnable() {
+							public void run() {
 								payPkg();
 							}
 						};
 						Thread t = new Thread(run);
 						t.start();
-						
+
 					}
 				}
 			});
@@ -507,7 +485,7 @@ public class Packages extends JDialog {
 		dtm.addColumn("Mức giới hạn (gói/ người)");
 		dtm.addColumn("Bán đến hết ngày");
 		dtm.addColumn("Giá thành");
-		//tblPkg.setAutoCreateRowSorter(true);
+		// tblPkg.setAutoCreateRowSorter(true);
 		sorter = new TableRowSorter<TableModel>(dtm);
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
@@ -558,7 +536,7 @@ public class Packages extends JDialog {
 		txtPkgName2Find.setColumns(12);
 		pnUtils.setVisible(false);
 		tblPkg = new JTable(dtm);
-		
+
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblPkg.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
@@ -567,19 +545,16 @@ public class Packages extends JDialog {
 		tblPkg.getRowSorter().toggleSortOrder(0);
 		// Prevent manager edit this table
 		tblPkg.setDefaultEditor(Object.class, null);
-		//		// Terminate edit when focus is lost
-		//		tblPkg.putClientProperty("terminateEditOnFocusLost", true);
+		// // Terminate edit when focus is lost
+		// tblPkg.putClientProperty("terminateEditOnFocusLost", true);
 
-		JScrollPane scrollPane = new JScrollPane(
-				tblPkg,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+		JScrollPane scrollPane = new JScrollPane(tblPkg, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		pnPkg.setLayout(new BorderLayout());
 		pnPkg.add(scrollPane, BorderLayout.CENTER);
 		JPanel pnBtn = new JPanel();
 		pnMain.add(pnBtn, BorderLayout.SOUTH);
 		pnBtn.setLayout(new FlowLayout(FlowLayout.CENTER));
-
 
 		btnShowAddPkg = new JButton("Thêm gói");
 		btnShowAddPkg.setActionCommand("OK");
@@ -594,110 +569,108 @@ public class Packages extends JDialog {
 		pnBtn.add(btnDelPkg);
 		btnDelPkg.setEnabled(false);
 
+		if (usrManager.equals("")) {
+			dtmCart = new DefaultTableModel();
+			dtmCart.addColumn("Tên gói");
+			dtmCart.addColumn("Số lượng");
+			dtmCart.addColumn("Giá tiền 1 gói");
+			btnAddToCart = new JButton("Chọn mua");
+			pnBtn.add(btnAddToCart);
+			btnAddToCart.setEnabled(false);
+			pnCart = new JPanel();
+			getContentPane().add(pnCart);
+			tblCart = new JTable(dtmCart);
+			// Prevent manager edit this table
+			tblCart.setDefaultEditor(Object.class, null);
 
-		if(usrManager.equals("")){
-		dtmCart = new DefaultTableModel();
-		dtmCart.addColumn("Tên gói");
-		dtmCart.addColumn("Số lượng");
-		dtmCart.addColumn("Giá tiền 1 gói");
-		btnAddToCart = new JButton("Chọn mua");
-		pnBtn.add(btnAddToCart);
-		btnAddToCart.setEnabled(false);
-		pnCart = new JPanel();
-		getContentPane().add(pnCart);
-		tblCart = new JTable(dtmCart);
-		// Prevent manager edit this table
-		tblCart.setDefaultEditor(Object.class, null);
+			JScrollPane scrollPaneCart = new JScrollPane(tblCart, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+			pnCart.setLayout(new BorderLayout());
+			pnCart.add(scrollPaneCart, BorderLayout.CENTER);
 
-		JScrollPane scrollPaneCart = new JScrollPane(
-				tblCart,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		pnCart.setLayout(new BorderLayout());
-		pnCart.add(scrollPaneCart, BorderLayout.CENTER);
+			pnCartFunc = new JPanel();
+			pnCart.add(pnCartFunc, BorderLayout.SOUTH);
+			pnCartFunc.setLayout(new BoxLayout(pnCartFunc, BoxLayout.X_AXIS));
 
-		pnCartFunc = new JPanel();
-		pnCart.add(pnCartFunc, BorderLayout.SOUTH);
-		pnCartFunc.setLayout(new BoxLayout(pnCartFunc, BoxLayout.X_AXIS));
+			pnCartUtils = new JPanel();
+			pnCartFunc.add(pnCartUtils);
 
-		pnCartUtils = new JPanel();
-		pnCartFunc.add(pnCartUtils);
+			lblQuantity = new JLabel("Số lượng");
+			pnCartUtils.add(lblQuantity);
 
-		lblQuantity = new JLabel("Số lượng");
-		pnCartUtils.add(lblQuantity);
+			cbQuantity = new JComboBox();
+			pnCartUtils.add(cbQuantity);
 
-		cbQuantity = new JComboBox();
-		pnCartUtils.add(cbQuantity);
+			btnRemoveFromCart = new JButton("Xoá");
+			pnCartUtils.add(btnRemoveFromCart);
 
-		btnRemoveFromCart = new JButton("Xoá");
-		pnCartUtils.add(btnRemoveFromCart);
+			pnPay = new JPanel();
+			pnCartFunc.add(pnPay);
+			pnPay.setLayout(new BoxLayout(pnPay, BoxLayout.Y_AXIS));
 
-		pnPay = new JPanel();
-		pnCartFunc.add(pnPay);
-		pnPay.setLayout(new BoxLayout(pnPay, BoxLayout.Y_AXIS));
+			pnCost = new JPanel();
+			pnPay.add(pnCost);
 
-		pnCost = new JPanel();
-		pnPay.add(pnCost);
+			lblAmount = new JLabel("Thành tiền:");
+			pnCost.add(lblAmount);
 
-		lblAmount = new JLabel("Thành tiền:");
-		pnCost.add(lblAmount);
+			lblCost = new JLabel("0 (VNĐ)");
+			pnCost.add(lblCost);
+			lblCost.setFont(new Font("Tahoma", Font.BOLD, 17));
 
-		lblCost = new JLabel("0 (VNĐ)");
-		pnCost.add(lblCost);
-		lblCost.setFont(new Font("Tahoma", Font.BOLD, 17));
+			panel = new JPanel();
+			pnPay.add(panel);
 
-		panel = new JPanel();
-		pnPay.add(panel);
+			btnPay = new JButton("Đặt mua");
+			panel.add(btnPay);
 
-		btnPay = new JButton("Đặt mua");
-		panel.add(btnPay);
+			pnCartTitle = new JPanel();
+			FlowLayout flowLayout_1 = (FlowLayout) pnCartTitle.getLayout();
+			flowLayout_1.setVgap(9);
+			pnCart.add(pnCartTitle, BorderLayout.NORTH);
 
-		pnCartTitle = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) pnCartTitle.getLayout();
-		flowLayout_1.setVgap(9);
-		pnCart.add(pnCartTitle, BorderLayout.NORTH);
-
-		lblCart = new JLabel("Các gói nhu yếu phẩm muốn mua");
-		lblCart.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCart.setHorizontalAlignment(SwingConstants.CENTER);
-		pnCartTitle.add(lblCart);
-		pnCart.setVisible(false);
+			lblCart = new JLabel("Các gói nhu yếu phẩm muốn mua");
+			lblCart.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblCart.setHorizontalAlignment(SwingConstants.CENTER);
+			pnCartTitle.add(lblCart);
+			pnCart.setVisible(false);
 		}
 
-
-
 		getDataFromDb();
-		if(tblPkg.getRowCount() == 0){
+		if (tblPkg.getRowCount() == 0) {
 			JOptionPane.showMessageDialog(null, "Chưa có gói nhu yếu phẩm nào đang được bán");
 		}
 	}
-	private void saveOldLine(){
+
+	private void saveOldLine() {
 		txtPkgName.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 0));
 		txtLimit.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 1));
 		txtDate.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 2));
 		txtPrice.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 3));
 	}
-	private String validateNum(StringBuilder s){
-		for(int i = 0; i < s.length(); i++){
-			if(!Character.isDigit(s.charAt(i))){
+
+	private String validateNum(StringBuilder s) {
+		for (int i = 0; i < s.length(); i++) {
+			if (!Character.isDigit(s.charAt(i))) {
 				s.deleteCharAt(i);
 				i--;
 			}
 		}
-		for(int i = s.length() - 3; i > 0; i-=3){
+		for (int i = s.length() - 3; i > 0; i -= 3) {
 			s.insert(i, ',');
 		}
 		return s.toString();
 	}
-	private void getDataFromDb(){
-		Statement[] stmt = new Statement[] {null};
+
+	private void getDataFromDb() {
+		Statement[] stmt = new Statement[] { null };
 		ResultSet rs = dbi.query("select pkg_name,"
-				+ " limit_quantity_per_person, date_limit, price from necessary_packages"
-				+ " where is_deleted = 0", stmt);
+				+ " limit_quantity_per_person, date_limit, price from necessary_packages" + " where is_deleted = 0",
+				stmt);
 		try {
-			if(rs.isBeforeFirst()){
+			if (rs.isBeforeFirst()) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-				while(rs.next()){
+				while (rs.next()) {
 					Vector<String> rowData = new Vector<String>();
 					rowData.add(rs.getString(1));
 					rowData.add(validateNum(new StringBuilder(rs.getString(2))));
@@ -712,15 +685,16 @@ public class Packages extends JDialog {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt[0] != null){
+				if (stmt[0] != null) {
 					stmt[0].close();
-				}				
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	private void addPkg(){
+
+	private void addPkg() {
 		String date = changeDateFormatter(txtDate.getValue().toString(), "yyyy/MM/dd", df);
 		CallableStatement st = null;
 		try {
@@ -732,21 +706,20 @@ public class Packages extends JDialog {
 			st.setString(4, txtPrice.getText());
 			st.setString(5, usrManager);
 			st.execute();
-			int code  = st.getInt("code");
-			if(code == 1){
-				dtm.addRow(new String[] {txtPkgName.getText(), txtLimit.getText(),
-						txtDate.getValue().toString(), txtPrice.getText()});
+			int code = st.getInt("code");
+			if (code == 1) {
+				dtm.addRow(new String[] { txtPkgName.getText(), txtLimit.getText(), txtDate.getValue().toString(),
+						txtPrice.getText() });
 				JOptionPane.showMessageDialog(null, "Thêm gói nhu yếu phẩm thành công");
-			}
-			else{
+			} else {
 				JOptionPane.showMessageDialog(null, "Lỗi khi thực hiện thêm gói nhu yếu phẩm");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Lỗi không xác định khi thêm gói");
-		} finally{
-			if(st != null){
+		} finally {
+			if (st != null) {
 				try {
 					st.close();
 				} catch (SQLException e) {
@@ -757,7 +730,8 @@ public class Packages extends JDialog {
 		}
 
 	}
-	private void changePkg(){
+
+	private void changePkg() {
 		String date = changeDateFormatter(txtDate.getValue().toString(), "yyyy/MM/dd", df);
 		CallableStatement st = null;
 		try {
@@ -771,7 +745,7 @@ public class Packages extends JDialog {
 			st.setString(6, txtPkgName.getText());
 			st.execute();
 			int code = st.getInt("code");
-			if(code == 1){		
+			if (code == 1) {
 				int row = tblPkg.getSelectedRow();
 				dtm.setValueAt(txtPkgName.getText(), row, 0);
 				dtm.setValueAt(txtLimit.getText(), row, 1);
@@ -779,16 +753,15 @@ public class Packages extends JDialog {
 				dtm.setValueAt(txtPrice.getText(), row, 3);
 				btnAddPkg.setEnabled(false);
 				JOptionPane.showMessageDialog(null, "Cập nhật gói thành công");
-			}
-			else{
+			} else {
 				JOptionPane.showMessageDialog(null, "Thất bại. Xin vui lòng thử lại sau");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi, không thể cập nhật gói lúc này");
-		} finally{
-			if(st != null){
+		} finally {
+			if (st != null) {
 				try {
 					st.close();
 				} catch (SQLException e) {
@@ -798,7 +771,8 @@ public class Packages extends JDialog {
 			}
 		}
 	}
-	private void deletePkg(String pkgNList, int counter){
+
+	private void deletePkg(String pkgNList, int counter) {
 		CallableStatement st = null;
 		try {
 			st = dbi.getStatement("{call delPkg(?, ?, ?)}");
@@ -806,20 +780,19 @@ public class Packages extends JDialog {
 			st.setString(1, pkgNList);
 			st.setString(2, usrManager);
 			st.execute();
-			int code  = st.getInt("code");
-			if(code == counter){
+			int code = st.getInt("code");
+			if (code == counter) {
 				JOptionPane.showMessageDialog(null, "Xoá thành công " + code + " gói");
 				return;
-			}
-			else{
+			} else {
 				JOptionPane.showMessageDialog(null, "Không thể xoá " + (counter - code) + " gói trong số đó");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi, không thể xoá gói nào");
-		} finally{
-			if(st != null){
+		} finally {
+			if (st != null) {
 				try {
 					st.close();
 				} catch (SQLException e) {
@@ -831,7 +804,8 @@ public class Packages extends JDialog {
 		dtm.setRowCount(0);
 		getDataFromDb();
 	}
-	private String changeDateFormatter(String date, String format, SimpleDateFormat sdf){
+
+	private String changeDateFormatter(String date, String format, SimpleDateFormat sdf) {
 		SimpleDateFormat f = new SimpleDateFormat(format);
 		String res = null;
 		try {
@@ -842,13 +816,14 @@ public class Packages extends JDialog {
 		}
 		return res;
 	}
-	private boolean isPkgNameExisted(String pkgN){
-		Statement[] stmt = new Statement[] {null};
-		ResultSet rs = dbi.query("select count(*) from necessary_packages where pkg_name = N'"
-				+ pkgN + "' and is_deleted = 0;", stmt);
+
+	private boolean isPkgNameExisted(String pkgN) {
+		Statement[] stmt = new Statement[] { null };
+		ResultSet rs = dbi.query(
+				"select count(*) from necessary_packages where pkg_name = N'" + pkgN + "' and is_deleted = 0;", stmt);
 		try {
 			rs.next();
-			if(rs.getString(1).equals("0")){
+			if (rs.getString(1).equals("0")) {
 				return false;
 			}
 		} catch (SQLException e) {
@@ -856,9 +831,9 @@ public class Packages extends JDialog {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt[0] != null){
+				if (stmt[0] != null) {
 					stmt[0].close();
-				}				
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -874,51 +849,50 @@ public class Packages extends JDialog {
 			sorter.setRowFilter(null);
 		}
 	}
-	private boolean isChanged(){
 
-		//JOptionPane.showMessageDialog(null,txtDate.getText());
-		if(!txtPkgName.getText().toUpperCase().equals(getValInTableAt(0)) ||
-				!txtLimit.getText().equals(getValInTableAt(1)) ||
-				!txtDate.getText().equals(getValInTableAt(2)) ||
-				!txtPrice.getText().equals(getValInTableAt(3))){
+	private boolean isChanged() {
+
+		// JOptionPane.showMessageDialog(null,txtDate.getText());
+		if (!txtPkgName.getText().toUpperCase().equals(getValInTableAt(0))
+				|| !txtLimit.getText().equals(getValInTableAt(1)) || !txtDate.getText().equals(getValInTableAt(2))
+				|| !txtPrice.getText().equals(getValInTableAt(3))) {
 			return true;
 		}
 
 		return false;
 	}
-	private void onOffChangeBtn(){
-		if(txtPkgName.getText().equals("") ||
-				txtLimit.getText().equals("") ||
-				txtDate.getText().equals("  /  /    ") ||
-				txtPrice.getText().equals("") ){
+
+	private void onOffChangeBtn() {
+		if (txtPkgName.getText().equals("") || txtLimit.getText().equals("") || txtDate.getText().equals("  /  /    ")
+				|| txtPrice.getText().equals("")) {
 			btnAddPkg.setEnabled(false);
 			return;
 		}
-		if(btnAddPkg.getText().equals("Thay đổi")){
-			//JOptionPane.showMessageDialog(null,isChanged());
-			if(isChanged()){
+		if (btnAddPkg.getText().equals("Thay đổi")) {
+			// JOptionPane.showMessageDialog(null,isChanged());
+			if (isChanged()) {
 				btnAddPkg.setEnabled(true);
-			}
-			else{
+			} else {
 				btnAddPkg.setEnabled(false);
 			}
-		}
-		else{
+		} else {
 			btnAddPkg.setEnabled(true);
 		}
 	}
-	private String getValInTableAt(int col){
+
+	private String getValInTableAt(int col) {
 		return tblPkg.getValueAt(tblPkg.getSelectedRow(), col) + "";
 	}
-	private void payPkg(){
+
+	private void payPkg() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Vector<Vector<String>> rowData = new Vector<Vector<String>>();
 		StringBuilder listPkgN = new StringBuilder();
 		StringBuilder listQuan = new StringBuilder();
-		for(int i = 0; i < tblCart.getRowCount(); i++){
+		for (int i = 0; i < tblCart.getRowCount(); i++) {
 			listPkgN.append(tblCart.getValueAt(i, 0) + "");
 			listQuan.append(tblCart.getValueAt(i, 1) + "");
-			if(i != tblCart.getRowCount() - 1){
+			if (i != tblCart.getRowCount() - 1) {
 				listPkgN.append(";");
 				listQuan.append(";");
 			}
@@ -942,20 +916,19 @@ public class Packages extends JDialog {
 			st.setString(3, listQuan.toString());
 			st.execute();
 			int code = st.getInt("code");
-			if(code == rowData.size()){		
-				for(int i = 0; i < tblCart.getRowCount(); i++){
+			if (code == rowData.size()) {
+				for (int i = 0; i < tblCart.getRowCount(); i++) {
 					dtmBPH.addRow(rowData.get(i));
 				}
 				JOptionPane.showMessageDialog(null, "Đặt mua thành công");
-			}
-			else{
+			} else {
 				JOptionPane.showMessageDialog(null, "Thất bại. Xin vui lòng thử lại sau");
-			}		
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			if(st != null){
+		} finally {
+			if (st != null) {
 				try {
 					st.close();
 				} catch (SQLException e) {
@@ -963,51 +936,52 @@ public class Packages extends JDialog {
 				}
 			}
 		}
-						
+
 		dispose();
 	}
-	private boolean canBuy(String pkgN){
+
+	private boolean canBuy(String pkgN) {
 		Date d = new Date(swapDayWithMon(getValInTableAt(2)));
-		if(d.before(new Date())){
+		if (d.before(new Date())) {
 			JOptionPane.showMessageDialog(null, "Gói này đã ngừng bán, vui lòng chọn gói khác");
 			return false;
 		}
 		int quan = getQuantityOfBoughtPkg(pkgN);
-		if(quan == -2){
+		if (quan == -2) {
 			quan = 0;
 		}
-		if(quan > -1 || quan == -2){
+		if (quan > -1 || quan == -2) {
 			String pricePkg = getValInTableAt(3).replace(",", "");
 			String maxQuan = getValInTableAt(1).replace(",", "");
-			if(quan == Integer.parseInt(maxQuan)){
+			if (quan == Integer.parseInt(maxQuan)) {
 				JOptionPane.showMessageDialog(null, "Không thể mua vì đã đạt tới mức giới hạn mua của gói này");
 				return false;
 			}
 
 			quantityOfBoughtPkgL.add(Integer.parseInt(maxQuan) - quan);
 			return true;
-		}
-		else{
+		} else {
 			JOptionPane.showMessageDialog(null, "Không thể lấy được số lượng gói đã mua");
 			return false;
 		}
 	}
-	private String swapDayWithMon(String date){
+
+	private String swapDayWithMon(String date) {
 		String day = date.substring(0, 2);
 		String month = date.substring(3, 5);
 		String year = date.substring(6, 10);
 		return month + "/" + day + "/" + year + " 23:59:59";
 	}
-	private int getQuantityOfBoughtPkg(String pkgN){
-		Statement[] stmt = new Statement[] {null};
+
+	private int getQuantityOfBoughtPkg(String pkgN) {
+		Statement[] stmt = new Statement[] { null };
 		ResultSet rs = dbi.query("select sum(bph.quantity) from bought_pkg_history bph "
-				+ "join patients p on p.id = bph.id_patient "
-				+ "join necessary_packages np on np.id = bph.id_pkg "
+				+ "join patients p on p.id = bph.id_patient " + "join necessary_packages np on np.id = bph.id_pkg "
 				+ "where p.id_card = '" + idCard + "' and np.pkg_name = N'" + pkgN + "'", stmt);
 		try {
 			rs.next();
 			String temp = rs.getString(1);
-			if(rs.wasNull()){
+			if (rs.wasNull()) {
 				return -2;
 			}
 			return Integer.parseInt(temp);
@@ -1016,33 +990,36 @@ public class Packages extends JDialog {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(stmt[0] != null){
+				if (stmt[0] != null) {
 					stmt[0].close();
-				}				
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return -1;
 	}
-	private void updateCost(int credit){
+
+	private void updateCost(int credit) {
 		String strCost = lblCost.getText().substring(0, lblCost.getText().length() - 6);
 		int cur_cost = Integer.parseInt(strCost.replace(",", ""));
 		cur_cost += credit;
 		lblCost.setText(validateNum(new StringBuilder(cur_cost + "")) + " (VNĐ)");
 	}
-	private void updateQuantitySelection(){
+
+	private void updateQuantitySelection() {
 		cbQuantity.setEnabled(false);
 		cbQuantity.removeAllItems();
-		for(int i = 1; i <= quantityOfBoughtPkgL.get(tblCart.getSelectedRow()); i++){
+		for (int i = 1; i <= quantityOfBoughtPkgL.get(tblCart.getSelectedRow()); i++) {
 			cbQuantity.addItem(i + "");
 		}
 		cbQuantity.setSelectedItem(tblCart.getValueAt(tblCart.getSelectedRow(), 1) + "");
 		cbQuantity.setEnabled(true);
 	}
-	private boolean isExistedInCart(String pkgN){
+
+	private boolean isExistedInCart(String pkgN) {
 		for (int i = 0; i < tblCart.getRowCount(); i++) {
-			if(pkgN.equals(tblCart.getValueAt(i, 0))){
+			if (pkgN.equals(tblCart.getValueAt(i, 0))) {
 				return true;
 			}
 		}
