@@ -1,5 +1,6 @@
 package model;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,17 +13,28 @@ import java.sql.Types;
 
 import javax.net.ssl.SSLSocket;
 
+import org.apache.log4j.Logger;
+
 public class ClientConnection extends Thread {
 	private SSLSocket sslSocket;
 	private DbInteraction dbi = null;
+	private final Logger logger;
+	
+	
 	public ClientConnection(SSLSocket sock, String pHostname,
-			String pDbName, String pUsrName, String pPwd){
+							String pDbName, String pUsrName, 
+							String pPwd, Logger logger){
+		this.logger = logger;
+		
 		sslSocket = sock;
 		try {
 			dbi = new DbInteraction(pHostname, pDbName, pUsrName, pPwd);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			logger.error("Lỗi không thể kết nối tới CSDL");
+			
 			System.out.println("Không thể kết nối đến CSDL");
 		}
 	}
@@ -46,6 +58,10 @@ public class ClientConnection extends Thread {
 			bfr.close();
 			sslSocket.close();
 		} catch(IOException e){
+			
+			
+			logger.debug("Ngắt kết nối đột ngột");
+			
 			e.printStackTrace();
 		}
 	}
@@ -64,11 +80,19 @@ public class ClientConnection extends Thread {
 			// TODO Auto-generated catch block
 			try {
 				dbi.getConnection().rollback();
+				logger.debug("Rollback giao dịch thành công");
 			} catch (SQLException e1) {
+				
 				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
+				
+				logger.error(e);
 			}
+			
 			e.printStackTrace();
+			
+			logger.error(e);
 			System.out.println("Không thể kết nối đến CSDL");
 		}
 		return code + "";

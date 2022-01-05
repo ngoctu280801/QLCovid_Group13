@@ -299,7 +299,8 @@ public class AdminPanel extends JFrame {
 				}
 				if(btnLockAcc.getText().equals("Khoá tài khoản này")){
 					if(LockOrUnlock(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 0) + "", 1)){
-						dtmManagerL.setValueAt("Bị khoá", tblManagerL.getSelectedRow(), 1);
+						dtmManagerL.setValueAt("Bị khoá", 
+								tblManagerL.convertRowIndexToModel(tblManagerL.getSelectedRow()), 1);
 						btnLockAcc.setText("Mở khoá tài khoản này");
 						JOptionPane.showMessageDialog(null, "Khoá tài khoản này thành công");
 					}
@@ -311,7 +312,8 @@ public class AdminPanel extends JFrame {
 				else{
 					if(LockOrUnlock(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 0) + "", 0)){
 						btnLockAcc.setText("Khoá tài khoản này");
-						dtmManagerL.setValueAt("Hoạt động", tblManagerL.getSelectedRow(), 1);
+						dtmManagerL.setValueAt("Hoạt động", 
+								tblManagerL.convertRowIndexToModel(tblManagerL.getSelectedRow()), 1);
 						JOptionPane.showMessageDialog(null, "Mở khoá tài khoản này thành công");
 					}
 					else{
@@ -330,16 +332,22 @@ public class AdminPanel extends JFrame {
 		txtCapacity.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				txtCapacity.setText(validateNum(new StringBuilder(txtCapacity.getText())));
-				checkChange();
+				if(notSkipCheck(arg0)){
+					txtCapacity.setText(validateNum(new StringBuilder(txtCapacity.getText())));
+					checkChange();
+				}
+				
 			}
 		});
 
 		txtCurCapacity.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				txtCurCapacity.setText(validateNum(new StringBuilder(txtCurCapacity.getText())));
-				checkChange();
+				if(notSkipCheck(e)){
+					txtCurCapacity.setText(validateNum(new StringBuilder(txtCurCapacity.getText())));
+					checkChange();
+				}
+				
 			}
 		});
 
@@ -419,20 +427,23 @@ public class AdminPanel extends JFrame {
 		txtQrtName.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(txtQrtName.getText().length() > 1){
-					String space = "";
-					char c = 'ư';
-					if(txtQrtName.getText().charAt(txtQrtName.getText().length() - 1) == ' '){
-						space = " ";
+				if(notSkipCheck(e)){
+					if(txtQrtName.getText().length() > 1){
+						String space = "";
+						char c = 'ư';
+						if(txtQrtName.getText().charAt(txtQrtName.getText().length() - 1) == ' '){
+							space = " ";
+						}
+						String qrtN = txtQrtName.getText().trim() + space;
+						if(qrtN.length() > 50){
+							qrtN = qrtN.substring(0, 50);
+							JOptionPane.showMessageDialog(null, "Vui lòng không nhập quá 50 ký tự");
+						}
+						txtQrtName.setText(qrtN);
 					}
-					String qrtN = txtQrtName.getText().trim() + space;
-					if(qrtN.length() > 50){
-						qrtN = qrtN.substring(0, 50);
-						JOptionPane.showMessageDialog(null, "Vui lòng không nhập quá 50 ký tự");
-					}
-					txtQrtName.setText(qrtN);
+					checkChange();
 				}
-				checkChange();
+				
 			}
 		});
 		btnAddManager.addMouseListener(new MouseAdapter() {
@@ -551,8 +562,11 @@ public class AdminPanel extends JFrame {
 		}
 	}
 	private void updateQrtPos(String qName, String cap, String curCap){
+		String formatedCap = cap;
+		String formatedCurCap = curCap;
 		cap = cap.replace(",", "");
 		curCap = curCap.replace(",", "");
+		
 		Statement[] stmt = new Statement[] {null};
 		int rows = dbi.insert("update quarantinepos set name = N'" + qName + "', "
 				+ "capacity = '" + cap + "', current_capacity = '" + curCap + "' "
@@ -566,9 +580,10 @@ public class AdminPanel extends JFrame {
 		}
 		if(rows > 0){
 			int selectedRowIndex = tblQrtPosL.getSelectedRow();
+			selectedRowIndex = tblQrtPosL.convertRowIndexToModel(selectedRowIndex);
 			dtmQrtPosL.setValueAt(qName, selectedRowIndex, 0);
-			dtmQrtPosL.setValueAt(cap, selectedRowIndex, 1);
-			dtmQrtPosL.setValueAt(curCap, selectedRowIndex, 2);
+			dtmQrtPosL.setValueAt(formatedCap, selectedRowIndex, 1);
+			dtmQrtPosL.setValueAt(formatedCurCap, selectedRowIndex, 2);
 			JOptionPane.showMessageDialog(null, "Sửa thành công");
 		}
 		else{
@@ -607,5 +622,15 @@ public class AdminPanel extends JFrame {
 				btnAdd_Update.setEnabled(false);
 			}
 		}
+	}
+	private boolean notSkipCheck(KeyEvent e){
+		int code = e.getKeyCode();
+		if(		code == KeyEvent.VK_LEFT || 
+				code == KeyEvent.VK_UP || 
+				code == KeyEvent.VK_DOWN || 
+				code == KeyEvent.VK_RIGHT){
+			return false;
+		}
+		return true;
 	}
 }

@@ -141,7 +141,7 @@ public class LoginScr extends JFrame {
 	}
 	private void login(){
 		String hashedPwd = Encrypt.toPBKDF2(txtPwd.getText(), 8*25);
-		String sql = "select id_permission, usrname from accounts where usrname = '" +
+		String sql = "select id_permission, usrname, is_locked from accounts where usrname = '" +
 				txtUsrname.getText() + "' and pwd = '" +
 				hashedPwd + "';";
 		Statement[] stmt = new Statement[] {null};
@@ -151,6 +151,11 @@ public class LoginScr extends JFrame {
 				rs.next();
 				final int idPermission = Integer.parseInt(rs.getString(1));
 				final String usrname = rs.getString(2);
+				int is_locked = Integer.parseInt(rs.getString(3));
+				if(is_locked == 1){
+					JOptionPane.showMessageDialog(null, "Tài khoản của bạn đã bị khoá");
+					return;
+				}
 				if(idPermission == 0){
 					// Manager
 					ManagerPanel mPanel = new ManagerPanel(dbi, usrname);
