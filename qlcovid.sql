@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 02, 2022 at 10:26 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 7.4.26
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th1 05, 2022 lúc 05:17 AM
+-- Phiên bản máy phục vụ: 10.4.21-MariaDB
+-- Phiên bản PHP: 8.0.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -17,15 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE `qlcovid` CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `qlcovid`;
 --
--- Database: `qlcovid`
+-- Cơ sở dữ liệu: `qlcovid`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Thủ tục
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addPatient` (IN `usrNameIn` VARCHAR(20), IN `fName` VARCHAR(50), IN `DOB` DATE, IN `idCard` VARCHAR(12), IN `qrtPos` VARCHAR(50), IN `stateF` VARCHAR(2), IN `prov` VARCHAR(50), IN `townN` VARCHAR(50), IN `vlg` VARCHAR(50), IN `usrManager` VARCHAR(20), OUT `code` INT)  BEGIN
 	declare id_acc int;
@@ -645,7 +643,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `accounts`
+-- Cấu trúc bảng cho bảng `accounts`
 --
 
 CREATE TABLE `accounts` (
@@ -657,7 +655,7 @@ CREATE TABLE `accounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `accounts`
+-- Đang đổ dữ liệu cho bảng `accounts`
 --
 
 INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VALUES
@@ -700,10 +698,11 @@ INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VA
 (0000000052, 'cf2', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000054, 'manager4', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 0, 0),
-(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
+(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000056, 'manager5', 'e5486a6670a3f3b6821574c1812be01914b9908a94be89e1c8', 0, 0);
 
 --
--- Triggers `accounts`
+-- Bẫy `accounts`
 --
 DELIMITER $$
 CREATE TRIGGER `addNewDebtAndPaymentAcc` AFTER INSERT ON `accounts` FOR EACH ROW BEGIN
@@ -743,7 +742,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `activity_history`
+-- Cấu trúc bảng cho bảng `activity_history`
 --
 
 CREATE TABLE `activity_history` (
@@ -755,7 +754,7 @@ CREATE TABLE `activity_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `activity_history`
+-- Đang đổ dữ liệu cho bảng `activity_history`
 --
 
 INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, `description`) VALUES
@@ -834,12 +833,36 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 (0000000090, 'manager', '2021-12-27', '123456789', 'Chuyển 123456789 từ F0 thành Khỏi bệnh'),
 (0000000091, 'manager', '2021-12-29', '211219922', 'Thêm 211219922 làm F0 tại Bệnh viện Bạch Mai'),
 (0000000092, 'manager', '2021-12-29', '444444444', 'Chuyển 444444444 từ F1 thành Khỏi bệnh'),
-(0000000093, 'manager', '2021-12-29', '210119999', 'Chuyển 210119999 từ F2 thành Khỏi bệnh');
+(0000000093, 'manager', '2021-12-29', '210119999', 'Chuyển 210119999 từ F2 thành Khỏi bệnh'),
+(0000000094, 'manager', '2022-01-02', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST3, hạn mức 3 gói/ người, bán đến hết ngày 2022-11-15 với giá 19,000 VNĐ'),
+(0000000095, 'manager', '2022-01-02', '200120011', 'Chuyển 200120011 từ F0 thành Khỏi bệnh'),
+(0000000096, 'manager', '2022-01-04', NULL, 'Thêm gói KHAU TRANG, hạn mức 10 gói/ người, bán đến hết ngày 2022-10-10 với giá 10,000 VNĐ'),
+(0000000097, 'manager', '2022-01-04', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST3, hạn mức 10 gói/ người, bán đến hết ngày 2022-11-15 với giá 20,000 VNĐ'),
+(0000000098, 'manager', '2022-01-04', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST4, hạn mức 3 gói/ người, bán đến hết ngày 2022-11-15 với giá 19,000 VNĐ'),
+(0000000099, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000100, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000101, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000102, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000103, 'manager', '2022-01-04', NULL, 'Thêm gói KHỬ KHUẨN, hạn mức 2 gói/ người, bán đến hết ngày 2022-10-22 với giá 15,000 VNĐ'),
+(0000000104, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000105, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000106, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000107, 'manager', '2022-01-04', NULL, 'Xoá gói KHAU TRANG'),
+(0000000108, 'manager', '2022-01-04', NULL, 'Thêm gói KIT TEST, hạn mức 2 gói/ người, bán đến hết ngày 2022-12-22 với giá 120,000 VNĐ'),
+(0000000109, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN thành gói KHỬ KHUẨN, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-22 với giá 15,000 VNĐ'),
+(0000000110, 'manager', '2022-01-04', NULL, 'Thêm gói NƯỚC RỬA TAY, hạn mức 10 gói/ người, bán đến hết ngày 2022-12-12 với giá 20,000 VNĐ'),
+(0000000111, 'manager', '2022-01-04', NULL, 'Cập nhật gói NƯỚC RỬA TAY thành gói NƯỚC RỬA TAY, hạn mức 15 gói/ người, bán đến hết ngày 2022-12-12 với giá 20,000 VNĐ'),
+(0000000112, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN thành gói KHỬ KHUẨN TAY, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-12 với giá 15,000 VNĐ'),
+(0000000113, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN TAY thành gói KHỬ KHUẨN TAY, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-22 với giá 30,000 VNĐ'),
+(0000000114, 'manager', '2022-01-04', NULL, 'Cập nhật gói NƯỚC RỬA TAY thành gói NƯỚC RỬA TAY, hạn mức 100 gói/ người, bán đến hết ngày 2022-12-22 với giá 20,000 VNĐ'),
+(0000000115, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN TAY thành gói KHỬ KHUẨN TAY, hạn mức 15 gói/ người, bán đến hết ngày 2022-12-22 với giá 30,000 VNĐ'),
+(0000000116, 'manager', '2022-01-04', NULL, 'Cập nhật gói KIT TEST thành gói KIT TEST, hạn mức 20 gói/ người, bán đến hết ngày 2022-10-10 với giá 120,000 VNĐ'),
+(0000000117, 'manager', '2022-01-04', NULL, 'Cập nhật gói KIT TEST thành gói KIT TEST, hạn mức 01 gói/ người, bán đến hết ngày 2022-10-10 với giá 120,000 VNĐ');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bought_pkg_history`
+-- Cấu trúc bảng cho bảng `bought_pkg_history`
 --
 
 CREATE TABLE `bought_pkg_history` (
@@ -852,7 +875,7 @@ CREATE TABLE `bought_pkg_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `bought_pkg_history`
+-- Đang đổ dữ liệu cho bảng `bought_pkg_history`
 --
 
 INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `date`, `price`) VALUES
@@ -861,10 +884,12 @@ INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `dat
 (0000000010, 0000000025, 0000000002, 2, '2021-11-14', '38000'),
 (0000000011, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
 (0000000012, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
-(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000');
+(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000'),
+(0000000014, 0000000040, 0000000004, 3, '2022-01-02', '57000'),
+(0000000015, 0000000040, 0000000009, 6, '2022-01-04', '60000');
 
 --
--- Triggers `bought_pkg_history`
+-- Bẫy `bought_pkg_history`
 --
 DELIMITER $$
 CREATE TRIGGER `checkDebtWhenBuyPkg` AFTER INSERT ON `bought_pkg_history` FOR EACH ROW BEGIN
@@ -881,7 +906,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `debt`
+-- Cấu trúc bảng cho bảng `debt`
 --
 
 CREATE TABLE `debt` (
@@ -890,7 +915,7 @@ CREATE TABLE `debt` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `debt`
+-- Đang đổ dữ liệu cho bảng `debt`
 --
 
 INSERT INTO `debt` (`id_patient`, `debt`) VALUES
@@ -913,7 +938,7 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000036, 38000),
 (0000000038, 0),
 (0000000039, 0),
-(0000000040, 420000),
+(0000000040, 200000),
 (0000000041, 0),
 (0000000042, 0),
 (0000000043, 0),
@@ -932,7 +957,7 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logon`
+-- Cấu trúc bảng cho bảng `logon`
 --
 
 CREATE TABLE `logon` (
@@ -940,7 +965,7 @@ CREATE TABLE `logon` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `logon`
+-- Đang đổ dữ liệu cho bảng `logon`
 --
 
 INSERT INTO `logon` (`id_patient`) VALUES
@@ -952,7 +977,7 @@ INSERT INTO `logon` (`id_patient`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `management_history`
+-- Cấu trúc bảng cho bảng `management_history`
 --
 
 CREATE TABLE `management_history` (
@@ -964,7 +989,7 @@ CREATE TABLE `management_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `management_history`
+-- Đang đổ dữ liệu cho bảng `management_history`
 --
 
 INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_pos`) VALUES
@@ -1033,12 +1058,13 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 (0000000089, 0000000007, '2021-12-27', 'Khỏi bệnh', 0000000001),
 (0000000090, 0000000055, '2021-12-29', 'F0', 0000000001),
 (0000000091, 0000000019, '2021-12-29', 'Khỏi bệnh', 0000000001),
-(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001);
+(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001),
+(0000000093, 0000000040, '2022-01-02', 'Khỏi bệnh', 0000000001);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `necessary_packages`
+-- Cấu trúc bảng cho bảng `necessary_packages`
 --
 
 CREATE TABLE `necessary_packages` (
@@ -1051,20 +1077,24 @@ CREATE TABLE `necessary_packages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `necessary_packages`
+-- Đang đổ dữ liệu cho bảng `necessary_packages`
 --
 
 INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`, `date_limit`, `price`, `is_deleted`) VALUES
-(0000000002, 'PACKAGE TEST', 3, '2021-12-14', '19000', 0),
-(0000000003, 'PACKAGE TEST2', 5, '2021-11-16', '69000', 0),
-(0000000004, 'PACKAGE TEST3', 3, '2021-11-16', '19000', 1),
+(0000000002, 'PACKAGE TEST', 3, '2021-12-14', '19000', 1),
+(0000000003, 'PACKAGE TEST2', 5, '2021-11-16', '69000', 1),
+(0000000004, 'PACKAGE TEST4', 3, '2022-11-15', '19000', 1),
 (0000000005, 'PACKAGE TEST4', 6, '2021-11-16', '19000', 1),
-(0000000008, 'PACKAGE TEST3', 3, '2021-11-15', '19000', 0);
+(0000000008, 'PACKAGE TEST4', 3, '2022-11-15', '19000', 1),
+(0000000009, 'KHAU TRANG', 10, '2022-10-10', '10000', 1),
+(0000000010, 'KHỬ KHUẨN TAY', 15, '2022-12-22', '30000', 0),
+(0000000011, 'KIT TEST', 1, '2022-10-10', '120000', 0),
+(0000000012, 'NƯỚC RỬA TAY', 100, '2022-12-22', '20000', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `patients`
+-- Cấu trúc bảng cho bảng `patients`
 --
 
 CREATE TABLE `patients` (
@@ -1080,7 +1110,7 @@ CREATE TABLE `patients` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `patients`
+-- Đang đổ dữ liệu cho bảng `patients`
 --
 
 INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`, `id_town`, `id_vlg`, `state`, `id_pos`) VALUES
@@ -1103,7 +1133,7 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000036, 'ĐÂY LÀ TEST MƯỜI BẢY', '170919999', '1999-09-17', 0000000001, 0000000001, 0000000001, 'F1', 0000000002),
 (0000000038, 'ĐÂY LÀ TEST MƯỜI TÁM', '180819988', '1998-08-18', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000039, 'ĐÂY LÀ TEST MƯỜI CHÍN', '190119919', '1991-01-19', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000041, 'ĐÂY LÀ TEST HAI MỐT', '210119999', '1999-01-21', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000042, 'TÚ', '010120011', '2001-01-01', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000043, 'VĂN', '020120011', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
@@ -1120,7 +1150,7 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000055, 'TEST THỨ HAI BA', '211219922', '1992-12-21', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
 
 --
--- Triggers `patients`
+-- Bẫy `patients`
 --
 DELIMITER $$
 CREATE TRIGGER `addMngmHis_insert` AFTER INSERT ON `patients` FOR EACH ROW BEGIN
@@ -1164,7 +1194,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payment_acc`
+-- Cấu trúc bảng cho bảng `payment_acc`
 --
 
 CREATE TABLE `payment_acc` (
@@ -1173,13 +1203,13 @@ CREATE TABLE `payment_acc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `payment_acc`
+-- Đang đổ dữ liệu cho bảng `payment_acc`
 --
 
 INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
-(0000000020, '80000'),
+(0000000020, '417000'),
 (0000000039, '10000000'),
-(0000000040, '9920000'),
+(0000000040, '9583000'),
 (0000000041, '10000000'),
 (0000000042, '10000000'),
 (0000000043, '10000000'),
@@ -1198,7 +1228,7 @@ INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `provinces`
+-- Cấu trúc bảng cho bảng `provinces`
 --
 
 CREATE TABLE `provinces` (
@@ -1207,18 +1237,20 @@ CREATE TABLE `provinces` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `provinces`
+-- Đang đổ dữ liệu cho bảng `provinces`
 --
 
 INSERT INTO `provinces` (`id`, `name`) VALUES
 (0000000001, 'Hồ Chí Minh'),
 (0000000002, 'Hà Nội'),
-(0000000003, 'An Giang');
+(0000000003, 'Long An'),
+(0000000004, 'Đồng Nai'),
+(0000000005, 'Bình Định');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `provinces_towns`
+-- Cấu trúc bảng cho bảng `provinces_towns`
 --
 
 CREATE TABLE `provinces_towns` (
@@ -1227,16 +1259,40 @@ CREATE TABLE `provinces_towns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `provinces_towns`
+-- Đang đổ dữ liệu cho bảng `provinces_towns`
 --
 
 INSERT INTO `provinces_towns` (`id_prov`, `id_town`) VALUES
-(0000000001, 0000000001);
+(0000000001, 0000000001),
+(0000000001, 0000000002),
+(0000000001, 0000000003),
+(0000000001, 0000000004),
+(0000000001, 0000000005),
+(0000000002, 0000000006),
+(0000000002, 0000000007),
+(0000000002, 0000000008),
+(0000000002, 0000000009),
+(0000000002, 0000000010),
+(0000000003, 0000000011),
+(0000000003, 0000000012),
+(0000000003, 0000000013),
+(0000000003, 0000000014),
+(0000000003, 0000000015),
+(0000000004, 0000000016),
+(0000000004, 0000000017),
+(0000000004, 0000000018),
+(0000000004, 0000000019),
+(0000000004, 0000000020),
+(0000000005, 0000000021),
+(0000000005, 0000000022),
+(0000000005, 0000000023),
+(0000000005, 0000000024),
+(0000000005, 0000000025);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `quarantinepos`
+-- Cấu trúc bảng cho bảng `quarantinepos`
 --
 
 CREATE TABLE `quarantinepos` (
@@ -1247,17 +1303,18 @@ CREATE TABLE `quarantinepos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `quarantinepos`
+-- Đang đổ dữ liệu cho bảng `quarantinepos`
 --
 
 INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUES
 (0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000925),
-(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104);
+(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104),
+(0000000003, 'Bệnh viện Chợ Rẫy', 0000001200, 0000000850);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `related_persons`
+-- Cấu trúc bảng cho bảng `related_persons`
 --
 
 CREATE TABLE `related_persons` (
@@ -1266,7 +1323,7 @@ CREATE TABLE `related_persons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `related_persons`
+-- Đang đổ dữ liệu cho bảng `related_persons`
 --
 
 INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
@@ -1285,7 +1342,7 @@ INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `towns`
+-- Cấu trúc bảng cho bảng `towns`
 --
 
 CREATE TABLE `towns` (
@@ -1294,16 +1351,40 @@ CREATE TABLE `towns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `towns`
+-- Đang đổ dữ liệu cho bảng `towns`
 --
 
 INSERT INTO `towns` (`id`, `name`) VALUES
-(0000000001, 'Quận 1');
+(0000000001, 'Quận 1'),
+(0000000002, 'Quận 3'),
+(0000000003, 'Quận 5'),
+(0000000004, 'Quận 10'),
+(0000000005, 'Quận Bình Thạnh'),
+(0000000006, 'Từ Liêm'),
+(0000000007, 'Hà Đông'),
+(0000000008, 'Ba Đình'),
+(0000000009, 'Cầu Giấy'),
+(0000000010, 'Hoàn Kiếm'),
+(0000000011, 'Cần Đước'),
+(0000000012, 'Tân An'),
+(0000000013, 'Cần Giuộc'),
+(0000000014, 'Bến Lức'),
+(0000000015, 'Đức Hòa'),
+(0000000016, 'Thống Nhất'),
+(0000000017, 'Biên Hòa'),
+(0000000018, 'Định Quán'),
+(0000000019, 'Long Khánh'),
+(0000000020, 'Long Thành'),
+(0000000021, 'Quy Nhơn'),
+(0000000022, 'Tây Sơn'),
+(0000000023, 'An Nhơn'),
+(0000000024, 'Phù Cát'),
+(0000000025, 'Hoài Nhơn');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `towns_villages`
+-- Cấu trúc bảng cho bảng `towns_villages`
 --
 
 CREATE TABLE `towns_villages` (
@@ -1312,16 +1393,45 @@ CREATE TABLE `towns_villages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `towns_villages`
+-- Đang đổ dữ liệu cho bảng `towns_villages`
 --
 
 INSERT INTO `towns_villages` (`id_town`, `id_vlg`) VALUES
-(0000000001, 0000000001);
+(0000000001, 0000000001),
+(0000000001, 0000000002),
+(0000000001, 0000000003),
+(0000000001, 0000000004),
+(0000000001, 0000000005),
+(0000000002, 0000000006),
+(0000000002, 0000000007),
+(0000000002, 0000000008),
+(0000000002, 0000000009),
+(0000000002, 0000000010),
+(0000000003, 0000000011),
+(0000000003, 0000000012),
+(0000000003, 0000000013),
+(0000000003, 0000000014),
+(0000000003, 0000000015),
+(0000000004, 0000000016),
+(0000000004, 0000000017),
+(0000000004, 0000000018),
+(0000000004, 0000000019),
+(0000000004, 0000000020),
+(0000000005, 0000000021),
+(0000000005, 0000000022),
+(0000000005, 0000000023),
+(0000000005, 0000000024),
+(0000000005, 0000000025),
+(0000000006, 0000000026),
+(0000000006, 0000000027),
+(0000000006, 0000000028),
+(0000000006, 0000000029),
+(0000000006, 0000000030);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaction_history`
+-- Cấu trúc bảng cho bảng `transaction_history`
 --
 
 CREATE TABLE `transaction_history` (
@@ -1335,17 +1445,23 @@ CREATE TABLE `transaction_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `transaction_history`
+-- Đang đổ dữ liệu cho bảng `transaction_history`
 --
 
 INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `date_trans`, `remaining_debt`, `remaining_balance`) VALUES
 (0000000002, 0000000040, 0000000020, '20000', '2021-11-17 09:44:11', '480000', '9980000'),
 (0000000003, 0000000040, 0000000020, '20000', '2021-11-17 10:11:56', '460000', '9960000'),
 (0000000004, 0000000040, 0000000020, '20000', '2021-11-17 11:00:00', '440000', '9940000'),
-(0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000');
+(0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000'),
+(0000000006, 0000000040, 0000000020, '20000', '2022-01-02 15:50:01', '400000', '9900000'),
+(0000000007, 0000000040, 0000000020, '20000', '2022-01-02 15:50:01', '380000', '9880000'),
+(0000000008, 0000000040, 0000000020, '40000', '2022-01-02 15:50:09', '340000', '9840000'),
+(0000000009, 0000000040, 0000000020, '97000', '2022-01-02 15:56:16', '300000', '9743000'),
+(0000000010, 0000000040, 0000000020, '60000', '2022-01-04 07:23:47', '300000', '9683000'),
+(0000000011, 0000000040, 0000000020, '100000', '2022-01-04 17:20:40', '200000', '9583000');
 
 --
--- Triggers `transaction_history`
+-- Bẫy `transaction_history`
 --
 DELIMITER $$
 CREATE TRIGGER `updateBalanceAndDebt` BEFORE INSERT ON `transaction_history` FOR EACH ROW begin
@@ -1372,7 +1488,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `villages`
+-- Cấu trúc bảng cho bảng `villages`
 --
 
 CREATE TABLE `villages` (
@@ -1381,25 +1497,54 @@ CREATE TABLE `villages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `villages`
+-- Đang đổ dữ liệu cho bảng `villages`
 --
 
 INSERT INTO `villages` (`id`, `name`) VALUES
-(0000000001, 'Phường Cầu Ông Lãnh');
+(0000000001, 'Phường Bến Nghé'),
+(0000000002, 'Phường Bến Thành'),
+(0000000003, 'Phường Đa Kao'),
+(0000000004, 'Phường Nguyễn Cư Trinh'),
+(0000000005, 'Phường  Nguyễn Thái Bình'),
+(0000000006, 'Phường 1'),
+(0000000007, 'Phường 2'),
+(0000000008, 'Phường 3'),
+(0000000009, 'Phường 4'),
+(0000000010, 'Phường 5'),
+(0000000011, 'Phường 1'),
+(0000000012, 'Phường 2'),
+(0000000013, 'Phường 3'),
+(0000000014, 'Phường 4'),
+(0000000015, 'Phường 5'),
+(0000000016, 'Phường 1'),
+(0000000017, 'Phường 2'),
+(0000000018, 'Phường 3'),
+(0000000019, 'Phường 4'),
+(0000000020, 'Phường 5'),
+(0000000021, 'Phường 1'),
+(0000000022, 'Phường 2'),
+(0000000023, 'Phường 3'),
+(0000000024, 'Phường 5'),
+(0000000025, 'Phường 6'),
+(0000000026, 'Cầu Diễn'),
+(0000000027, 'Mỹ Đình 1'),
+(0000000028, 'Mỹ Đình 2'),
+(0000000029, 'Xuân Phương'),
+(0000000030, 'Phương Canh');
 
 --
--- Indexes for dumped tables
+-- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Indexes for table `accounts`
+-- Chỉ mục cho bảng `accounts`
 --
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `usrname` (`usrname`);
 
 --
--- Indexes for table `activity_history`
+-- Chỉ mục cho bảng `activity_history`
 --
 ALTER TABLE `activity_history`
   ADD PRIMARY KEY (`id`),
@@ -1407,7 +1552,7 @@ ALTER TABLE `activity_history`
   ADD KEY `fk_acthis_account` (`usr_manager`);
 
 --
--- Indexes for table `bought_pkg_history`
+-- Chỉ mục cho bảng `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
   ADD PRIMARY KEY (`id`),
@@ -1415,19 +1560,19 @@ ALTER TABLE `bought_pkg_history`
   ADD KEY `fk_bpkghis_pkg` (`id_pkg`);
 
 --
--- Indexes for table `debt`
+-- Chỉ mục cho bảng `debt`
 --
 ALTER TABLE `debt`
   ADD PRIMARY KEY (`id_patient`);
 
 --
--- Indexes for table `logon`
+-- Chỉ mục cho bảng `logon`
 --
 ALTER TABLE `logon`
   ADD PRIMARY KEY (`id_patient`);
 
 --
--- Indexes for table `management_history`
+-- Chỉ mục cho bảng `management_history`
 --
 ALTER TABLE `management_history`
   ADD PRIMARY KEY (`id`),
@@ -1435,13 +1580,13 @@ ALTER TABLE `management_history`
   ADD KEY `fk_mgmthis_qrtpos` (`id_qrt_pos`);
 
 --
--- Indexes for table `necessary_packages`
+-- Chỉ mục cho bảng `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `patients`
+-- Chỉ mục cho bảng `patients`
 --
 ALTER TABLE `patients`
   ADD PRIMARY KEY (`id`),
@@ -1452,53 +1597,53 @@ ALTER TABLE `patients`
   ADD KEY `fk_patients_vlg` (`id_vlg`);
 
 --
--- Indexes for table `payment_acc`
+-- Chỉ mục cho bảng `payment_acc`
 --
 ALTER TABLE `payment_acc`
   ADD PRIMARY KEY (`id_acc`);
 
 --
--- Indexes for table `provinces`
+-- Chỉ mục cho bảng `provinces`
 --
 ALTER TABLE `provinces`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `provinces_towns`
+-- Chỉ mục cho bảng `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
   ADD PRIMARY KEY (`id_prov`,`id_town`),
   ADD KEY `fk_provtown_town` (`id_town`);
 
 --
--- Indexes for table `quarantinepos`
+-- Chỉ mục cho bảng `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Indexes for table `related_persons`
+-- Chỉ mục cho bảng `related_persons`
 --
 ALTER TABLE `related_persons`
   ADD PRIMARY KEY (`id_patient`,`id_related`),
   ADD KEY `fk_rltper_patient_to` (`id_related`);
 
 --
--- Indexes for table `towns`
+-- Chỉ mục cho bảng `towns`
 --
 ALTER TABLE `towns`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `towns_villages`
+-- Chỉ mục cho bảng `towns_villages`
 --
 ALTER TABLE `towns_villages`
   ADD PRIMARY KEY (`id_town`,`id_vlg`),
   ADD KEY `fk_townvlg_vlg` (`id_vlg`);
 
 --
--- Indexes for table `transaction_history`
+-- Chỉ mục cho bảng `transaction_history`
 --
 ALTER TABLE `transaction_history`
   ADD PRIMARY KEY (`id`),
@@ -1506,120 +1651,120 @@ ALTER TABLE `transaction_history`
   ADD KEY `FK_transHis_toIDAcc` (`to_id_acc`);
 
 --
--- Indexes for table `villages`
+-- Chỉ mục cho bảng `villages`
 --
 ALTER TABLE `villages`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT for table `accounts`
+-- AUTO_INCREMENT cho bảng `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT for table `activity_history`
+-- AUTO_INCREMENT cho bảng `activity_history`
 --
 ALTER TABLE `activity_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
--- AUTO_INCREMENT for table `bought_pkg_history`
+-- AUTO_INCREMENT cho bảng `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `debt`
+-- AUTO_INCREMENT cho bảng `debt`
 --
 ALTER TABLE `debt`
   MODIFY `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
--- AUTO_INCREMENT for table `management_history`
+-- AUTO_INCREMENT cho bảng `management_history`
 --
 ALTER TABLE `management_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
--- AUTO_INCREMENT for table `necessary_packages`
+-- AUTO_INCREMENT cho bảng `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `provinces`
+-- AUTO_INCREMENT cho bảng `provinces`
 --
 ALTER TABLE `provinces`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `quarantinepos`
---
-ALTER TABLE `quarantinepos`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `towns`
---
-ALTER TABLE `towns`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `transaction_history`
---
-ALTER TABLE `transaction_history`
   MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `villages`
+-- AUTO_INCREMENT cho bảng `quarantinepos`
+--
+ALTER TABLE `quarantinepos`
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT cho bảng `towns`
+--
+ALTER TABLE `towns`
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT cho bảng `transaction_history`
+--
+ALTER TABLE `transaction_history`
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT cho bảng `villages`
 --
 ALTER TABLE `villages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- Constraints for dumped tables
+-- Các ràng buộc cho các bảng đã đổ
 --
 
 --
--- Constraints for table `activity_history`
+-- Các ràng buộc cho bảng `activity_history`
 --
 ALTER TABLE `activity_history`
   ADD CONSTRAINT `FK_actHis_patients` FOREIGN KEY (`id_card_patient`) REFERENCES `patients` (`id_card`),
   ADD CONSTRAINT `fk_acthis_account` FOREIGN KEY (`usr_manager`) REFERENCES `accounts` (`usrname`);
 
 --
--- Constraints for table `bought_pkg_history`
+-- Các ràng buộc cho bảng `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
   ADD CONSTRAINT `fk_bpkghis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_bpkghis_pkg` FOREIGN KEY (`id_pkg`) REFERENCES `necessary_packages` (`id`);
 
 --
--- Constraints for table `debt`
+-- Các ràng buộc cho bảng `debt`
 --
 ALTER TABLE `debt`
   ADD CONSTRAINT `debt_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
--- Constraints for table `logon`
+-- Các ràng buộc cho bảng `logon`
 --
 ALTER TABLE `logon`
   ADD CONSTRAINT `FK_logon_acc` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
--- Constraints for table `management_history`
+-- Các ràng buộc cho bảng `management_history`
 --
 ALTER TABLE `management_history`
   ADD CONSTRAINT `fk_mgmthis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_mgmthis_qrtpos` FOREIGN KEY (`id_qrt_pos`) REFERENCES `quarantinepos` (`id`);
 
 --
--- Constraints for table `patients`
+-- Các ràng buộc cho bảng `patients`
 --
 ALTER TABLE `patients`
   ADD CONSTRAINT `fk_patients_acc` FOREIGN KEY (`id`) REFERENCES `accounts` (`id`),
@@ -1629,34 +1774,34 @@ ALTER TABLE `patients`
   ADD CONSTRAINT `fk_patients_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
--- Constraints for table `payment_acc`
+-- Các ràng buộc cho bảng `payment_acc`
 --
 ALTER TABLE `payment_acc`
   ADD CONSTRAINT `FK_paymentAcc_Accounts` FOREIGN KEY (`id_acc`) REFERENCES `accounts` (`id`);
 
 --
--- Constraints for table `provinces_towns`
+-- Các ràng buộc cho bảng `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
   ADD CONSTRAINT `fk_provtown_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
   ADD CONSTRAINT `fk_provtown_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`);
 
 --
--- Constraints for table `related_persons`
+-- Các ràng buộc cho bảng `related_persons`
 --
 ALTER TABLE `related_persons`
   ADD CONSTRAINT `fk_rltper_patient_from` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_rltper_patient_to` FOREIGN KEY (`id_related`) REFERENCES `patients` (`id`);
 
 --
--- Constraints for table `towns_villages`
+-- Các ràng buộc cho bảng `towns_villages`
 --
 ALTER TABLE `towns_villages`
   ADD CONSTRAINT `fk_townvlg_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
   ADD CONSTRAINT `fk_townvlg_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
--- Constraints for table `transaction_history`
+-- Các ràng buộc cho bảng `transaction_history`
 --
 ALTER TABLE `transaction_history`
   ADD CONSTRAINT `FK_transHis_fromIDAcc` FOREIGN KEY (`from_id_acc`) REFERENCES `accounts` (`id`),
