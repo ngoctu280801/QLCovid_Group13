@@ -39,7 +39,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Vector;
 
@@ -47,7 +46,6 @@ import javax.swing.SwingConstants;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.CardLayout;
 import java.awt.Font;
 
 import javax.swing.JComboBox;
@@ -738,6 +736,14 @@ public class Packages extends JDialog {
 				dtm.addRow(new String[] {txtPkgName.getText(), txtLimit.getText(),
 						txtDate.getValue().toString(), txtPrice.getText()});
 				JOptionPane.showMessageDialog(null, "Thêm gói nhu yếu phẩm thành công");
+				btnShowAddPkg.setText("Thêm gói");
+				btnShowAddPkg.setEnabled(true);
+				pnUtils.setVisible(false);
+				txtDate.setText("");
+				txtLimit.setText("");
+				txtPkgName.setText("");
+				txtPrice.setText("");
+				btnShowChangePkg.setText("Sửa gói");
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "Lỗi khi thực hiện thêm gói nhu yếu phẩm");
@@ -782,6 +788,14 @@ public class Packages extends JDialog {
 				dtm.setValueAt(txtPrice.getText(), row, 3);
 				btnAddPkg.setEnabled(false);
 				JOptionPane.showMessageDialog(null, "Cập nhật gói thành công");
+				btnDelPkg.setEnabled(true);
+				btnShowAddPkg.setEnabled(true);
+				pnUtils.setVisible(false);
+				txtDate.setText("");
+				txtLimit.setText("");
+				txtPkgName.setText("");
+				txtPrice.setText("");
+				btnShowChangePkg.setText("Sửa gói");
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "Thất bại. Xin vui lòng thử lại sau");

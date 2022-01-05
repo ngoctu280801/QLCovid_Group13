@@ -417,9 +417,24 @@ public class AdminPanel extends JFrame {
 					}
 					if(btnAdd_Update.getText().equals("Thêm")){
 						addQrtPos(txtQrtName.getText(), txtCapacity.getText(), txtCurCapacity.getText());
+						pnQrtPosMngm.setVisible(false);
+						btnAddQrtPos.setText("Thêm địa điểm mới");
+						resetInput();
+						btnAdd_Update.setEnabled(false);
+						pnQrtPosMngm.setVisible(false);
+						if(tblQrtPosL.getSelectedRowCount() == 1){
+							btnUpdateQrtPos.setEnabled(true);
+						}
+						
 					}
 					else{
 						updateQrtPos(txtQrtName.getText(), txtCapacity.getText(), txtCurCapacity.getText());
+						pnQrtPosMngm.setVisible(false);
+						btnUpdateQrtPos.setText("Sửa địa điểm");
+						btnAdd_Update.setEnabled(false);
+						resetInput();
+						pnQrtPosMngm.setVisible(false);
+						btnAddQrtPos.setEnabled(true);
 					}
 				}
 			}

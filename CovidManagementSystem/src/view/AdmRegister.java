@@ -284,9 +284,58 @@ public class AdmRegister extends JDialog {
 				}
 			});
 			
-			//btnFind
-			
-			//txtIdCard2Find
+			btnFind.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if(!txtIdCard2Find.getText().equals("")){
+						if(!validateIdCard(txtIdCard2Find.getText())){
+							JOptionPane.showMessageDialog(null, "Vui lòng kiểm tra lại số CMND/ CCCD");
+							return;
+						}
+						String s = "select * from patients where id_card ='"
+								+ txtIdCard2Find.getText() + "' and state = '"
+								+ findFBefore(cbState.getSelectedItem().toString()) + "';";
+						Statement[] stmt = new Statement[] {null};
+						try {
+							ResultSet rs = dbi.query(s, stmt);
+							if(!rs.isBeforeFirst()){
+								JOptionPane.showMessageDialog(null, "Không tồn tại người nào hiện đang là "
+										+ findFBefore(cbState.getSelectedItem().toString())
+										+ " có số CMND/ CCCD: "
+										+ txtIdCard2Find.getText() 
+										+ " trong hệ thống");
+								return;
+							}
+							else{
+								PatientInfo pIn4 = new PatientInfo(dbi, dtm, tblRelatedPer, txtIdCard2Find.getText(), 0);
+								pIn4.setModal(true);
+								pIn4.setVisible(true);
+								//JOptionPane.showMessageDialog(null,
+								//		((Vector)dtm.getDataVector().elementAt(row)).elementAt(col));
+
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								if(stmt[0] != null){
+									stmt[0].close();
+								}				
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			});
+			txtIdCard2Find.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if(txtIdCard2Find.getText().equals("Nhập CMND/ CCCD")){
+						txtIdCard2Find.setText("");
+					}
+				}
+			});
 			
 			txtDOB.addFocusListener(new FocusAdapter() {
 				@Override
