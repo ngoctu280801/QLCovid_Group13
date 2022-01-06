@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th1 05, 2022 lúc 05:17 AM
+-- Thời gian đã tạo: Th1 06, 2022 lúc 05:29 AM
 -- Phiên bản máy phục vụ: 10.4.21-MariaDB
 -- Phiên bản PHP: 8.0.12
 
@@ -698,8 +698,7 @@ INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VA
 (0000000052, 'cf2', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000054, 'manager4', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 0, 0),
-(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
-(0000000056, 'manager5', 'e5486a6670a3f3b6821574c1812be01914b9908a94be89e1c8', 0, 0);
+(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
 
 --
 -- Bẫy `accounts`
@@ -834,30 +833,14 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 (0000000091, 'manager', '2021-12-29', '211219922', 'Thêm 211219922 làm F0 tại Bệnh viện Bạch Mai'),
 (0000000092, 'manager', '2021-12-29', '444444444', 'Chuyển 444444444 từ F1 thành Khỏi bệnh'),
 (0000000093, 'manager', '2021-12-29', '210119999', 'Chuyển 210119999 từ F2 thành Khỏi bệnh'),
-(0000000094, 'manager', '2022-01-02', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST3, hạn mức 3 gói/ người, bán đến hết ngày 2022-11-15 với giá 19,000 VNĐ'),
-(0000000095, 'manager', '2022-01-02', '200120011', 'Chuyển 200120011 từ F0 thành Khỏi bệnh'),
-(0000000096, 'manager', '2022-01-04', NULL, 'Thêm gói KHAU TRANG, hạn mức 10 gói/ người, bán đến hết ngày 2022-10-10 với giá 10,000 VNĐ'),
-(0000000097, 'manager', '2022-01-04', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST3, hạn mức 10 gói/ người, bán đến hết ngày 2022-11-15 với giá 20,000 VNĐ'),
-(0000000098, 'manager', '2022-01-04', NULL, 'Cập nhật gói PACKAGE TEST3 thành gói PACKAGE TEST4, hạn mức 3 gói/ người, bán đến hết ngày 2022-11-15 với giá 19,000 VNĐ'),
-(0000000099, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST4'),
-(0000000100, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST4'),
-(0000000101, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST2'),
-(0000000102, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST2'),
-(0000000103, 'manager', '2022-01-04', NULL, 'Thêm gói KHỬ KHUẨN, hạn mức 2 gói/ người, bán đến hết ngày 2022-10-22 với giá 15,000 VNĐ'),
-(0000000104, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
-(0000000105, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
-(0000000106, 'manager', '2022-01-04', NULL, 'Xoá gói PACKAGE TEST'),
-(0000000107, 'manager', '2022-01-04', NULL, 'Xoá gói KHAU TRANG'),
-(0000000108, 'manager', '2022-01-04', NULL, 'Thêm gói KIT TEST, hạn mức 2 gói/ người, bán đến hết ngày 2022-12-22 với giá 120,000 VNĐ'),
-(0000000109, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN thành gói KHỬ KHUẨN, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-22 với giá 15,000 VNĐ'),
-(0000000110, 'manager', '2022-01-04', NULL, 'Thêm gói NƯỚC RỬA TAY, hạn mức 10 gói/ người, bán đến hết ngày 2022-12-12 với giá 20,000 VNĐ'),
-(0000000111, 'manager', '2022-01-04', NULL, 'Cập nhật gói NƯỚC RỬA TAY thành gói NƯỚC RỬA TAY, hạn mức 15 gói/ người, bán đến hết ngày 2022-12-12 với giá 20,000 VNĐ'),
-(0000000112, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN thành gói KHỬ KHUẨN TAY, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-12 với giá 15,000 VNĐ'),
-(0000000113, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN TAY thành gói KHỬ KHUẨN TAY, hạn mức 5 gói/ người, bán đến hết ngày 2022-12-22 với giá 30,000 VNĐ'),
-(0000000114, 'manager', '2022-01-04', NULL, 'Cập nhật gói NƯỚC RỬA TAY thành gói NƯỚC RỬA TAY, hạn mức 100 gói/ người, bán đến hết ngày 2022-12-22 với giá 20,000 VNĐ'),
-(0000000115, 'manager', '2022-01-04', NULL, 'Cập nhật gói KHỬ KHUẨN TAY thành gói KHỬ KHUẨN TAY, hạn mức 15 gói/ người, bán đến hết ngày 2022-12-22 với giá 30,000 VNĐ'),
-(0000000116, 'manager', '2022-01-04', NULL, 'Cập nhật gói KIT TEST thành gói KIT TEST, hạn mức 20 gói/ người, bán đến hết ngày 2022-10-10 với giá 120,000 VNĐ'),
-(0000000117, 'manager', '2022-01-04', NULL, 'Cập nhật gói KIT TEST thành gói KIT TEST, hạn mức 01 gói/ người, bán đến hết ngày 2022-10-10 với giá 120,000 VNĐ');
+(0000000094, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000095, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000096, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000097, 'manager', '2022-01-06', NULL, 'Thêm gói KHAU TRANG, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-22 với giá 10,000 VNĐ'),
+(0000000098, 'manager', '2022-01-06', NULL, 'Thêm gói KHU KHUAN, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-20 với giá 100,000 VNĐ'),
+(0000000099, 'manager', '2022-01-06', NULL, 'Thêm gói KIT TEST, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-20 với giá 120,000 VNĐ'),
+(0000000100, 'manager', '2022-01-06', NULL, 'Xoá gói KHU KHUAN'),
+(0000000101, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST');
 
 -- --------------------------------------------------------
 
@@ -884,9 +867,7 @@ INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `dat
 (0000000010, 0000000025, 0000000002, 2, '2021-11-14', '38000'),
 (0000000011, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
 (0000000012, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
-(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000'),
-(0000000014, 0000000040, 0000000004, 3, '2022-01-02', '57000'),
-(0000000015, 0000000040, 0000000009, 6, '2022-01-04', '60000');
+(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000');
 
 --
 -- Bẫy `bought_pkg_history`
@@ -938,7 +919,7 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000036, 38000),
 (0000000038, 0),
 (0000000039, 0),
-(0000000040, 200000),
+(0000000040, 420000),
 (0000000041, 0),
 (0000000042, 0),
 (0000000043, 0),
@@ -1058,8 +1039,7 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 (0000000089, 0000000007, '2021-12-27', 'Khỏi bệnh', 0000000001),
 (0000000090, 0000000055, '2021-12-29', 'F0', 0000000001),
 (0000000091, 0000000019, '2021-12-29', 'Khỏi bệnh', 0000000001),
-(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001),
-(0000000093, 0000000040, '2022-01-02', 'Khỏi bệnh', 0000000001);
+(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001);
 
 -- --------------------------------------------------------
 
@@ -1083,13 +1063,12 @@ CREATE TABLE `necessary_packages` (
 INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`, `date_limit`, `price`, `is_deleted`) VALUES
 (0000000002, 'PACKAGE TEST', 3, '2021-12-14', '19000', 1),
 (0000000003, 'PACKAGE TEST2', 5, '2021-11-16', '69000', 1),
-(0000000004, 'PACKAGE TEST4', 3, '2022-11-15', '19000', 1),
+(0000000004, 'PACKAGE TEST3', 3, '2021-11-16', '19000', 1),
 (0000000005, 'PACKAGE TEST4', 6, '2021-11-16', '19000', 1),
-(0000000008, 'PACKAGE TEST4', 3, '2022-11-15', '19000', 1),
-(0000000009, 'KHAU TRANG', 10, '2022-10-10', '10000', 1),
-(0000000010, 'KHỬ KHUẨN TAY', 15, '2022-12-22', '30000', 0),
-(0000000011, 'KIT TEST', 1, '2022-10-10', '120000', 0),
-(0000000012, 'NƯỚC RỬA TAY', 100, '2022-12-22', '20000', 0);
+(0000000008, 'PACKAGE TEST3', 3, '2021-11-15', '19000', 1),
+(0000000009, 'KHAU TRANG', 10, '2023-02-22', '10000', 0),
+(0000000010, 'KHU KHUAN', 10, '2023-02-20', '100000', 1),
+(0000000011, 'KIT TEST', 10, '2023-02-20', '120000', 1);
 
 -- --------------------------------------------------------
 
@@ -1133,7 +1112,7 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000036, 'ĐÂY LÀ TEST MƯỜI BẢY', '170919999', '1999-09-17', 0000000001, 0000000001, 0000000001, 'F1', 0000000002),
 (0000000038, 'ĐÂY LÀ TEST MƯỜI TÁM', '180819988', '1998-08-18', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000039, 'ĐÂY LÀ TEST MƯỜI CHÍN', '190119919', '1991-01-19', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
+(0000000040, 'ĐÂY LÀ TEST HAI MƯƠI', '200120011', '2001-01-20', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000041, 'ĐÂY LÀ TEST HAI MỐT', '210119999', '1999-01-21', 0000000001, 0000000001, 0000000001, 'Khỏi bệnh', 0000000001),
 (0000000042, 'TÚ', '010120011', '2001-01-01', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
 (0000000043, 'VĂN', '020120011', '2001-01-02', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
@@ -1207,9 +1186,9 @@ CREATE TABLE `payment_acc` (
 --
 
 INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
-(0000000020, '417000'),
+(0000000020, '80000'),
 (0000000039, '10000000'),
-(0000000040, '9583000'),
+(0000000040, '9920000'),
 (0000000041, '10000000'),
 (0000000042, '10000000'),
 (0000000043, '10000000'),
@@ -1308,8 +1287,7 @@ CREATE TABLE `quarantinepos` (
 
 INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUES
 (0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000925),
-(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104),
-(0000000003, 'Bệnh viện Chợ Rẫy', 0000001200, 0000000850);
+(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104);
 
 -- --------------------------------------------------------
 
@@ -1421,12 +1399,7 @@ INSERT INTO `towns_villages` (`id_town`, `id_vlg`) VALUES
 (0000000005, 0000000022),
 (0000000005, 0000000023),
 (0000000005, 0000000024),
-(0000000005, 0000000025),
-(0000000006, 0000000026),
-(0000000006, 0000000027),
-(0000000006, 0000000028),
-(0000000006, 0000000029),
-(0000000006, 0000000030);
+(0000000005, 0000000025);
 
 -- --------------------------------------------------------
 
@@ -1452,13 +1425,7 @@ INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `
 (0000000002, 0000000040, 0000000020, '20000', '2021-11-17 09:44:11', '480000', '9980000'),
 (0000000003, 0000000040, 0000000020, '20000', '2021-11-17 10:11:56', '460000', '9960000'),
 (0000000004, 0000000040, 0000000020, '20000', '2021-11-17 11:00:00', '440000', '9940000'),
-(0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000'),
-(0000000006, 0000000040, 0000000020, '20000', '2022-01-02 15:50:01', '400000', '9900000'),
-(0000000007, 0000000040, 0000000020, '20000', '2022-01-02 15:50:01', '380000', '9880000'),
-(0000000008, 0000000040, 0000000020, '40000', '2022-01-02 15:50:09', '340000', '9840000'),
-(0000000009, 0000000040, 0000000020, '97000', '2022-01-02 15:56:16', '300000', '9743000'),
-(0000000010, 0000000040, 0000000020, '60000', '2022-01-04 07:23:47', '300000', '9683000'),
-(0000000011, 0000000040, 0000000020, '100000', '2022-01-04 17:20:40', '200000', '9583000');
+(0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000');
 
 --
 -- Bẫy `transaction_history`
@@ -1505,7 +1472,7 @@ INSERT INTO `villages` (`id`, `name`) VALUES
 (0000000002, 'Phường Bến Thành'),
 (0000000003, 'Phường Đa Kao'),
 (0000000004, 'Phường Nguyễn Cư Trinh'),
-(0000000005, 'Phường  Nguyễn Thái Bình'),
+(0000000005, 'Phường Nguyễn Thái Bình'),
 (0000000006, 'Phường 1'),
 (0000000007, 'Phường 2'),
 (0000000008, 'Phường 3'),
@@ -1525,12 +1492,7 @@ INSERT INTO `villages` (`id`, `name`) VALUES
 (0000000022, 'Phường 2'),
 (0000000023, 'Phường 3'),
 (0000000024, 'Phường 5'),
-(0000000025, 'Phường 6'),
-(0000000026, 'Cầu Diễn'),
-(0000000027, 'Mỹ Đình 1'),
-(0000000028, 'Mỹ Đình 2'),
-(0000000029, 'Xuân Phương'),
-(0000000030, 'Phương Canh');
+(0000000025, 'Phường 6');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -1664,19 +1626,19 @@ ALTER TABLE `villages`
 -- AUTO_INCREMENT cho bảng `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT cho bảng `activity_history`
 --
 ALTER TABLE `activity_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT cho bảng `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT cho bảng `debt`
@@ -1688,13 +1650,13 @@ ALTER TABLE `debt`
 -- AUTO_INCREMENT cho bảng `management_history`
 --
 ALTER TABLE `management_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT cho bảng `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT cho bảng `provinces`
@@ -1706,7 +1668,7 @@ ALTER TABLE `provinces`
 -- AUTO_INCREMENT cho bảng `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT cho bảng `towns`
@@ -1718,13 +1680,13 @@ ALTER TABLE `towns`
 -- AUTO_INCREMENT cho bảng `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `villages`
 --
 ALTER TABLE `villages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
