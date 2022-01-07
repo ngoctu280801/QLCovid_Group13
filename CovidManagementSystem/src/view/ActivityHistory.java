@@ -18,6 +18,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.log4j.Logger;
+
 import model.DateComparator;
 import model.DbInteraction;
 import model.Utils;
@@ -30,6 +32,7 @@ public class ActivityHistory extends JDialog {
 	private DefaultTableModel dtm;
 	private DbInteraction dbi;
 	private TableRowSorter<TableModel> sorter;
+	private static final Logger logger = Logger.getLogger(ActivityHistory.class); 
 
 
 	public ActivityHistory(DbInteraction dbi, String usrManager) {
@@ -97,6 +100,7 @@ public class ActivityHistory extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy dữ liệu từ bảng activity_history");
 		}  finally {
 			try {
 				if(stmt[0] != null){

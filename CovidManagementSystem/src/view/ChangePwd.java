@@ -8,6 +8,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -39,6 +42,7 @@ public class ChangePwd extends JDialog {
 	private boolean isFirstLogin;
 	private boolean changeSuccessful;
 	private final String[] pwd;
+	private static final Logger logger = Logger.getLogger(ChangePwd.class); 
 
 	/**
 	 * Create the dialog.
@@ -162,6 +166,7 @@ public class ChangePwd extends JDialog {
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							logger.error("Lỗi khi hash mật khẩu");
 						}
 						
 					}
@@ -175,6 +180,7 @@ public class ChangePwd extends JDialog {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra");
+					logger.error("Lỗi khi đổi mật khẩu");
 				}
 			}
 		});
@@ -206,6 +212,7 @@ public class ChangePwd extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra. Không thể thực hiện việc đổi mật khẩu");
+			logger.error("Lỗi khi lấy dữ liệu từ bảng accounts");
 		} finally {
 			try {
 				if(stmt1[0] != null){
@@ -216,6 +223,7 @@ public class ChangePwd extends JDialog {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import model.ChartStat;
 import model.DbInteraction;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 
@@ -23,7 +24,7 @@ public class StatisticView extends JDialog {
 	private static ChartStat chartStat;
 	private static final JPanel pnChart = new JPanel();
 	private static JButton btnNumOfPersonByTime, btnNumOfPkgConsumed, btnDebt,btnNumOfCuredPatients, btnNumOfChangedStatePatients;
-
+	private static final Logger logger = Logger.getLogger(StatisticView.class);
 	public StatisticView(DbInteraction dbi) {
 		this.dbi = dbi;
 		addControls();

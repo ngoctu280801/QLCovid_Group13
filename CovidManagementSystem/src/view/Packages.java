@@ -21,6 +21,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -83,6 +86,7 @@ public class Packages extends JDialog {
 	private JComboBox cbQuantity;
 	private JButton btnAddToCart, btnPay;
 	private Vector<Integer> quantityOfBoughtPkgL;
+	private static final Logger logger = Logger.getLogger(Packages.class); 
 
 	public Packages(DbInteraction dbi, String usrManager, String idCard, DefaultTableModel dtmBPH) {
 		this.dbi = dbi;
@@ -504,6 +508,7 @@ public class Packages extends JDialog {
 			dateMask = new MaskFormatter("##/##/####");
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("Failed!",e);
 		}
 
 		dtm = new DefaultTableModel();
@@ -732,6 +737,7 @@ public class Packages extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy dữ liệu tất cả các gói từ bảng pkg_name");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -739,6 +745,7 @@ public class Packages extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -775,6 +782,7 @@ public class Packages extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Lỗi không xác định khi thêm gói");
+			logger.error("Lỗi không xác định khi thêm gói");
 		} finally{
 			if(st != null){
 				try {
@@ -782,6 +790,7 @@ public class Packages extends JDialog {
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					logger.error("Failed!",e);
 				}
 			}
 		}
@@ -827,6 +836,7 @@ public class Packages extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi, không thể cập nhật gói lúc này");
+			logger.error("Lỗi khi cập nhật gói");
 		} finally{
 			if(st != null){
 				try {
@@ -834,6 +844,7 @@ public class Packages extends JDialog {
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					logger.error("Failed!",e);
 				}
 			}
 		}
@@ -865,6 +876,7 @@ public class Packages extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi, không thể xoá gói nào");
+			logger.error("Lỗi khi xoá gói");
 		} finally{
 			if(st != null){
 				try {
@@ -872,6 +884,7 @@ public class Packages extends JDialog {
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					logger.error("Failed!",e);
 				}
 			}
 		}
@@ -901,6 +914,7 @@ public class Packages extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi kiểm tra nếu tên gói đã tồn tại");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -908,6 +922,7 @@ public class Packages extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		return true;
@@ -1005,12 +1020,14 @@ public class Packages extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi đặt mua gói");
 		} finally{
 			if(st != null){
 				try {
 					st.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
+					logger.error("Failed!",e);
 				}
 			}
 		}
@@ -1065,6 +1082,7 @@ public class Packages extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi kkhi lấy số lượng gói đã được mua");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -1072,6 +1090,7 @@ public class Packages extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		return -1;

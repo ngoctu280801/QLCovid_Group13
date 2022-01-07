@@ -8,6 +8,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -43,7 +46,7 @@ public class PatientInfo extends JDialog {
 	private JButton btnAddToRelatedPer, btnCancel;
 	private String id;
 	private JTable tblRelatedPer;
-
+	private static final Logger logger = Logger.getLogger(PatientInfo.class);
 	/**
 	 * Create the dialog.
 	 */
@@ -240,6 +243,7 @@ public class PatientInfo extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi gọi hàm getUsrInfoByIdCard()");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -247,6 +251,7 @@ public class PatientInfo extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}

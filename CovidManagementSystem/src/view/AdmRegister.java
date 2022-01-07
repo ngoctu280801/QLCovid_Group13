@@ -55,6 +55,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
+import org.apache.log4j.Logger;
+
 import java.awt.Component;
 
 public class AdmRegister extends JDialog {
@@ -76,7 +78,7 @@ public class AdmRegister extends JDialog {
 	private JFormattedTextField txtDOB;
 	private SimpleDateFormat df;
 	private String usrManager;
-
+	private static final Logger logger = Logger.getLogger(AdmRegister.class); 
 	/**
 	 * Create the dialog.
 	 */
@@ -218,6 +220,7 @@ public class AdmRegister extends JDialog {
 								}				
 							} catch (SQLException e1) {
 								e1.printStackTrace();
+								logger.error("Failed!",e1);
 							}
 							cbTown.setEnabled(true);
 						}
@@ -249,6 +252,7 @@ public class AdmRegister extends JDialog {
 									}				
 								} catch (SQLException e1) {
 									e1.printStackTrace();
+									logger.error("Failed!",e1);
 								}
 							}
 						}
@@ -317,6 +321,7 @@ public class AdmRegister extends JDialog {
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();
+							logger.error("Lỗi khi tìm bằng CMND/CCCD",e);
 						} finally {
 							try {
 								if(stmt[0] != null){
@@ -324,6 +329,7 @@ public class AdmRegister extends JDialog {
 								}				
 							} catch (SQLException e) {
 								e.printStackTrace();
+								logger.error("Failed!",e);
 							}
 						}
 					}
@@ -466,6 +472,7 @@ public class AdmRegister extends JDialog {
 				dateMask = new MaskFormatter("##/##/####");
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 			txtDOB = new JFormattedTextField(dateMask);
 			txtDOB.setColumns(6);
@@ -498,6 +505,7 @@ public class AdmRegister extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 
 			JLabel lblState = new JLabel("Hiện là:");
@@ -543,6 +551,7 @@ public class AdmRegister extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 
 			JPanel pnRPerson = new JPanel();
@@ -626,6 +635,7 @@ public class AdmRegister extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi kiểm tra tài khoản đã tồn tại hay chưa");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -633,6 +643,7 @@ public class AdmRegister extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		return true;
@@ -649,6 +660,7 @@ public class AdmRegister extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi kiểm tra nếu CMND/CCCD đã tồn tại");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -656,6 +668,7 @@ public class AdmRegister extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		return false;
@@ -673,6 +686,7 @@ public class AdmRegister extends JDialog {
 				stmt[0].close();
 			}				
 		} catch (SQLException e) {
+			logger.error("Failed!",e);
 			e.printStackTrace();
 		}
 		if(linesAffected > 0 && num != 0){
@@ -720,6 +734,7 @@ public class AdmRegister extends JDialog {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				logger.error("Lỗi khi thêm người liên đới");
 				JOptionPane.showMessageDialog(null, "Có lỗi khi thêm người liên đới");
 			} finally{
 				try {
@@ -727,6 +742,7 @@ public class AdmRegister extends JDialog {
 					st.close();}
 				} catch (SQLException e) {
 					e.printStackTrace();
+					logger.error("Failed!",e);
 				}
 			}
 		}
@@ -743,6 +759,7 @@ public class AdmRegister extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Failed!",e);
 		}
 	}
 //	private String changeDateFormatter(String date, String format){
@@ -779,6 +796,7 @@ public class AdmRegister extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi kiểm tra nêu CMND/CCCD đã tồn tại");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -786,6 +804,7 @@ public class AdmRegister extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		return false;
@@ -857,16 +876,19 @@ public class AdmRegister extends JDialog {
 		} catch (HeadlessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Failed",e);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Thất bại. Xin vui lòng thử lại sau");
+			logger.error("Lỗi khi gọi hàm addPatients()");
 		} finally{
 			try {
 				if(st != null){
 				st.close();}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed",e);
 			}
 		}
 		dispose();

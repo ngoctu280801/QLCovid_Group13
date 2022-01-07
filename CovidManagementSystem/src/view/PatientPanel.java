@@ -20,6 +20,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.JButton;
 
 import model.DateComparator;
@@ -46,7 +49,7 @@ public class PatientPanel extends JFrame {
 	JButton btnInfo, btnMngmHis, btnPkg, btnPayment;
 	private JButton btnChangePwd;
 	private TableRowSorter<TableModel> sorter;
-
+	private static final Logger logger = Logger.getLogger(PatientPanel.class);
 	/**
 	 * Create the frame.
 	 */
@@ -199,6 +202,7 @@ public class PatientPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy thông tin bệnh nhân từ bảng accounts");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -206,6 +210,7 @@ public class PatientPanel extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -228,6 +233,7 @@ public class PatientPanel extends JFrame {
 			e.printStackTrace();
 			
 			JOptionPane.showMessageDialog(null, "Lỗi kết nối tới CSDL");
+			logger.error("Lỗi khi lấy CMND/CCCD của bệnh nhân");
 			dbi.close();
 			dispose();
 		} finally {
@@ -237,6 +243,7 @@ public class PatientPanel extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -268,6 +275,7 @@ public class PatientPanel extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra");
+			logger.error("Lỗi khi kiểm tra lần đầu đăng nhập của bệnh nhân");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -275,6 +283,7 @@ public class PatientPanel extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 		

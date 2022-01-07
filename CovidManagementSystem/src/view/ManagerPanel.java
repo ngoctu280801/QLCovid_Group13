@@ -201,6 +201,7 @@ public class ManagerPanel extends JFrame {
 			}				
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error("Lỗi truy vấn bảng quarantinepos");
 		}
 		pnShow.add(newPosLab);
 		pnShow.add(cbPos);
@@ -333,6 +334,7 @@ public class ManagerPanel extends JFrame {
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
+						logger.error("Failed!", e1);
 					} finally {
 						try {
 							if(stmt[0] != null){
@@ -340,6 +342,7 @@ public class ManagerPanel extends JFrame {
 							}				
 						} catch (SQLException e1) {
 							e1.printStackTrace();
+							logger.error("Lỗi khi truy vấn bảng patients khi tìm ID");
 						}
 					}
 				}
@@ -535,6 +538,7 @@ public class ManagerPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Failed!", e);
 		}
 	}
 	private void getDataFromDb(){
@@ -565,6 +569,7 @@ public class ManagerPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi gọi hàm getAllPatients()");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -572,6 +577,7 @@ public class ManagerPanel extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!", e);
 			}
 		}
 	}
@@ -628,6 +634,7 @@ public class ManagerPanel extends JFrame {
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			logger.error("Lỗi khi gọi hàm changeQtrPos()");
 		}  finally {
 			try {
 				if(stmt1[0] != null){
@@ -644,6 +651,7 @@ public class ManagerPanel extends JFrame {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!", e);
 			}
 		}
 	}
@@ -682,6 +690,7 @@ public class ManagerPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi chuyển trạng thái bệnh nhân");
 		} finally{
 			try {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -707,6 +716,7 @@ public class ManagerPanel extends JFrame {
 				stmt[0].close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!", e);
 			}
 		}
 	}

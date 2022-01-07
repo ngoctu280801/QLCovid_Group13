@@ -513,6 +513,7 @@ public class AdminPanel extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy dữ liệu tất cả người quản lý");
 		}  finally {
 			try {
 				if(stmt[0] != null){
@@ -520,6 +521,7 @@ public class AdminPanel extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -545,6 +547,7 @@ public class AdminPanel extends JFrame {
 			}				
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error("Lỗi khi khoá hoặc mở khoá tài khoản người quản lý");
 		}
 		if(rows > 0){
 			return true;
@@ -581,6 +584,7 @@ public class AdminPanel extends JFrame {
 			}				
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error("Lỗi khi thêm vào bảng quarantinepos",e);
 		}
 		if(rows > 0){
 			dtmQrtPosL.addRow(new String[] {qName, cap, curCap});
@@ -606,6 +610,7 @@ public class AdminPanel extends JFrame {
 			}				
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error("Lỗi khi cập nhật thông tin nơi điều trị");
 		}
 		if(rows > 0){
 			int selectedRowIndex = tblQrtPosL.getSelectedRow();

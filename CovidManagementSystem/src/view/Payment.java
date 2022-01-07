@@ -17,6 +17,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.JLabel;
 
 import java.awt.Font;
@@ -66,6 +69,7 @@ public class Payment extends JDialog {
 	private final String serverName;
 	private final int port;
 	private TableRowSorter<TableModel> sorter;
+	private static final Logger logger = Logger.getLogger(Payment.class);
 
 	public Payment(DbInteraction dbi, String usrName, String path, String pwd, String svName, int port) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -260,10 +264,12 @@ public class Payment extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Vui lòng xem lại địa chỉ server");
+			logger.error("Lỗi kết nối đến Server (xem lại địa chỉ server)");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Server đang offline");
+			logger.error("Lỗi kết nối đến Server (Server đang offline)");
 		} 
 		
 		finally{
@@ -332,6 +338,7 @@ public class Payment extends JDialog {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi reload dữ liệu bảng transaction_history");
 		}
 		finally{
 			onOffPaymentBtn();
@@ -358,6 +365,7 @@ public class Payment extends JDialog {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Không thể kết nối tới CSDL");
+			logger.error("Lỗi khi lấy dữ liệu từ bảng transaction_history");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -365,6 +373,7 @@ public class Payment extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -379,6 +388,7 @@ public class Payment extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy thông tin dư nợ của bệnh nhân");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -386,6 +396,7 @@ public class Payment extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}
@@ -400,6 +411,7 @@ public class Payment extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi dữ liệu từ bảng payment_acc",e);
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -407,6 +419,7 @@ public class Payment extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}

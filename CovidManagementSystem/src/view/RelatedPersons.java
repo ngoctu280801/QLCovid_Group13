@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.log4j.Logger;
+
 import model.DateComparator;
 import model.DbInteraction;
 import model.Utils;
@@ -33,7 +35,7 @@ public class RelatedPersons extends JDialog {
 	private JTable tblRPer;
 	private DbInteraction dbi;
 	private TableRowSorter<TableModel> sorter;
-
+	private static final Logger logger = Logger.getLogger(RelatedPersons.class);
 	
 	public RelatedPersons(DbInteraction dbi, String idCard) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -118,6 +120,7 @@ public class RelatedPersons extends JDialog {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi lấy dữ liệu tất cả người liên quan");
 		} finally {
 			try {
 				if(stmt[0] != null){
@@ -125,6 +128,7 @@ public class RelatedPersons extends JDialog {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 		}
 	}

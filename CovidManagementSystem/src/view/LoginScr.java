@@ -6,6 +6,9 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
@@ -33,7 +36,7 @@ public class LoginScr extends JFrame {
 	private JPasswordField txtPwd;
 	private static JButton btnLogin;
 	private static ImageIcon loading;
-	
+	private static final Logger logger = Logger.getLogger(LoginScr.class); 
 
 	/**
 	 * Create the frame.
@@ -180,6 +183,7 @@ public class LoginScr extends JFrame {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Lỗi khi đăng nhập");
 		} finally{
 			try {
 				if(stmt[0] != null){
@@ -187,6 +191,7 @@ public class LoginScr extends JFrame {
 				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.error("Failed!",e);
 			}
 			btnLogin.setIcon(null);
 		}
