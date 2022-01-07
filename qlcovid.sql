@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th1 06, 2022 lúc 05:29 AM
--- Phiên bản máy phục vụ: 10.4.21-MariaDB
--- Phiên bản PHP: 8.0.12
+-- Host: 127.0.0.1
+-- Generation Time: Jan 07, 2022 at 07:09 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.4.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,12 +20,12 @@ SET time_zone = "+00:00";
 CREATE DATABASE `qlcovid` CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `qlcovid`;
 --
--- Cơ sở dữ liệu: `qlcovid`
+-- Database: `qlcovid`
 --
 
 DELIMITER $$
 --
--- Thủ tục
+-- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addPatient` (IN `usrNameIn` VARCHAR(20), IN `fName` VARCHAR(50), IN `DOB` DATE, IN `idCard` VARCHAR(12), IN `qrtPos` VARCHAR(50), IN `stateF` VARCHAR(2), IN `prov` VARCHAR(50), IN `townN` VARCHAR(50), IN `vlg` VARCHAR(50), IN `usrManager` VARCHAR(20), OUT `code` INT)  BEGIN
 	declare id_acc int;
@@ -645,7 +645,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `accounts`
+-- Table structure for table `accounts`
 --
 
 CREATE TABLE `accounts` (
@@ -657,7 +657,7 @@ CREATE TABLE `accounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `accounts`
+-- Dumping data for table `accounts`
 --
 
 INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VALUES
@@ -700,10 +700,13 @@ INSERT INTO `accounts` (`id`, `usrname`, `pwd`, `id_permission`, `is_locked`) VA
 (0000000052, 'cf2', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000053, 'df3', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
 (0000000054, 'manager4', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 0, 0),
-(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
+(0000000055, 'test23', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000056, 'test25', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000057, 'test26', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0),
+(0000000058, 'test27', '3440400d53523c54a5f5c142f828afe7e2326d20dfe8bd3c0d', 2, 0);
 
 --
--- Bẫy `accounts`
+-- Triggers `accounts`
 --
 DELIMITER $$
 CREATE TRIGGER `addNewDebtAndPaymentAcc` AFTER INSERT ON `accounts` FOR EACH ROW BEGIN
@@ -743,7 +746,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `activity_history`
+-- Table structure for table `activity_history`
 --
 
 CREATE TABLE `activity_history` (
@@ -755,7 +758,7 @@ CREATE TABLE `activity_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `activity_history`
+-- Dumping data for table `activity_history`
 --
 
 INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, `description`) VALUES
@@ -842,12 +845,631 @@ INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, 
 (0000000098, 'manager', '2022-01-06', NULL, 'Thêm gói KHU KHUAN, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-20 với giá 100,000 VNĐ'),
 (0000000099, 'manager', '2022-01-06', NULL, 'Thêm gói KIT TEST, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-20 với giá 120,000 VNĐ'),
 (0000000100, 'manager', '2022-01-06', NULL, 'Xoá gói KHU KHUAN'),
-(0000000101, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST');
+(0000000101, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000102, 'manager', '2022-01-06', NULL, 'Thêm gói BỘ KIT TEST COVID, hạn mức 5 gói/ người, bán đến hết ngày 2022-02-02 với giá 22,000 VNĐ'),
+(0000000103, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000104, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000105, 'manager', '2022-01-06', NULL, 'Cập nhật gói KHAU TRANG thành gói KHẨU TRANG, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-22 với giá 10,000 VNĐ'),
+(0000000106, 'manager', '2022-01-06', NULL, 'Thêm gói PACKAGE TEST, hạn mức 10 gói/ người, bán đến hết ngày 2022-02-12 với giá 19,000 VNĐ'),
+(0000000107, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000108, 'manager', '2022-01-06', NULL, 'Cập nhật gói KHU KHUAN thành gói KHỬ KHUẨN, hạn mức 10 gói/ người, bán đến hết ngày 2023-02-20 với giá 100,000 VNĐ'),
+(0000000109, 'manager', '2022-01-06', NULL, 'Thêm gói GẠO 50KG, hạn mức 5 gói/ người, bán đến hết ngày 2022-02-23 với giá 1,000,000 VNĐ'),
+(0000000110, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000111, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000112, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000113, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000114, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000115, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000116, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000117, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000118, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000119, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000120, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000121, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000122, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000123, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000124, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000125, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000126, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000127, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000128, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000129, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000130, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000131, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000132, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000133, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000134, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000135, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000136, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000137, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000138, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000139, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000140, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000141, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000142, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000143, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000144, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000145, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000146, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000147, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000148, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000149, 'manager', '2022-01-06', NULL, 'Thêm gói ĐÂY LÀ GÓI TEST, hạn mức 6 gói/ người, bán đến hết ngày 2022-02-12 với giá 19,000 VNĐ'),
+(0000000150, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000151, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000152, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000153, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000154, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000155, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000156, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000157, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000158, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000159, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000160, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000161, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000162, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000163, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000164, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000165, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000166, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000167, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000168, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000169, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000170, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000171, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000172, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000173, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000174, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000175, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000176, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000177, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000178, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000179, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000180, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000181, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000182, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000183, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000184, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000185, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000186, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000187, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000188, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000189, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000190, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000191, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000192, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000193, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000194, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000195, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000196, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000197, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000198, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000199, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000200, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000201, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000202, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000203, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000204, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000205, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000206, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000207, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000208, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000209, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000210, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000211, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000212, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000213, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000214, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000215, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000216, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000217, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000218, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000219, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000220, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000221, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000222, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000223, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000224, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000225, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000226, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000227, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000228, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000229, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000230, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000231, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000232, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000233, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000234, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000235, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000236, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000237, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000238, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000239, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000240, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000241, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000242, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000243, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000244, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000245, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000246, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000247, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000248, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000249, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000250, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000251, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000252, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000253, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000254, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000255, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000256, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000257, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000258, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000259, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000260, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000261, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000262, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000263, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000264, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000265, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000266, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000267, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000268, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000269, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000270, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000271, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000272, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000273, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000274, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000275, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000276, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000277, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000278, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000279, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000280, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000281, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000282, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000283, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000284, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000285, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000286, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000287, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000288, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000289, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000290, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000291, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000292, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000293, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000294, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000295, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000296, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000297, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000298, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000299, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000300, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000301, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000302, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000303, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000304, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000305, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000306, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000307, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000308, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000309, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000310, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000311, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000312, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000313, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000314, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000315, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000316, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000317, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000318, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000319, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000320, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000321, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000322, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000323, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000324, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000325, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000326, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000327, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000328, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000329, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000330, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000331, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000332, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000333, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000334, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000335, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000336, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000337, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000338, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000339, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000340, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000341, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000342, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000343, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000344, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000345, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000346, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000347, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000348, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000349, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000350, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000351, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000352, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000353, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000354, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000355, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000356, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000357, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000358, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000359, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000360, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000361, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000362, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000363, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000364, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000365, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000366, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000367, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000368, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000369, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000370, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000371, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000372, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000373, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000374, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000375, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000376, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000377, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000378, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000379, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000380, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000381, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000382, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000383, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000384, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000385, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000386, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000387, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000388, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000389, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000390, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000391, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000392, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000393, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000394, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000395, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000396, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000397, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000398, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000399, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000400, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000401, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000402, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000403, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000404, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000405, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000406, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000407, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000408, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000409, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000410, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000411, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000412, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000413, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000414, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000415, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000416, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000417, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000418, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000419, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000420, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000421, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000422, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000423, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000424, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000425, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000426, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000427, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000428, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000429, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000430, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000431, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000432, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000433, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000434, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000435, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000436, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000437, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000438, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000439, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000440, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000441, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000442, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000443, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000444, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000445, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000446, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000447, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000448, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000449, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000450, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000451, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000452, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000453, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000454, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000455, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000456, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000457, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000458, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000459, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000460, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000461, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000462, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000463, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000464, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000465, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000466, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000467, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000468, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000469, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000470, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000471, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000472, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000473, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000474, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000475, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000476, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000477, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000478, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000479, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000480, 'manager', '2022-01-06', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000481, 'manager', '2022-01-06', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000482, 'manager', '2022-01-06', NULL, 'Xoá gói GẠO 50KG'),
+(0000000483, 'manager', '2022-01-06', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000484, 'manager', '2022-01-06', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000485, 'manager', '2022-01-06', NULL, 'Xoá gói KIT TEST'),
+(0000000486, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000487, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000488, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000489, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000490, 'manager', '2022-01-06', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000491, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000492, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000493, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000494, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000495, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000496, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000497, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000498, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000499, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000500, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000501, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000502, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000503, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000504, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000505, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000506, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000507, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000508, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000509, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000510, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000511, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000512, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000513, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000514, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000515, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000516, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000517, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000518, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000519, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000520, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000521, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000522, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000523, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000524, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000525, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000526, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000527, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000528, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000529, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000530, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000531, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000532, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000533, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000534, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000535, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000536, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000537, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000538, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000539, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000540, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000541, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000542, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000543, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000544, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000545, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000546, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000547, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000548, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000549, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000550, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000551, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000552, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000553, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000554, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000555, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000556, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000557, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000558, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000559, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000560, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000561, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000562, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000563, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000564, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000565, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000566, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000567, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000568, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000569, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000570, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000571, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000572, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000573, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000574, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000575, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000576, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000577, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000578, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000579, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000580, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000581, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000582, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000583, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000584, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000585, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000586, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000587, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000588, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000589, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000590, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000591, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000592, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000593, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000594, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000595, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000596, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000597, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000598, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000599, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000600, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000601, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000602, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000603, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000604, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000605, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000606, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000607, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000608, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000609, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000610, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000611, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000612, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000613, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000614, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000615, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000616, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000617, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000618, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000619, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000620, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000621, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000622, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000623, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000624, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000625, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000626, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000627, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000628, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000629, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000630, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000631, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000632, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000633, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000634, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000635, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000636, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000637, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000638, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000639, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000640, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000641, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000642, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000643, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000644, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000645, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000646, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000647, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000648, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000649, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000650, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000651, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000652, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000653, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000654, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000655, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000656, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000657, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000658, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000659, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000660, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000661, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000662, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000663, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000664, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000665, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000666, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000667, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000668, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000669, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000670, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000671, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000672, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000673, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000674, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000675, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000676, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000677, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000678, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000679, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000680, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000681, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000682, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000683, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000684, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000685, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000686, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000687, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000688, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000689, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000690, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000691, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000692, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000693, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000694, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000695, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000696, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000697, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000698, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000699, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000700, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000701, 'manager', '2022-01-07', NULL, 'Xoá gói KHẨU TRANG'),
+(0000000702, 'manager', '2022-01-07', NULL, 'Xoá gói KHỬ KHUẨN'),
+(0000000703, 'manager', '2022-01-07', NULL, 'Xoá gói KIT TEST'),
+(0000000704, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000705, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000706, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000707, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4'),
+(0000000708, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000709, 'manager', '2022-01-07', NULL, 'Xoá gói GẠO 50KG'),
+(0000000710, 'manager', '2022-01-07', NULL, 'Xoá gói ĐÂY LÀ GÓI TEST'),
+(0000000711, 'manager', '2022-01-07', NULL, 'Xoá gói BỘ KIT TEST COVID'),
+(0000000712, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST'),
+(0000000713, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST2'),
+(0000000714, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST3'),
+(0000000715, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST4');
+INSERT INTO `activity_history` (`id`, `usr_manager`, `date`, `id_card_patient`, `description`) VALUES
+(0000000716, 'manager', '2022-01-07', NULL, 'Xoá gói PACKAGE TEST5'),
+(0000000717, 'manager', '2022-01-07', '250320011', 'Thêm 250320011 làm F0 tại Bệnh viện Gia An 115'),
+(0000000718, 'manager', '2022-01-07', '020119911', 'Thêm 020119911 làm F0 tại Bệnh viện Gia An 115'),
+(0000000719, 'manager', '2022-01-07', '280219922', 'Thêm 280219922 làm F1 tại Bệnh viện Bạch Mai');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `bought_pkg_history`
+-- Table structure for table `bought_pkg_history`
 --
 
 CREATE TABLE `bought_pkg_history` (
@@ -860,7 +1482,7 @@ CREATE TABLE `bought_pkg_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `bought_pkg_history`
+-- Dumping data for table `bought_pkg_history`
 --
 
 INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `date`, `price`) VALUES
@@ -869,10 +1491,15 @@ INSERT INTO `bought_pkg_history` (`id`, `id_patient`, `id_pkg`, `quantity`, `dat
 (0000000010, 0000000025, 0000000002, 2, '2021-11-14', '38000'),
 (0000000011, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
 (0000000012, 0000000025, 0000000003, 1, '2021-11-14', '69000'),
-(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000');
+(0000000013, 0000000036, 0000000004, 2, '2021-11-15', '38000'),
+(0000000014, 0000000040, 0000000010, 1, '2022-01-06', '100000'),
+(0000000015, 0000000040, 0000000009, 1, '2022-01-06', '10000'),
+(0000000016, 0000000040, 0000000010, 1, '2022-01-06', '100000'),
+(0000000017, 0000000040, 0000000011, 1, '2022-01-06', '120000'),
+(0000000018, 0000000040, 0000000010, 1, '2022-01-07', '100000');
 
 --
--- Bẫy `bought_pkg_history`
+-- Triggers `bought_pkg_history`
 --
 DELIMITER $$
 CREATE TRIGGER `checkDebtWhenBuyPkg` AFTER INSERT ON `bought_pkg_history` FOR EACH ROW BEGIN
@@ -889,7 +1516,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `debt`
+-- Table structure for table `debt`
 --
 
 CREATE TABLE `debt` (
@@ -898,7 +1525,7 @@ CREATE TABLE `debt` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `debt`
+-- Dumping data for table `debt`
 --
 
 INSERT INTO `debt` (`id_patient`, `debt`) VALUES
@@ -921,7 +1548,7 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000036, 38000),
 (0000000038, 0),
 (0000000039, 0),
-(0000000040, 420000),
+(0000000040, 850000),
 (0000000041, 0),
 (0000000042, 0),
 (0000000043, 0),
@@ -935,12 +1562,15 @@ INSERT INTO `debt` (`id_patient`, `debt`) VALUES
 (0000000051, 0),
 (0000000052, 0),
 (0000000053, 0),
-(0000000055, 0);
+(0000000055, 0),
+(0000000056, 0),
+(0000000057, 0),
+(0000000058, 0);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `logon`
+-- Table structure for table `logon`
 --
 
 CREATE TABLE `logon` (
@@ -948,7 +1578,7 @@ CREATE TABLE `logon` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `logon`
+-- Dumping data for table `logon`
 --
 
 INSERT INTO `logon` (`id_patient`) VALUES
@@ -960,7 +1590,7 @@ INSERT INTO `logon` (`id_patient`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `management_history`
+-- Table structure for table `management_history`
 --
 
 CREATE TABLE `management_history` (
@@ -972,7 +1602,7 @@ CREATE TABLE `management_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `management_history`
+-- Dumping data for table `management_history`
 --
 
 INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_pos`) VALUES
@@ -1041,12 +1671,15 @@ INSERT INTO `management_history` (`id`, `id_patient`, `date`, `state`, `id_qrt_p
 (0000000089, 0000000007, '2021-12-27', 'Khỏi bệnh', 0000000001),
 (0000000090, 0000000055, '2021-12-29', 'F0', 0000000001),
 (0000000091, 0000000019, '2021-12-29', 'Khỏi bệnh', 0000000001),
-(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001);
+(0000000092, 0000000041, '2021-12-29', 'Khỏi bệnh', 0000000001),
+(0000000093, 0000000056, '2022-01-07', 'F0', 0000000002),
+(0000000094, 0000000057, '2022-01-07', 'F0', 0000000002),
+(0000000095, 0000000058, '2022-01-07', 'F1', 0000000001);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `necessary_packages`
+-- Table structure for table `necessary_packages`
 --
 
 CREATE TABLE `necessary_packages` (
@@ -1059,7 +1692,7 @@ CREATE TABLE `necessary_packages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `necessary_packages`
+-- Dumping data for table `necessary_packages`
 --
 
 INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`, `date_limit`, `price`, `is_deleted`) VALUES
@@ -1067,15 +1700,18 @@ INSERT INTO `necessary_packages` (`id`, `pkg_name`, `limit_quantity_per_person`,
 (0000000003, 'PACKAGE TEST2', 5, '2021-11-16', '69000', 1),
 (0000000004, 'PACKAGE TEST3', 3, '2021-11-16', '19000', 1),
 (0000000005, 'PACKAGE TEST4', 6, '2021-11-16', '19000', 1),
-(0000000008, 'PACKAGE TEST3', 3, '2021-11-15', '19000', 1),
-(0000000009, 'KHAU TRANG', 10, '2023-02-22', '10000', 0),
-(0000000010, 'KHU KHUAN', 10, '2023-02-20', '100000', 1),
-(0000000011, 'KIT TEST', 10, '2023-02-20', '120000', 1);
+(0000000008, 'PACKAGE TEST5', 3, '2021-11-15', '19000', 1),
+(0000000009, 'KHẨU TRANG', 10, '2023-02-22', '10000', 0),
+(0000000010, 'KHỬ KHUẨN', 10, '2023-02-20', '100000', 0),
+(0000000011, 'KIT TEST', 10, '2023-02-20', '120000', 0),
+(0000000012, 'BỘ KIT TEST COVID', 5, '2022-02-02', '22000', 1),
+(0000000014, 'GẠO 50KG', 5, '2022-02-23', '1000000', 1),
+(0000000015, 'ĐÂY LÀ GÓI TEST', 6, '2022-02-12', '19000', 1);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `patients`
+-- Table structure for table `patients`
 --
 
 CREATE TABLE `patients` (
@@ -1091,7 +1727,7 @@ CREATE TABLE `patients` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `patients`
+-- Dumping data for table `patients`
 --
 
 INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`, `id_town`, `id_vlg`, `state`, `id_pos`) VALUES
@@ -1128,10 +1764,13 @@ INSERT INTO `patients` (`id`, `full_name`, `id_card`, `date_of_birth`, `id_prov`
 (0000000051, 'B F1', '020111111', '1111-01-02', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
 (0000000052, 'C F2 LIÊN QUAN A VÀ B', '030111111', '1111-01-03', 0000000001, 0000000001, 0000000001, 'F1', 0000000001),
 (0000000053, 'D F3 LIÊN QUAN C', '040111111', '1111-01-04', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
-(0000000055, 'TEST THỨ HAI BA', '211219922', '1992-12-21', 0000000001, 0000000001, 0000000001, 'F0', 0000000001);
+(0000000055, 'TEST THỨ HAI BA', '211219922', '1992-12-21', 0000000001, 0000000001, 0000000001, 'F0', 0000000001),
+(0000000056, 'TEST THỨ HAI LĂM', '250320011', '2001-08-22', 0000000002, 0000000009, 0000000042, 'F0', 0000000002),
+(0000000057, 'TEST THỨ HAI SÁU', '020119911', '1991-01-02', 0000000002, 0000000009, 0000000042, 'F0', 0000000002),
+(0000000058, 'TEST THỨ HAI TÁM', '280219922', '1992-02-28', 0000000005, 0000000023, 0000000112, 'F1', 0000000001);
 
 --
--- Bẫy `patients`
+-- Triggers `patients`
 --
 DELIMITER $$
 CREATE TRIGGER `addMngmHis_insert` AFTER INSERT ON `patients` FOR EACH ROW BEGIN
@@ -1175,7 +1814,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `payment_acc`
+-- Table structure for table `payment_acc`
 --
 
 CREATE TABLE `payment_acc` (
@@ -1184,7 +1823,7 @@ CREATE TABLE `payment_acc` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `payment_acc`
+-- Dumping data for table `payment_acc`
 --
 
 INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
@@ -1204,12 +1843,15 @@ INSERT INTO `payment_acc` (`id_acc`, `balance`) VALUES
 (0000000051, '10000000'),
 (0000000052, '10000000'),
 (0000000053, '10000000'),
-(0000000055, '10000000');
+(0000000055, '10000000'),
+(0000000056, '10000000'),
+(0000000057, '10000000'),
+(0000000058, '10000000');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `provinces`
+-- Table structure for table `provinces`
 --
 
 CREATE TABLE `provinces` (
@@ -1218,7 +1860,7 @@ CREATE TABLE `provinces` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `provinces`
+-- Dumping data for table `provinces`
 --
 
 INSERT INTO `provinces` (`id`, `name`) VALUES
@@ -1231,7 +1873,7 @@ INSERT INTO `provinces` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `provinces_towns`
+-- Table structure for table `provinces_towns`
 --
 
 CREATE TABLE `provinces_towns` (
@@ -1240,7 +1882,7 @@ CREATE TABLE `provinces_towns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `provinces_towns`
+-- Dumping data for table `provinces_towns`
 --
 
 INSERT INTO `provinces_towns` (`id_prov`, `id_town`) VALUES
@@ -1273,7 +1915,7 @@ INSERT INTO `provinces_towns` (`id_prov`, `id_town`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `quarantinepos`
+-- Table structure for table `quarantinepos`
 --
 
 CREATE TABLE `quarantinepos` (
@@ -1284,17 +1926,17 @@ CREATE TABLE `quarantinepos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `quarantinepos`
+-- Dumping data for table `quarantinepos`
 --
 
 INSERT INTO `quarantinepos` (`id`, `name`, `capacity`, `current_capacity`) VALUES
-(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000925),
-(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000104);
+(0000000001, 'Bệnh viện Bạch Mai', 0000001000, 0000000926),
+(0000000002, 'Bệnh viện Gia An 115', 0000000900, 0000000106);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `related_persons`
+-- Table structure for table `related_persons`
 --
 
 CREATE TABLE `related_persons` (
@@ -1303,7 +1945,7 @@ CREATE TABLE `related_persons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `related_persons`
+-- Dumping data for table `related_persons`
 --
 
 INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
@@ -1317,12 +1959,13 @@ INSERT INTO `related_persons` (`id_patient`, `id_related`) VALUES
 (0000000046, 0000000021),
 (0000000048, 0000000049),
 (0000000051, 0000000030),
-(0000000052, 0000000053);
+(0000000052, 0000000053),
+(0000000058, 0000000049);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `towns`
+-- Table structure for table `towns`
 --
 
 CREATE TABLE `towns` (
@@ -1331,7 +1974,7 @@ CREATE TABLE `towns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `towns`
+-- Dumping data for table `towns`
 --
 
 INSERT INTO `towns` (`id`, `name`) VALUES
@@ -1364,7 +2007,7 @@ INSERT INTO `towns` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `towns_villages`
+-- Table structure for table `towns_villages`
 --
 
 CREATE TABLE `towns_villages` (
@@ -1373,7 +2016,7 @@ CREATE TABLE `towns_villages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `towns_villages`
+-- Dumping data for table `towns_villages`
 --
 
 INSERT INTO `towns_villages` (`id_town`, `id_vlg`) VALUES
@@ -1401,12 +2044,112 @@ INSERT INTO `towns_villages` (`id_town`, `id_vlg`) VALUES
 (0000000005, 0000000022),
 (0000000005, 0000000023),
 (0000000005, 0000000024),
-(0000000005, 0000000025);
+(0000000005, 0000000025),
+(0000000006, 0000000026),
+(0000000006, 0000000027),
+(0000000006, 0000000028),
+(0000000006, 0000000029),
+(0000000006, 0000000030),
+(0000000007, 0000000031),
+(0000000007, 0000000032),
+(0000000007, 0000000033),
+(0000000007, 0000000034),
+(0000000007, 0000000035),
+(0000000008, 0000000036),
+(0000000008, 0000000037),
+(0000000008, 0000000038),
+(0000000008, 0000000039),
+(0000000008, 0000000040),
+(0000000009, 0000000041),
+(0000000009, 0000000042),
+(0000000009, 0000000043),
+(0000000009, 0000000044),
+(0000000009, 0000000045),
+(0000000010, 0000000046),
+(0000000010, 0000000047),
+(0000000010, 0000000048),
+(0000000010, 0000000049),
+(0000000010, 0000000050),
+(0000000011, 0000000051),
+(0000000011, 0000000052),
+(0000000011, 0000000053),
+(0000000011, 0000000054),
+(0000000011, 0000000055),
+(0000000012, 0000000056),
+(0000000012, 0000000057),
+(0000000012, 0000000058),
+(0000000012, 0000000059),
+(0000000012, 0000000060),
+(0000000013, 0000000061),
+(0000000013, 0000000062),
+(0000000013, 0000000063),
+(0000000013, 0000000064),
+(0000000013, 0000000065),
+(0000000014, 0000000066),
+(0000000014, 0000000067),
+(0000000014, 0000000068),
+(0000000014, 0000000069),
+(0000000014, 0000000070),
+(0000000015, 0000000071),
+(0000000015, 0000000072),
+(0000000015, 0000000073),
+(0000000015, 0000000074),
+(0000000015, 0000000075),
+(0000000016, 0000000076),
+(0000000016, 0000000077),
+(0000000016, 0000000078),
+(0000000016, 0000000079),
+(0000000016, 0000000080),
+(0000000017, 0000000081),
+(0000000017, 0000000082),
+(0000000017, 0000000083),
+(0000000017, 0000000084),
+(0000000017, 0000000085),
+(0000000018, 0000000086),
+(0000000018, 0000000087),
+(0000000018, 0000000088),
+(0000000018, 0000000089),
+(0000000018, 0000000090),
+(0000000019, 0000000091),
+(0000000019, 0000000092),
+(0000000019, 0000000093),
+(0000000019, 0000000094),
+(0000000019, 0000000095),
+(0000000020, 0000000096),
+(0000000020, 0000000097),
+(0000000020, 0000000098),
+(0000000020, 0000000099),
+(0000000020, 0000000100),
+(0000000021, 0000000101),
+(0000000021, 0000000102),
+(0000000021, 0000000103),
+(0000000021, 0000000104),
+(0000000021, 0000000105),
+(0000000022, 0000000106),
+(0000000022, 0000000107),
+(0000000022, 0000000108),
+(0000000022, 0000000109),
+(0000000022, 0000000110),
+(0000000023, 0000000111),
+(0000000023, 0000000112),
+(0000000023, 0000000113),
+(0000000023, 0000000114),
+(0000000023, 0000000115),
+(0000000024, 0000000116),
+(0000000024, 0000000117),
+(0000000024, 0000000118),
+(0000000024, 0000000119),
+(0000000024, 0000000120),
+(0000000025, 0000000121),
+(0000000025, 0000000122),
+(0000000025, 0000000123),
+(0000000025, 0000000124),
+(0000000025, 0000000125);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `transaction_history`
+-- Table structure for table `transaction_history`
 --
 
 CREATE TABLE `transaction_history` (
@@ -1420,7 +2163,7 @@ CREATE TABLE `transaction_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `transaction_history`
+-- Dumping data for table `transaction_history`
 --
 
 INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `date_trans`, `remaining_debt`, `remaining_balance`) VALUES
@@ -1430,7 +2173,7 @@ INSERT INTO `transaction_history` (`id`, `from_id_acc`, `to_id_acc`, `credit`, `
 (0000000005, 0000000040, 0000000020, '20000', '2021-11-23 14:16:15', '420000', '9920000');
 
 --
--- Bẫy `transaction_history`
+-- Triggers `transaction_history`
 --
 DELIMITER $$
 CREATE TRIGGER `updateBalanceAndDebt` BEFORE INSERT ON `transaction_history` FOR EACH ROW begin
@@ -1457,7 +2200,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `villages`
+-- Table structure for table `villages`
 --
 
 CREATE TABLE `villages` (
@@ -1466,7 +2209,7 @@ CREATE TABLE `villages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Đang đổ dữ liệu cho bảng `villages`
+-- Dumping data for table `villages`
 --
 
 INSERT INTO `villages` (`id`, `name`) VALUES
@@ -1494,21 +2237,121 @@ INSERT INTO `villages` (`id`, `name`) VALUES
 (0000000022, 'Phường 2'),
 (0000000023, 'Phường 3'),
 (0000000024, 'Phường 5'),
-(0000000025, 'Phường 6');
+(0000000025, 'Phường 6'),
+(0000000026, 'Cầu Diễn'),
+(0000000027, 'Mỹ Đình 1'),
+(0000000028, 'Mỹ Đình 2'),
+(0000000029, 'Xuân Phương'),
+(0000000030, 'Phương Canh'),
+(0000000031, 'Hà Cầu'),
+(0000000032, 'La Khê'),
+(0000000033, 'Biên Giang'),
+(0000000034, 'Đồng Mai'),
+(0000000035, 'Yên Nghĩa'),
+(0000000036, 'Cầu Giấy'),
+(0000000037, 'Cống Vị'),
+(0000000038, 'Điện Biên'),
+(0000000039, 'Nguyễn Trung Trực'),
+(0000000040, 'Phúc Xá'),
+(0000000041, 'Dịch Vọng'),
+(0000000042, 'Dịch Vọng Hậu'),
+(0000000043, 'Nghĩa Đô'),
+(0000000044, 'Nghĩa Tân'),
+(0000000045, 'Quan Hà'),
+(0000000046, 'Hà Mã'),
+(0000000047, 'Hàng Trống'),
+(0000000048, 'Hàng Buồm'),
+(0000000049, 'Hàng Bồ'),
+(0000000050, 'Hàng Bài'),
+(0000000051, 'Long Hựu Đông'),
+(0000000052, 'Long Hựu Tây'),
+(0000000053, 'Thị Trấn Cần Đước'),
+(0000000054, 'Phước Vân'),
+(0000000055, 'Tân Ân'),
+(0000000056, 'Phường 1'),
+(0000000057, 'Phường 2'),
+(0000000058, 'Phường 3'),
+(0000000059, 'Phường 4'),
+(0000000060, 'Phường 5'),
+(0000000061, 'Long Hậu'),
+(0000000062, 'Tân Tập'),
+(0000000063, 'Phước Lợi'),
+(0000000064, 'Thị Trấn Cần Giuộc'),
+(0000000065, 'Phước Lý'),
+(0000000066, 'Lương Bình'),
+(0000000067, 'Lương Hòa'),
+(0000000068, 'Lương Hiệp'),
+(0000000069, 'Bình Đức'),
+(0000000070, 'Nhựt Chánh'),
+(0000000071, 'Tân Mỹ'),
+(0000000072, 'Tân Phú'),
+(0000000073, 'Mỹ Hạnh'),
+(0000000074, 'Lập Hiệp'),
+(0000000075, 'Đức Lập'),
+(0000000076, 'Gia Thiện'),
+(0000000077, 'Gia Tân 1'),
+(0000000078, 'Gia Tân 2'),
+(0000000079, 'Gia Tân 3'),
+(0000000080, 'Gia Kiệm'),
+(0000000081, 'Bửu Hòa'),
+(0000000082, 'Bửu Long'),
+(0000000083, 'Hiệp Hòa'),
+(0000000084, 'Hóa An'),
+(0000000085, 'Tân Hạnh'),
+(0000000086, 'Phú Lợi'),
+(0000000087, 'Phú Vinh'),
+(0000000088, 'Phú Tân'),
+(0000000089, 'Phú Ngọc'),
+(0000000090, 'Phú Túc'),
+(0000000091, 'Xuân An'),
+(0000000092, 'Xuân Bình'),
+(0000000093, 'Xuân Hòa'),
+(0000000094, 'Xuân Lập'),
+(0000000095, 'Xuân Tân'),
+(0000000096, 'Long An'),
+(0000000097, 'Long Phước'),
+(0000000098, 'Long Thái'),
+(0000000099, 'Tân Hiệp'),
+(0000000100, 'Lộc An'),
+(0000000101, 'Bùi Thị Xuân'),
+(0000000102, 'Đống Đa'),
+(0000000103, 'Ghềnh Ráng'),
+(0000000104, 'Hải Cảng'),
+(0000000105, 'Lê Hồng Phong'),
+(0000000106, 'Thị trấn Phú Phong'),
+(0000000107, 'Bình Hoà'),
+(0000000108, 'Bình Nghi'),
+(0000000109, 'Bình Thành'),
+(0000000110, 'Bình Tường'),
+(0000000111, 'Đập Đá'),
+(0000000112, 'Nhơn An'),
+(0000000113, 'Nhơn Hạnh'),
+(0000000114, 'Nhơn Phong'),
+(0000000115, 'Nhơn Hậu'),
+(0000000116, 'Cát Sơn'),
+(0000000117, 'Cát Lâm'),
+(0000000118, 'Cát Hiệp'),
+(0000000119, 'Cát Hanh'),
+(0000000120, 'Cát Tài'),
+(0000000121, 'Bồng Sơn'),
+(0000000122, 'Tam Quan'),
+(0000000123, 'Hoài Châu'),
+(0000000124, 'Hoài Châu Bắc'),
+(0000000125, 'Hoài Đức');
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `accounts`
+-- Indexes for table `accounts`
 --
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `usrname` (`usrname`);
 
 --
--- Chỉ mục cho bảng `activity_history`
+-- Indexes for table `activity_history`
 --
 ALTER TABLE `activity_history`
   ADD PRIMARY KEY (`id`),
@@ -1516,7 +2359,7 @@ ALTER TABLE `activity_history`
   ADD KEY `fk_acthis_account` (`usr_manager`);
 
 --
--- Chỉ mục cho bảng `bought_pkg_history`
+-- Indexes for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
   ADD PRIMARY KEY (`id`),
@@ -1524,19 +2367,19 @@ ALTER TABLE `bought_pkg_history`
   ADD KEY `fk_bpkghis_pkg` (`id_pkg`);
 
 --
--- Chỉ mục cho bảng `debt`
+-- Indexes for table `debt`
 --
 ALTER TABLE `debt`
   ADD PRIMARY KEY (`id_patient`);
 
 --
--- Chỉ mục cho bảng `logon`
+-- Indexes for table `logon`
 --
 ALTER TABLE `logon`
   ADD PRIMARY KEY (`id_patient`);
 
 --
--- Chỉ mục cho bảng `management_history`
+-- Indexes for table `management_history`
 --
 ALTER TABLE `management_history`
   ADD PRIMARY KEY (`id`),
@@ -1544,13 +2387,13 @@ ALTER TABLE `management_history`
   ADD KEY `fk_mgmthis_qrtpos` (`id_qrt_pos`);
 
 --
--- Chỉ mục cho bảng `necessary_packages`
+-- Indexes for table `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `patients`
+-- Indexes for table `patients`
 --
 ALTER TABLE `patients`
   ADD PRIMARY KEY (`id`),
@@ -1561,53 +2404,53 @@ ALTER TABLE `patients`
   ADD KEY `fk_patients_vlg` (`id_vlg`);
 
 --
--- Chỉ mục cho bảng `payment_acc`
+-- Indexes for table `payment_acc`
 --
 ALTER TABLE `payment_acc`
   ADD PRIMARY KEY (`id_acc`);
 
 --
--- Chỉ mục cho bảng `provinces`
+-- Indexes for table `provinces`
 --
 ALTER TABLE `provinces`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `provinces_towns`
+-- Indexes for table `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
   ADD PRIMARY KEY (`id_prov`,`id_town`),
   ADD KEY `fk_provtown_town` (`id_town`);
 
 --
--- Chỉ mục cho bảng `quarantinepos`
+-- Indexes for table `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Chỉ mục cho bảng `related_persons`
+-- Indexes for table `related_persons`
 --
 ALTER TABLE `related_persons`
   ADD PRIMARY KEY (`id_patient`,`id_related`),
   ADD KEY `fk_rltper_patient_to` (`id_related`);
 
 --
--- Chỉ mục cho bảng `towns`
+-- Indexes for table `towns`
 --
 ALTER TABLE `towns`
   ADD PRIMARY KEY (`id`);
 
 --
--- Chỉ mục cho bảng `towns_villages`
+-- Indexes for table `towns_villages`
 --
 ALTER TABLE `towns_villages`
   ADD PRIMARY KEY (`id_town`,`id_vlg`),
   ADD KEY `fk_townvlg_vlg` (`id_vlg`);
 
 --
--- Chỉ mục cho bảng `transaction_history`
+-- Indexes for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
   ADD PRIMARY KEY (`id`),
@@ -1615,120 +2458,120 @@ ALTER TABLE `transaction_history`
   ADD KEY `FK_transHis_toIDAcc` (`to_id_acc`);
 
 --
--- Chỉ mục cho bảng `villages`
+-- Indexes for table `villages`
 --
 ALTER TABLE `villages`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `accounts`
+-- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
--- AUTO_INCREMENT cho bảng `activity_history`
+-- AUTO_INCREMENT for table `activity_history`
 --
 ALTER TABLE `activity_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=720;
 
 --
--- AUTO_INCREMENT cho bảng `bought_pkg_history`
+-- AUTO_INCREMENT for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT cho bảng `debt`
+-- AUTO_INCREMENT for table `debt`
 --
 ALTER TABLE `debt`
-  MODIFY `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id_patient` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
--- AUTO_INCREMENT cho bảng `management_history`
+-- AUTO_INCREMENT for table `management_history`
 --
 ALTER TABLE `management_history`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
--- AUTO_INCREMENT cho bảng `necessary_packages`
+-- AUTO_INCREMENT for table `necessary_packages`
 --
 ALTER TABLE `necessary_packages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT cho bảng `provinces`
+-- AUTO_INCREMENT for table `provinces`
 --
 ALTER TABLE `provinces`
   MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `quarantinepos`
+-- AUTO_INCREMENT for table `quarantinepos`
 --
 ALTER TABLE `quarantinepos`
   MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT cho bảng `towns`
+-- AUTO_INCREMENT for table `towns`
 --
 ALTER TABLE `towns`
   MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT cho bảng `transaction_history`
+-- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
   MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT cho bảng `villages`
+-- AUTO_INCREMENT for table `villages`
 --
 ALTER TABLE `villages`
-  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
--- Các ràng buộc cho các bảng đã đổ
+-- Constraints for dumped tables
 --
 
 --
--- Các ràng buộc cho bảng `activity_history`
+-- Constraints for table `activity_history`
 --
 ALTER TABLE `activity_history`
   ADD CONSTRAINT `FK_actHis_patients` FOREIGN KEY (`id_card_patient`) REFERENCES `patients` (`id_card`),
   ADD CONSTRAINT `fk_acthis_account` FOREIGN KEY (`usr_manager`) REFERENCES `accounts` (`usrname`);
 
 --
--- Các ràng buộc cho bảng `bought_pkg_history`
+-- Constraints for table `bought_pkg_history`
 --
 ALTER TABLE `bought_pkg_history`
   ADD CONSTRAINT `fk_bpkghis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_bpkghis_pkg` FOREIGN KEY (`id_pkg`) REFERENCES `necessary_packages` (`id`);
 
 --
--- Các ràng buộc cho bảng `debt`
+-- Constraints for table `debt`
 --
 ALTER TABLE `debt`
   ADD CONSTRAINT `debt_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
--- Các ràng buộc cho bảng `logon`
+-- Constraints for table `logon`
 --
 ALTER TABLE `logon`
   ADD CONSTRAINT `FK_logon_acc` FOREIGN KEY (`id_patient`) REFERENCES `accounts` (`id`);
 
 --
--- Các ràng buộc cho bảng `management_history`
+-- Constraints for table `management_history`
 --
 ALTER TABLE `management_history`
   ADD CONSTRAINT `fk_mgmthis_patient` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_mgmthis_qrtpos` FOREIGN KEY (`id_qrt_pos`) REFERENCES `quarantinepos` (`id`);
 
 --
--- Các ràng buộc cho bảng `patients`
+-- Constraints for table `patients`
 --
 ALTER TABLE `patients`
   ADD CONSTRAINT `fk_patients_acc` FOREIGN KEY (`id`) REFERENCES `accounts` (`id`),
@@ -1738,34 +2581,34 @@ ALTER TABLE `patients`
   ADD CONSTRAINT `fk_patients_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
--- Các ràng buộc cho bảng `payment_acc`
+-- Constraints for table `payment_acc`
 --
 ALTER TABLE `payment_acc`
   ADD CONSTRAINT `FK_paymentAcc_Accounts` FOREIGN KEY (`id_acc`) REFERENCES `accounts` (`id`);
 
 --
--- Các ràng buộc cho bảng `provinces_towns`
+-- Constraints for table `provinces_towns`
 --
 ALTER TABLE `provinces_towns`
   ADD CONSTRAINT `fk_provtown_prov` FOREIGN KEY (`id_prov`) REFERENCES `provinces` (`id`),
   ADD CONSTRAINT `fk_provtown_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`);
 
 --
--- Các ràng buộc cho bảng `related_persons`
+-- Constraints for table `related_persons`
 --
 ALTER TABLE `related_persons`
   ADD CONSTRAINT `fk_rltper_patient_from` FOREIGN KEY (`id_patient`) REFERENCES `patients` (`id`),
   ADD CONSTRAINT `fk_rltper_patient_to` FOREIGN KEY (`id_related`) REFERENCES `patients` (`id`);
 
 --
--- Các ràng buộc cho bảng `towns_villages`
+-- Constraints for table `towns_villages`
 --
 ALTER TABLE `towns_villages`
   ADD CONSTRAINT `fk_townvlg_town` FOREIGN KEY (`id_town`) REFERENCES `towns` (`id`),
   ADD CONSTRAINT `fk_townvlg_vlg` FOREIGN KEY (`id_vlg`) REFERENCES `villages` (`id`);
 
 --
--- Các ràng buộc cho bảng `transaction_history`
+-- Constraints for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
   ADD CONSTRAINT `FK_transHis_fromIDAcc` FOREIGN KEY (`from_id_acc`) REFERENCES `accounts` (`id`),
