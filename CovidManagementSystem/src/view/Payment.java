@@ -227,7 +227,7 @@ public class Payment extends JDialog {
 			public void keyReleased(KeyEvent arg0) {	
 				if(Utils.notSkipCheck(arg0) 
 						&& txtCredit.getText().length() > 0){
-					txtCredit.setText(Utils.validateNum(new StringBuilder(txtCredit.getText())));
+					txtCredit.setText(validateNum(new StringBuilder(txtCredit.getText())));
 					String credit = txtCredit.getText();
 					if(credit.equals("") || 
 							new BigInteger(credit.replace(",","")).compareTo(new BigInteger("20000")) < 0 || 
@@ -298,18 +298,18 @@ public class Payment extends JDialog {
 			btnPay.setEnabled(false);
 		}
 	}
-//	private String validateNum(StringBuilder s){
-//		for(int i = 0; i < s.length(); i++){
-//			if(!Character.isDigit(s.charAt(i))){
-//				s.deleteCharAt(i);
-//				i--;
-//			}
-//		}
-//		for(int i = s.length() - 3; i > 0; i-=3){
-//			s.insert(i, ',');
-//		}
-//		return s.toString();
-//	}
+	private String validateNum(StringBuilder s){
+		for(int i = 0; i < s.length(); i++){
+			if(!Character.isDigit(s.charAt(i))){
+				s.deleteCharAt(i);
+				i--;
+			}
+		}
+		for(int i = s.length() - 3; i > 0; i-=3){
+			s.insert(i, ',');
+		}
+		return s.toString();
+	}
 	private void reloadData(){
 		Runnable getData = new Runnable(){
 			public void run(){
