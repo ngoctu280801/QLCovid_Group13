@@ -241,14 +241,22 @@ public class AdminPanel extends JFrame {
 	private void addEvents(){
 		tblManagerL.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
-	        	btnActivityHis.setEnabled(true);
-	        	btnLockAcc.setEnabled(true);
-	            if(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 1).toString().equals("Hoạt động")){
-	            	btnLockAcc.setText("Khoá tài khoản này");
-	            }
-	            else{
-	            	btnLockAcc.setText("Mở khoá tài khoản này");
-	            }
+	        	if(tblManagerL.getSelectedRowCount() == 1){
+	        		btnActivityHis.setEnabled(true);
+		        	btnLockAcc.setEnabled(true);
+		            if(tblManagerL.getValueAt(tblManagerL.getSelectedRow(), 1).toString().equals("Hoạt động")){
+		            	btnLockAcc.setText("Khoá tài khoản này");
+		            }
+		            else{
+		            	btnLockAcc.setText("Mở khoá tài khoản này");
+		            }
+	        	}
+	        	else{
+	        		btnActivityHis.setEnabled(false);
+	        		btnLockAcc.setEnabled(false);
+	        		
+	        	}
+	        	
 	        }
 	    });
 		

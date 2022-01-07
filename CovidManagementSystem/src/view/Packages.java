@@ -10,11 +10,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -55,7 +57,7 @@ public class Packages extends JDialog {
 	private String idCard;
 	private final JPanel pnContent = new JPanel();
 	private JTextField 	txtPkgName, 
-						txtLimit, txtPrice;
+	txtLimit, txtPrice;
 	private JFormattedTextField txtDate;
 	private JPanel 	pnUtils, 
 					pnFind, pnCart, 
@@ -66,8 +68,8 @@ public class Packages extends JDialog {
 	private JButton btnShowAddPkg, btnDelPkg;
 	private JButton btnAddPkg;
 	private JTextField txtPkgName2Find;
-	private JTable tblPkg, tblCart;
-	private DefaultTableModel dtm, dtmCart, dtmBPH;
+	private static JTable tblPkg, tblCart;
+	private static DefaultTableModel dtm, dtmCart, dtmBPH;
 	private JButton btnShowChangePkg;
 	private SimpleDateFormat df;
 	private String usrManager;
@@ -80,9 +82,6 @@ public class Packages extends JDialog {
 	private JButton btnAddToCart, btnPay;
 	private Vector<Integer> quantityOfBoughtPkgL;
 
-	/**
-	 * Create the dialog.
-	 */
 	public Packages(DbInteraction dbi, String usrManager, String idCard, DefaultTableModel dtmBPH) {
 		this.dbi = dbi;
 		this.usrManager = usrManager;
@@ -244,24 +243,28 @@ public class Packages extends JDialog {
 								"Bạn có chắc chắn muốn xoá?", "Xoá", 2);
 						if(dialogResult == JOptionPane.YES_OPTION){
 							StringBuilder pkgNList = new StringBuilder("");
-							int counter = 0;
-							while(!tblPkg.getSelectionModel().isSelectionEmpty()){
-								counter++;
-								pkgNList.append(tblPkg.getValueAt(tblPkg.getSelectedRow(), 0) + ";");
+							final int[] selectedRows = tblPkg.getSelectedRows();
+							int counter = selectedRows.length;
 
-								dtm.removeRow(tblPkg.getSelectedRow());
+
+
+							for(int i = 0; i < counter; i++){
+								int row = selectedRows[i];
+								pkgNList.append(tblPkg.getValueAt(row, 0) + ";");
 							}
+
 							pkgNList = pkgNList.deleteCharAt(pkgNList.length() - 1);
 							final String pkgL = pkgNList.toString();
+							
 							final int total = counter;
 							Runnable runLogin = new Runnable(){
 								public void run(){
-									deletePkg(pkgL, total);
+									deletePkg(pkgL, total, selectedRows);
 								}
 							};
 							Thread t = new Thread(runLogin);
 							t.start();
-
+							
 
 						}
 					}
@@ -482,7 +485,7 @@ public class Packages extends JDialog {
 						};
 						Thread t = new Thread(run);
 						t.start();
-						
+
 					}
 				}
 			});
@@ -505,9 +508,9 @@ public class Packages extends JDialog {
 		dtm.addColumn("Tên gói");
 		dtm.addColumn("Mức giới hạn (gói/ người)");
 		dtm.addColumn("Bán đến hết ngày");
-		dtm.addColumn("Giá thành");
+		dtm.addColumn("Giá thành (VNĐ)");
 		//tblPkg.setAutoCreateRowSorter(true);
-		sorter = new TableRowSorter<TableModel>(dtm);
+//		sorter = new TableRowSorter<TableModel>(dtm);
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 
 		pnMain = new JPanel();
@@ -557,7 +560,7 @@ public class Packages extends JDialog {
 		txtPkgName2Find.setColumns(12);
 		pnUtils.setVisible(false);
 		tblPkg = new JTable(dtm);
-		
+
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblPkg.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
@@ -569,6 +572,16 @@ public class Packages extends JDialog {
 		//		// Terminate edit when focus is lost
 		//		tblPkg.putClientProperty("terminateEditOnFocusLost", true);
 
+		tblPkg.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		tblPkg.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+		tblPkg.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
+		center.setHorizontalAlignment(JLabel.CENTER);
+		tblPkg.getColumnModel().getColumn(2).setCellRenderer(center);
+		
 		JScrollPane scrollPane = new JScrollPane(
 				tblPkg,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -595,72 +608,75 @@ public class Packages extends JDialog {
 
 
 		if(usrManager.equals("")){
-		dtmCart = new DefaultTableModel();
-		dtmCart.addColumn("Tên gói");
-		dtmCart.addColumn("Số lượng");
-		dtmCart.addColumn("Giá tiền 1 gói");
-		btnAddToCart = new JButton("Chọn mua");
-		pnBtn.add(btnAddToCart);
-		btnAddToCart.setEnabled(false);
-		pnCart = new JPanel();
-		getContentPane().add(pnCart);
-		tblCart = new JTable(dtmCart);
-		// Prevent manager edit this table
-		tblCart.setDefaultEditor(Object.class, null);
+			dtmCart = new DefaultTableModel();
+			dtmCart.addColumn("Tên gói");
+			dtmCart.addColumn("Số lượng");
+			dtmCart.addColumn("Giá tiền 1 gói (VNĐ)");
+			btnAddToCart = new JButton("Chọn mua");
+			pnBtn.add(btnAddToCart);
+			btnAddToCart.setEnabled(false);
+			pnCart = new JPanel();
+			getContentPane().add(pnCart);
+			tblCart = new JTable(dtmCart);
+			// Prevent manager edit this table
+			tblCart.setDefaultEditor(Object.class, null);
 
-		JScrollPane scrollPaneCart = new JScrollPane(
-				tblCart,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		pnCart.setLayout(new BorderLayout());
-		pnCart.add(scrollPaneCart, BorderLayout.CENTER);
+			JScrollPane scrollPaneCart = new JScrollPane(
+					tblCart,
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+			pnCart.setLayout(new BorderLayout());
+			pnCart.add(scrollPaneCart, BorderLayout.CENTER);
+			
+			tblCart.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+			tblCart.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+			
+			pnCartFunc = new JPanel();
+			pnCart.add(pnCartFunc, BorderLayout.SOUTH);
+			pnCartFunc.setLayout(new BoxLayout(pnCartFunc, BoxLayout.X_AXIS));
 
-		pnCartFunc = new JPanel();
-		pnCart.add(pnCartFunc, BorderLayout.SOUTH);
-		pnCartFunc.setLayout(new BoxLayout(pnCartFunc, BoxLayout.X_AXIS));
+			pnCartUtils = new JPanel();
+			pnCartFunc.add(pnCartUtils);
 
-		pnCartUtils = new JPanel();
-		pnCartFunc.add(pnCartUtils);
+			lblQuantity = new JLabel("Số lượng");
+			pnCartUtils.add(lblQuantity);
 
-		lblQuantity = new JLabel("Số lượng");
-		pnCartUtils.add(lblQuantity);
+			cbQuantity = new JComboBox();
+			pnCartUtils.add(cbQuantity);
 
-		cbQuantity = new JComboBox();
-		pnCartUtils.add(cbQuantity);
+			btnRemoveFromCart = new JButton("Xoá");
+			pnCartUtils.add(btnRemoveFromCart);
 
-		btnRemoveFromCart = new JButton("Xoá");
-		pnCartUtils.add(btnRemoveFromCart);
+			pnPay = new JPanel();
+			pnCartFunc.add(pnPay);
+			pnPay.setLayout(new BoxLayout(pnPay, BoxLayout.Y_AXIS));
 
-		pnPay = new JPanel();
-		pnCartFunc.add(pnPay);
-		pnPay.setLayout(new BoxLayout(pnPay, BoxLayout.Y_AXIS));
+			pnCost = new JPanel();
+			pnPay.add(pnCost);
 
-		pnCost = new JPanel();
-		pnPay.add(pnCost);
+			lblAmount = new JLabel("Thành tiền:");
+			pnCost.add(lblAmount);
 
-		lblAmount = new JLabel("Thành tiền:");
-		pnCost.add(lblAmount);
+			lblCost = new JLabel("0 (VNĐ)");
+			pnCost.add(lblCost);
+			lblCost.setFont(new Font("Tahoma", Font.BOLD, 17));
 
-		lblCost = new JLabel("0 (VNĐ)");
-		pnCost.add(lblCost);
-		lblCost.setFont(new Font("Tahoma", Font.BOLD, 17));
+			panel = new JPanel();
+			pnPay.add(panel);
 
-		panel = new JPanel();
-		pnPay.add(panel);
+			btnPay = new JButton("Đặt mua");
+			panel.add(btnPay);
 
-		btnPay = new JButton("Đặt mua");
-		panel.add(btnPay);
+			pnCartTitle = new JPanel();
+			FlowLayout flowLayout_1 = (FlowLayout) pnCartTitle.getLayout();
+			flowLayout_1.setVgap(9);
+			pnCart.add(pnCartTitle, BorderLayout.NORTH);
 
-		pnCartTitle = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) pnCartTitle.getLayout();
-		flowLayout_1.setVgap(9);
-		pnCart.add(pnCartTitle, BorderLayout.NORTH);
-
-		lblCart = new JLabel("Các gói nhu yếu phẩm muốn mua");
-		lblCart.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCart.setHorizontalAlignment(SwingConstants.CENTER);
-		pnCartTitle.add(lblCart);
-		pnCart.setVisible(false);
+			lblCart = new JLabel("Các gói nhu yếu phẩm muốn mua");
+			lblCart.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblCart.setHorizontalAlignment(SwingConstants.CENTER);
+			pnCartTitle.add(lblCart);
+			pnCart.setVisible(false);
 		}
 
 
@@ -779,7 +795,7 @@ public class Packages extends JDialog {
 			st.execute();
 			int code = st.getInt("code");
 			if(code == 1){
-				
+
 				int row = tblPkg.getSelectedRow();
 				row = tblPkg.convertRowIndexToModel(row);
 				dtm.setValueAt(txtPkgName.getText(), row, 0);
@@ -815,7 +831,7 @@ public class Packages extends JDialog {
 			}
 		}
 	}
-	private void deletePkg(String pkgNList, int counter){
+	private void deletePkg(String pkgNList, int counter, int[] selectedRows){
 		CallableStatement st = null;
 		try {
 			st = dbi.getStatement("{call delPkg(?, ?, ?)}");
@@ -824,13 +840,18 @@ public class Packages extends JDialog {
 			st.setString(2, usrManager);
 			st.execute();
 			int code  = st.getInt("code");
+			dtm.setRowCount(0);
+			getDataFromDb();
 			if(code == counter){
+				
+				btnDelPkg.setEnabled(false);
 				JOptionPane.showMessageDialog(null, "Xoá thành công " + code + " gói");
 				return;
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "Không thể xoá " + (counter - code) + " gói trong số đó");
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -885,7 +906,7 @@ public class Packages extends JDialog {
 
 	private void search(String s) {
 		if (s.length() != 0) {
-			sorter.setRowFilter(RowFilter.regexFilter(s));
+			sorter.setRowFilter(RowFilter.regexFilter(s, 0));
 
 		} else {
 			sorter.setRowFilter(null);
@@ -984,7 +1005,7 @@ public class Packages extends JDialog {
 				}
 			}
 		}
-						
+
 		dispose();
 	}
 	private boolean canBuy(String pkgN){

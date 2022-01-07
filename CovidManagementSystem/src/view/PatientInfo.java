@@ -54,7 +54,7 @@ public class PatientInfo extends JDialog {
 		setTitle("Thông tin chi tiết");
 		setResizable(false);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 748, 237);
+		setBounds(100, 100, 720, 237);
 		getContentPane().setLayout(new BorderLayout());
 		pnContent.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(pnContent, BorderLayout.CENTER);
@@ -69,6 +69,8 @@ public class PatientInfo extends JDialog {
 		pnContent.setLayout(new BoxLayout(pnContent, BoxLayout.Y_AXIS));
 		{
 			JPanel pnFName_IdCard_DOB = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnFName_IdCard_DOB.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEADING);
 			pnContent.add(pnFName_IdCard_DOB);
 			{
 				JLabel lblFName = new JLabel("Họ Tên:");
@@ -100,6 +102,8 @@ public class PatientInfo extends JDialog {
 		}
 		{
 			JPanel pnAddr = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnAddr.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEADING);
 			pnContent.add(pnAddr);
 			{
 				JLabel lblVlg = new JLabel("Xã/ Phường:");
@@ -126,11 +130,13 @@ public class PatientInfo extends JDialog {
 			{
 				txtProvince = new JTextField();
 				pnAddr.add(txtProvince);
-				txtProvince.setColumns(15);
+				txtProvince.setColumns(11);
 			}
 		}
 		{
 			JPanel pnState_QrtPos = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnState_QrtPos.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEADING);
 			pnContent.add(pnState_QrtPos);
 			{
 				JLabel lblState = new JLabel("Trạng thái hiện tại:");

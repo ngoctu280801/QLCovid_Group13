@@ -638,7 +638,7 @@ public class ManagerPanel extends JFrame {
 	}
 	private void search(String s) {
 		if (s.length() != 0) {
-			sorter.setRowFilter(RowFilter.regexFilter(s));
+			sorter.setRowFilter(RowFilter.regexFilter(s, 1));
 
 		} else {
 			sorter.setRowFilter(null);
