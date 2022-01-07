@@ -29,4 +29,58 @@
   2022-01-05 11:55:21 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
   2022-01-05 11:55:45 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
   2022-01-05 12:01:33 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
-  
+  2022-01-07 17:19:05 ERROR CovidSystem:35 - Không thể kết nối đến CSDL.
+  2022-01-07 17:19:13 ERROR CovidSystem:35 - Không thể kết nối đến CSDL.
+  2022-01-07 17:19:54 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-07 17:21:31 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-07 17:22:33 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-07 17:23:52 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-07 17:25:03 DEBUG CovidSystem:28 - Bắt đầu đăng nhập.
+  2022-01-07 17:25:18 ERROR Payment:414 - Lỗi khi dữ liệu từ bảng payment_acc
+  java.sql.SQLException: Illegal operation on empty result set.
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.checkRowPos(ResultSetImpl.java:517)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.getString(ResultSetImpl.java:870)
+	at view.Payment.getBalanceFromDb(Payment.java:410)
+	at view.Payment.access$12(Payment.java:403)
+	at view.Payment$4.run(Payment.java:328)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-01-07 17:25:21 ERROR Payment:414 - Lỗi khi dữ liệu từ bảng payment_acc
+  java.sql.SQLException: Illegal operation on empty result set.
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.checkRowPos(ResultSetImpl.java:517)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.getString(ResultSetImpl.java:870)
+	at view.Payment.getBalanceFromDb(Payment.java:410)
+	at view.Payment.access$12(Payment.java:403)
+	at view.Payment$4.run(Payment.java:328)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-01-07 17:25:23 ERROR Payment:414 - Lỗi khi dữ liệu từ bảng payment_acc
+  java.sql.SQLException: Illegal operation on empty result set.
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.checkRowPos(ResultSetImpl.java:517)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.getString(ResultSetImpl.java:870)
+	at view.Payment.getBalanceFromDb(Payment.java:410)
+	at view.Payment.access$12(Payment.java:403)
+	at view.Payment$4.run(Payment.java:328)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-01-07 17:25:48 ERROR Payment:414 - Lỗi khi dữ liệu từ bảng payment_acc
+  java.sql.SQLException: Illegal operation on empty result set.
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:89)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:63)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.checkRowPos(ResultSetImpl.java:517)
+	at mysql.connector.java@8.0.26/com.mysql.cj.jdbc.result.ResultSetImpl.getString(ResultSetImpl.java:870)
+	at view.Payment.getBalanceFromDb(Payment.java:410)
+	at view.Payment.access$12(Payment.java:403)
+	at view.Payment$4.run(Payment.java:328)
+	at java.base/java.lang.Thread.run(Thread.java:831)
