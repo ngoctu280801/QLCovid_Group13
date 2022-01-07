@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.JDialog;
@@ -19,8 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import model.DateComparator;
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 public class ManagementHistory extends JDialog {
 
@@ -72,7 +75,12 @@ public class ManagementHistory extends JDialog {
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblHistory.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
-			sorter.setComparator(i, new MyComparator<String>());
+			if(i != 2){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
 		}
 		
 		JScrollPane scrollPane = new JScrollPane(
@@ -90,12 +98,15 @@ public class ManagementHistory extends JDialog {
 				+ " join quarantinepos qrt on qrt.id = mh.id_qrt_pos"
 				+ " where p.id_card = '" + idCard + "';", stmt);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			if(rs.isBeforeFirst()){
 				while(rs.next()){
 					Vector<String> rowData = new Vector<String>();
 					rowData.add(rs.getString(1));
 					rowData.add(rs.getString(2));
-					rowData.add(rs.getString(3));
+					String d = rs.getString(3).replace("-", "/");
+					rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
+//					rowData.add(rs.getString(3));
 					rowData.add(rs.getString(4));
 					rowData.add(rs.getString(5));
 					dtm.addRow(rowData);

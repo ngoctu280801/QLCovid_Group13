@@ -45,6 +45,7 @@ import javax.swing.SwingConstants;
 
 import model.DbInteraction;
 import model.Encrypt;
+import model.Utils;
 
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
@@ -345,7 +346,7 @@ public class AdmRegister extends JDialog {
 						try {
 							Date d = df.parse(txtDOB.getText());
 						} catch (ParseException e1) {
-							e1.printStackTrace();
+//							e1.printStackTrace();
 							JOptionPane.showMessageDialog(null, "Không tồn tại ngày này");
 							txtDOB.setValue(null);
 						} 
@@ -744,17 +745,17 @@ public class AdmRegister extends JDialog {
 			e.printStackTrace();
 		}
 	}
-	private String changeDateFormatter(String date, String format){
-		SimpleDateFormat f = new SimpleDateFormat(format);
-		String res = null;
-		try {
-			res = f.format(df.parse(date));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return res;
-	}
+//	private String changeDateFormatter(String date, String format){
+//		SimpleDateFormat f = new SimpleDateFormat(format);
+//		String res = null;
+//		try {
+//			res = f.format(df.parse(date));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return res;
+//	}
 	private boolean validateIdCard(String idCard){
 		if(idCard.length() != 9 && idCard.length() != 12){
 			return false;
@@ -817,7 +818,9 @@ public class AdmRegister extends JDialog {
 		return true;
 	}
 	private void addPatientInfo(){
-		String date = changeDateFormatter(txtDOB.getValue().toString(), "yyyy/MM/dd");
+		SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+		String dateFormated = txtDOB.getValue().toString();
+		String date = Utils.changeDateFormatter(dateFormated, "yyyy/MM/dd", f);
 		CallableStatement st = null;
 		try {
 			st = dbi.getStatement("{call addPatient(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -838,7 +841,7 @@ public class AdmRegister extends JDialog {
 				if(addRelatedPer() == tblRelatedPer.getRowCount()){
 					dtmPInfoL.addRow(new String[] {
 							txtFName.getText(),
-							txtIdCard.getText(), date,
+							txtIdCard.getText(), dateFormated,
 							cbVlg.getSelectedItem().toString(),
 							cbTown.getSelectedItem().toString(),
 							cbProvinces.getSelectedItem().toString(),

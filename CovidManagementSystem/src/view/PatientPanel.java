@@ -9,19 +9,23 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JButton;
 
+import model.DateComparator;
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -91,8 +95,8 @@ public class PatientPanel extends JFrame {
 		dtm = new DefaultTableModel();
 		dtm.addColumn("Ngày");
 		dtm.addColumn("Tên gói");
-		dtm.addColumn("Số lượng");
-		dtm.addColumn("Giá");
+		dtm.addColumn("Số lượng (gói)");
+		dtm.addColumn("Giá (VNĐ)");
 		tblBoughtPkg = new JTable(dtm);
 		// Prevent manager edit this table
 		tblBoughtPkg.setDefaultEditor(Object.class, null);
@@ -100,8 +104,18 @@ public class PatientPanel extends JFrame {
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblBoughtPkg.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
-			sorter.setComparator(i, new MyComparator<String>());
+			if(i != 0){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
 		}
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		tblBoughtPkg.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+		tblBoughtPkg.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
 		
 		JScrollPane scrollPane = new JScrollPane(
 				tblBoughtPkg,
@@ -167,13 +181,15 @@ public class PatientPanel extends JFrame {
 		ResultSet rs = dbi.query(sql, stmt);
 		try {
 			if(rs.isBeforeFirst()){
-				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 				while(rs.next()){
 					Vector<String> rowData = new Vector<String>();
-					rowData.add(rs.getString(1));
+//					rowData.add(rs.getString(1));
+					String d = rs.getString(1).replace("-", "/");
+					rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
 					rowData.add(rs.getString(2));
-					rowData.add(validateNum(new StringBuilder(rs.getString(3))));
-					rowData.add(validateNum(new StringBuilder(rs.getString(4))));
+					rowData.add(Utils.validateNum(new StringBuilder(rs.getString(3))));
+					rowData.add(Utils.validateNum(new StringBuilder(rs.getString(4))));
 					dtm.addRow(rowData);
 				}
 			}
@@ -224,18 +240,18 @@ public class PatientPanel extends JFrame {
 			}
 		}
 	}
-	private String validateNum(StringBuilder s){
-		for(int i = 0; i < s.length(); i++){
-			if(!Character.isDigit(s.charAt(i))){
-				s.deleteCharAt(i);
-				i--;
-			}
-		}
-		for(int i = s.length() - 3; i > 0; i-=3){
-			s.insert(i, ',');
-		}
-		return s.toString();
-	}
+//	private String validateNum(StringBuilder s){
+//		for(int i = 0; i < s.length(); i++){
+//			if(!Character.isDigit(s.charAt(i))){
+//				s.deleteCharAt(i);
+//				i--;
+//			}
+//		}
+//		for(int i = s.length() - 3; i > 0; i-=3){
+//			s.insert(i, ',');
+//		}
+//		return s.toString();
+//	}
 	private void isFirstLogin(){
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query("select count(*) from logon l "

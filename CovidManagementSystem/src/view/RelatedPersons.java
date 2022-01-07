@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -19,8 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import model.DateComparator;
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 public class RelatedPersons extends JDialog {
 
@@ -42,10 +45,6 @@ public class RelatedPersons extends JDialog {
 		addEvents();
 
 		setLocationRelativeTo(null);
-//		if(tblRPer.getRowCount() == 0){
-//			haveRelatedPersons = false;
-//			JOptionPane.showMessageDialog(null, "Chưa tồn tại người nào trong hệ thống");
-//		}
 	}
 
 	private void addEvents() {
@@ -58,22 +57,6 @@ public class RelatedPersons extends JDialog {
 		pnTblRPer.setLayout(new FlowLayout());
 		pnTblRPer.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(pnTblRPer, BorderLayout.CENTER);
-//		{
-//			JPanel pnBtn = new JPanel();
-//			pnBtn.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//			getContentPane().add(pnBtn, BorderLayout.SOUTH);
-//			{
-//				JButton okButton = new JButton("OK");
-//				okButton.setActionCommand("OK");
-//				pnBtn.add(okButton);
-//				getRootPane().setDefaultButton(okButton);
-//			}
-//			{
-//				JButton cancelButton = new JButton("Cancel");
-//				cancelButton.setActionCommand("Cancel");
-//				pnBtn.add(cancelButton);
-//			}
-//		}
 		dtm = new DefaultTableModel();
 		dtm.addColumn("Họ Tên");
 		dtm.addColumn("CMND/ CCCD");
@@ -92,7 +75,12 @@ public class RelatedPersons extends JDialog {
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblRPer.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
-			sorter.setComparator(i, new MyComparator<String>());
+			if(i != 2){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
 		}
 		
 		JScrollPane scrollPane = new JScrollPane(
@@ -110,12 +98,15 @@ public class RelatedPersons extends JDialog {
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query(sql, stmt);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			if(rs.isBeforeFirst()){
 				while(rs.next()){
 					Vector<String> rowData = new Vector<String>();
 					rowData.add(rs.getString(1));
 					rowData.add(rs.getString(2));
-					rowData.add(rs.getString(3));
+					String d = rs.getString(3).replace("-", "/");
+					rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
+//					rowData.add(rs.getString(3));
 					rowData.add(rs.getString(6));
 					rowData.add(rs.getString(5));
 					rowData.add(rs.getString(4));

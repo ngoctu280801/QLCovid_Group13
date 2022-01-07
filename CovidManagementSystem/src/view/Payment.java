@@ -13,7 +13,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.JLabel;
 
 import java.awt.Font;
@@ -31,15 +34,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import javax.swing.JTextField;
 
+import model.DateComparator;
 import model.DbInteraction;
+import model.Utils;
+import model.VieStrComparator;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -57,6 +65,7 @@ public class Payment extends JDialog {
 	private final String pwd;
 	private final String serverName;
 	private final int port;
+	private TableRowSorter<TableModel> sorter;
 
 	public Payment(DbInteraction dbi, String usrName, String path, String pwd, String svName, int port) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -86,9 +95,9 @@ public class Payment extends JDialog {
 		
 		dtm = new DefaultTableModel();
 		dtm.addColumn("Ngày giao dịch");
-		dtm.addColumn("Số tiền giao dịch");
-		dtm.addColumn("Dư nợ còn lại");
-		dtm.addColumn("Số dư tài khoản còn lại");
+		dtm.addColumn("Số tiền giao dịch (VNĐ)");
+		dtm.addColumn("Dư nợ còn lại (VNĐ)");
+		dtm.addColumn("Số dư tài khoản còn lại (VNĐ)");
 		tblTransHis = new JTable(dtm);
 		// Prevent edit this table
 		tblTransHis.setDefaultEditor(Object.class, null);
@@ -98,6 +107,23 @@ public class Payment extends JDialog {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		pnTransHis.setLayout(new BorderLayout());
 		pnTransHis.add(scrollPane, BorderLayout.CENTER);
+		
+		sorter = new TableRowSorter<TableModel>(dtm);
+		tblTransHis.setRowSorter(sorter);
+		for (int i = 0; i < dtm.getColumnCount(); i++) {
+			if(i != 0){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
+		}
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+		tblTransHis.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+		tblTransHis.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+		tblTransHis.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
 		
 		pnTransHis.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(pnTransHis, BorderLayout.CENTER);
@@ -195,14 +221,19 @@ public class Payment extends JDialog {
 			@Override
 			
 			public void keyReleased(KeyEvent arg0) {	
-				
-				txtCredit.setText(validateNum(new StringBuilder(txtCredit.getText())));
-				String credit = txtCredit.getText();
-				if(credit.equals("") || Integer.parseInt(credit.replace(",","")) < 20000 || 
-						isCreditLargerThanBalance() || isCreditLargerThanDebt() || isDebtSmallerThanCreditMin()) {
-					btnPay.setEnabled(false);
+				if(Utils.notSkipCheck(arg0) 
+						&& txtCredit.getText().length() > 0){
+					txtCredit.setText(Utils.validateNum(new StringBuilder(txtCredit.getText())));
+					String credit = txtCredit.getText();
+					if(credit.equals("") || 
+							new BigInteger(credit.replace(",","")).compareTo(new BigInteger("20000")) < 0 || 
+							isCreditLargerThanBalance() || isCreditLargerThanDebt() || isDebtSmallerThanCreditMin()) {
+						btnPay.setEnabled(false);
+					}
+					else {btnPay.setEnabled(true);}
+					
+					
 				}
-				else {btnPay.setEnabled(true);}
 			}
 			
 		});
@@ -261,18 +292,18 @@ public class Payment extends JDialog {
 			btnPay.setEnabled(false);
 		}
 	}
-	private String validateNum(StringBuilder s){
-		for(int i = 0; i < s.length(); i++){
-			if(!Character.isDigit(s.charAt(i))){
-				s.deleteCharAt(i);
-				i--;
-			}
-		}
-		for(int i = s.length() - 3; i > 0; i-=3){
-			s.insert(i, ',');
-		}
-		return s.toString();
-	}
+//	private String validateNum(StringBuilder s){
+//		for(int i = 0; i < s.length(); i++){
+//			if(!Character.isDigit(s.charAt(i))){
+//				s.deleteCharAt(i);
+//				i--;
+//			}
+//		}
+//		for(int i = s.length() - 3; i > 0; i-=3){
+//			s.insert(i, ',');
+//		}
+//		return s.toString();
+//	}
 	private void reloadData(){
 		Runnable getData = new Runnable(){
 			public void run(){
@@ -312,12 +343,15 @@ public class Payment extends JDialog {
 				+ "from transaction_history th join accounts a on a.id = th.from_id_acc "
 				+ "where a.usrname = '" + usrName + "'", stmt);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			while(rs.next()){
 				Vector<String> rowData = new Vector<String>();
-				rowData.add(rs.getString(1));
-				rowData.add(validateNum(new StringBuilder(rs.getString(2))));
-				rowData.add(validateNum(new StringBuilder(rs.getString(3))));
-				rowData.add(validateNum(new StringBuilder(rs.getString(4))));
+				String d = rs.getString(1).replace("-", "/");
+				rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy HH:mm:ss", sdf));
+//				rowData.add(rs.getString(1));
+				rowData.add(Utils.validateNum(new StringBuilder(rs.getString(2))));
+				rowData.add(Utils.validateNum(new StringBuilder(rs.getString(3))));
+				rowData.add(Utils.validateNum(new StringBuilder(rs.getString(4))));
 				dtm.addRow(rowData);
 			}
 		} catch (SQLException e) {
@@ -341,7 +375,7 @@ public class Payment extends JDialog {
 				+ " where a.usrname = '" + usrName + "'", stmt);
 		try {
 			rs.next();
-			lblDebt.setText(validateNum(new StringBuilder(rs.getString(1))) + " (VNĐ)");
+			lblDebt.setText(Utils.validateNum(new StringBuilder(rs.getString(1))) + " (VNĐ)");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -362,7 +396,7 @@ public class Payment extends JDialog {
 				+ " where a.usrname = '" + usrName + "'", stmt);
 		try {
 			rs.next();
-			lblBalance.setText(validateNum(new StringBuilder(rs.getString(1))) + " (VNĐ)");
+			lblBalance.setText(Utils.validateNum(new StringBuilder(rs.getString(1))) + " (VNĐ)");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -377,24 +411,24 @@ public class Payment extends JDialog {
 		}
 	}
 	private boolean isCreditLargerThanBalance(){
-		if(Integer.parseInt(txtCredit.getText().replace(",", "")) > lblToInt(lblBalance.getText())){
+		if(new BigInteger(txtCredit.getText().replace(",", "")).compareTo(lblToInt(lblBalance.getText())) > 0){
 			return true;
 		}
 		return false;
 	}
 	private boolean isCreditLargerThanDebt(){
-		if(Integer.parseInt(txtCredit.getText().replace(",", "")) > lblToInt(lblDebt.getText())){
+		if(new BigInteger(txtCredit.getText().replace(",", "")).compareTo(lblToInt(lblDebt.getText())) > 0){
 			return true;
 		}
 		return false;
 	}
 	private boolean isDebtSmallerThanCreditMin(){
-		if(20000 > lblToInt(lblDebt.getText())){
+		if(lblToInt(lblDebt.getText()).compareTo(new BigInteger("20000")) < 0){
 			return true;
 		}
 		return false;
 	}
-	private int lblToInt(String s){
-		return Integer.parseInt(s.substring(0, s.length() - 6).replace(",", ""));
+	private BigInteger lblToInt(String s){
+		return new BigInteger(s.substring(0, s.length() - 6).replace(",", ""));
 	}
 }

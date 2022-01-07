@@ -25,8 +25,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
+import model.DateComparator;
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -172,7 +174,7 @@ public class Packages extends JDialog {
 			txtPrice.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
-					txtPrice.setText(validateNum(new StringBuilder(txtPrice.getText())));;
+					txtPrice.setText(Utils.validateNum(new StringBuilder(txtPrice.getText())));;
 					onOffChangeBtn();
 				}
 			});
@@ -204,7 +206,7 @@ public class Packages extends JDialog {
 			txtLimit.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent arg0) {
-					txtLimit.setText(validateNum(new StringBuilder(txtLimit.getText())));;
+					txtLimit.setText(Utils.validateNum(new StringBuilder(txtLimit.getText())));;
 					onOffChangeBtn();
 				}
 			});
@@ -564,7 +566,12 @@ public class Packages extends JDialog {
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblPkg.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
-			sorter.setComparator(i, new MyComparator<String>());
+			if(i != 2){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
 		}
 		tblPkg.getRowSorter().toggleSortOrder(0);
 		// Prevent manager edit this table
@@ -692,18 +699,18 @@ public class Packages extends JDialog {
 		txtDate.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 2));
 		txtPrice.setText((String) tblPkg.getValueAt(tblPkg.getSelectedRow(), 3));
 	}
-	private String validateNum(StringBuilder s){
-		for(int i = 0; i < s.length(); i++){
-			if(!Character.isDigit(s.charAt(i))){
-				s.deleteCharAt(i);
-				i--;
-			}
-		}
-		for(int i = s.length() - 3; i > 0; i-=3){
-			s.insert(i, ',');
-		}
-		return s.toString();
-	}
+//	private String validateNum(StringBuilder s){
+//		for(int i = 0; i < s.length(); i++){
+//			if(!Character.isDigit(s.charAt(i))){
+//				s.deleteCharAt(i);
+//				i--;
+//			}
+//		}
+//		for(int i = s.length() - 3; i > 0; i-=3){
+//			s.insert(i, ',');
+//		}
+//		return s.toString();
+//	}
 	private void getDataFromDb(){
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query("select pkg_name,"
@@ -715,10 +722,10 @@ public class Packages extends JDialog {
 				while(rs.next()){
 					Vector<String> rowData = new Vector<String>();
 					rowData.add(rs.getString(1));
-					rowData.add(validateNum(new StringBuilder(rs.getString(2))));
+					rowData.add(Utils.validateNum(new StringBuilder(rs.getString(2))));
 					String d = rs.getString(3).replace("-", "/");
-					rowData.add(changeDateFormatter(d, "dd/MM/yyyy", sdf));
-					rowData.add(validateNum(new StringBuilder(rs.getString(4))));
+					rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
+					rowData.add(Utils.validateNum(new StringBuilder(rs.getString(4))));
 					dtm.addRow(rowData);
 				}
 			}
@@ -736,7 +743,7 @@ public class Packages extends JDialog {
 		}
 	}
 	private void addPkg(){
-		String date = changeDateFormatter(txtDate.getValue().toString(), "yyyy/MM/dd", df);
+		String date = Utils.changeDateFormatter(txtDate.getValue().toString(), "yyyy/MM/dd", df);
 		CallableStatement st = null;
 		try {
 			st = dbi.getStatement("{call addPkg(?, ?, ?, ?, ?, ?)}");
@@ -781,7 +788,7 @@ public class Packages extends JDialog {
 
 	}
 	private void changePkg(){
-		String date = changeDateFormatter(txtDate.getText(), "yyyy/MM/dd", df);
+		String date = Utils.changeDateFormatter(txtDate.getText(), "yyyy/MM/dd", df);
 		CallableStatement st = null;
 		try {
 			st = dbi.getStatement("{call updatePkg(?, ?, ?, ?, ?, ?, ?)}");
@@ -840,8 +847,10 @@ public class Packages extends JDialog {
 			st.setString(2, usrManager);
 			st.execute();
 			int code  = st.getInt("code");
+			
 			dtm.setRowCount(0);
 			getDataFromDb();
+			
 			if(code == counter){
 				
 				btnDelPkg.setEnabled(false);
@@ -869,17 +878,17 @@ public class Packages extends JDialog {
 		dtm.setRowCount(0);
 		getDataFromDb();
 	}
-	private String changeDateFormatter(String date, String format, SimpleDateFormat sdf){
-		SimpleDateFormat f = new SimpleDateFormat(format);
-		String res = null;
-		try {
-			res = f.format(sdf.parse(date));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return res;
-	}
+//	private String changeDateFormatter(String date, String format, SimpleDateFormat sdf){
+//		SimpleDateFormat f = new SimpleDateFormat(format);
+//		String res = null;
+//		try {
+//			res = f.format(sdf.parse(date));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return res;
+//	}
 	private boolean isPkgNameExisted(String pkgN){
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query("select count(*) from necessary_packages where pkg_name = N'"
@@ -968,11 +977,11 @@ public class Packages extends JDialog {
 			Vector<String> aRow = new Vector<String>();
 			aRow.add(sdf.format(new Date()));
 			aRow.add(tblCart.getValueAt(i, 0) + "");
-			aRow.add(validateNum(new StringBuilder(tblCart.getValueAt(i, 1) + "")));
+			aRow.add(Utils.validateNum(new StringBuilder(tblCart.getValueAt(i, 1) + "")));
 			int price = Integer.parseInt(tblCart.getValueAt(i, 2).toString().replace(",", ""));
 			int quan = Integer.parseInt(tblCart.getValueAt(i, 1).toString().replace(",", ""));
 			price *= quan;
-			aRow.add(validateNum(new StringBuilder(price + "")));
+			aRow.add(Utils.validateNum(new StringBuilder(price + "")));
 			rowData.add(aRow);
 		}
 		CallableStatement st = null;
@@ -1071,7 +1080,7 @@ public class Packages extends JDialog {
 		String strCost = lblCost.getText().substring(0, lblCost.getText().length() - 6);
 		int cur_cost = Integer.parseInt(strCost.replace(",", ""));
 		cur_cost += credit;
-		lblCost.setText(validateNum(new StringBuilder(cur_cost + "")) + " (VNĐ)");
+		lblCost.setText(Utils.validateNum(new StringBuilder(cur_cost + "")) + " (VNĐ)");
 	}
 	private void updateQuantitySelection(){
 		cbQuantity.setEnabled(false);

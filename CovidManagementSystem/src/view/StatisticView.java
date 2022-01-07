@@ -8,7 +8,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 
 import model.ChartStat;
 import model.DbInteraction;
@@ -16,7 +15,6 @@ import model.DbInteraction;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -67,17 +65,6 @@ public class StatisticView extends JDialog {
 		
 		btnDebt = new JButton("Dư nợ của người dùng");
 		pnBtn.add(btnDebt);
-
-		JPanel pnTotal = new JPanel();
-		getContentPane().add(pnTotal, BorderLayout.NORTH);
-
-		JLabel lblTotal = new JLabel("Tổng cộng:");
-		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 14));
-		pnTotal.add(lblTotal);
-
-		JLabel lblTotalNum = new JLabel("0");
-		lblTotalNum.setFont(new Font("Tahoma", Font.BOLD, 14));
-		pnTotal.add(lblTotalNum);
 	}
 	private void addEvents(){
 

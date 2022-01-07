@@ -12,16 +12,17 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 
 import model.DbInteraction;
+import model.Utils;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 public class PatientInfo extends JDialog {
@@ -223,10 +224,13 @@ public class PatientInfo extends JDialog {
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query("call getUsrInfoByIdCard('" + idCard + "');", stmt);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			rs.next();
 			txtFName.setText(rs.getString(1));
 			txtIdCard.setText(rs.getString(2));
-			txtDOB.setText(rs.getString(3));
+			String d = rs.getString(3).replace("-", "/");
+			txtDOB.setText(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
+//			txtDOB.setText(rs.getString(3));
 			txtVlg.setText(rs.getString(4));
 			txtTown.setText(rs.getString(5));
 			txtProvince.setText(rs.getString(6));

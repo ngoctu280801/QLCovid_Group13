@@ -28,8 +28,10 @@ import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
+import model.DateComparator;
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -38,6 +40,7 @@ import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.sql.Types;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -134,7 +137,12 @@ public class ManagerPanel extends JFrame {
 		sorter = new TableRowSorter<TableModel>(dtm);
 		tblPatients.setRowSorter(sorter);
 		for (int i = 0; i < dtm.getColumnCount(); i++) {
-			sorter.setComparator(i, new MyComparator<String>());
+			if(i != 2){
+				sorter.setComparator(i, new VieStrComparator<String>());
+			}
+			else{
+				sorter.setComparator(i, new DateComparator<String>());
+			}
 		}
 		tblPatients.setRowSorter(sorter);
 		//tblPatients.setAutoCreateRowSorter(true);
@@ -533,13 +541,16 @@ public class ManagerPanel extends JFrame {
 		Statement[] stmt = new Statement[] {null};
 		ResultSet rs = dbi.query("call getAllPatients();", stmt);
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 			if(rs.isBeforeFirst()){
 				while(rs.next()){
 					Vector<String> rowData = new Vector<String>();
 					//rowData.add(rs.getString(1));
 					rowData.add(rs.getString(2));
 					rowData.add(rs.getString(3));
-					rowData.add(rs.getString(4));
+					String d = rs.getString(4).replace("-", "/");
+					rowData.add(Utils.changeDateFormatter(d, "dd/MM/yyyy", sdf));
+//					rowData.add(rs.getString(4));
 					rowData.add(rs.getString(7));
 					rowData.add(rs.getString(6));
 					rowData.add(rs.getString(5));

@@ -22,12 +22,14 @@ import java.util.Vector;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import model.DbInteraction;
-import model.MyComparator;
+import model.Utils;
+import model.VieStrComparator;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -141,7 +143,7 @@ public class AdminPanel extends JFrame {
 			TableRowSorter<TableModel> managerLSorter = new TableRowSorter<TableModel>(dtmManagerL);
 			tblManagerL.setRowSorter(managerLSorter);
 			for (int i = 0; i < dtmManagerL.getColumnCount(); i++) {
-				managerLSorter.setComparator(i, new MyComparator<String>());
+				managerLSorter.setComparator(i, new VieStrComparator<String>());
 			}
 			
 			JScrollPane scrPManagerL = new JScrollPane(
@@ -150,7 +152,6 @@ public class AdminPanel extends JFrame {
 					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			pnManagerList.setLayout(new BorderLayout());
 			pnManagerList.add(scrPManagerL, BorderLayout.CENTER);
-			
 			
 			dtmQrtPosL = new DefaultTableModel();
 			dtmQrtPosL.addColumn("Tên địa điểm");
@@ -163,8 +164,13 @@ public class AdminPanel extends JFrame {
 			TableRowSorter<TableModel> qrtPosLSorter = new TableRowSorter<TableModel>(dtmQrtPosL);
 			tblQrtPosL.setRowSorter(qrtPosLSorter);
 			for (int i = 0; i < dtmQrtPosL.getColumnCount(); i++) {
-				qrtPosLSorter.setComparator(i, new MyComparator<String>());
+				qrtPosLSorter.setComparator(i, new VieStrComparator<String>());
 			}
+			
+			DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+			rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+			tblQrtPosL.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+			tblQrtPosL.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
 			
 			JScrollPane scrPQrtPosL = new JScrollPane(
 					tblQrtPosL,
@@ -191,8 +197,8 @@ public class AdminPanel extends JFrame {
 			
 			
 			btnAddManager = new JButton("Thêm một tài khoản người quản lý mới");
-			btnAddManager.setAlignmentX(Component.CENTER_ALIGNMENT);
 			btnAddManager.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+			btnAddManager.setAlignmentX(Component.CENTER_ALIGNMENT);
 			pnUtilsManager.add(btnAddManager);
 			
 			JPanel panel = new JPanel();
@@ -340,8 +346,8 @@ public class AdminPanel extends JFrame {
 		txtCapacity.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				if(notSkipCheck(arg0)){
-					txtCapacity.setText(validateNum(new StringBuilder(txtCapacity.getText())));
+				if(Utils.notSkipCheck(arg0)){
+					txtCapacity.setText(Utils.validateNum(new StringBuilder(txtCapacity.getText())));
 					checkChange();
 				}
 				
@@ -351,8 +357,8 @@ public class AdminPanel extends JFrame {
 		txtCurCapacity.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(notSkipCheck(e)){
-					txtCurCapacity.setText(validateNum(new StringBuilder(txtCurCapacity.getText())));
+				if(Utils.notSkipCheck(e)){
+					txtCurCapacity.setText(Utils.validateNum(new StringBuilder(txtCurCapacity.getText())));
 					checkChange();
 				}
 				
@@ -450,7 +456,7 @@ public class AdminPanel extends JFrame {
 		txtQrtName.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(notSkipCheck(e)){
+				if(Utils.notSkipCheck(e)){
 					if(txtQrtName.getText().length() > 1){
 						String space = "";
 						char c = 'ư';
@@ -487,8 +493,8 @@ public class AdminPanel extends JFrame {
 					Vector<String> rowData = new Vector<String>();
 					rowData.add(rs.getString(1));
 					if(isQrtPosL){
-						rowData.add(validateNum(new StringBuilder(rs.getString(2))));
-						rowData.add(validateNum(new StringBuilder(rs.getString(3))));
+						rowData.add(Utils.validateNum(new StringBuilder(rs.getString(2))));
+						rowData.add(Utils.validateNum(new StringBuilder(rs.getString(3))));
 					}
 					else{
 						if(rs.getString(2).equals("0")){
@@ -517,18 +523,18 @@ public class AdminPanel extends JFrame {
 			}
 		}
 	}
-	private String validateNum(StringBuilder s){
-		for(int i = 0; i < s.length(); i++){
-			if(!Character.isDigit(s.charAt(i))){
-				s.deleteCharAt(i);
-				i--;
-			}
-		}
-		for(int i = s.length() - 3; i > 0; i-=3){
-			s.insert(i, ',');
-		}
-		return s.toString();
-	}
+//	private String validateNum(StringBuilder s){
+//		for(int i = 0; i < s.length(); i++){
+//			if(!Character.isDigit(s.charAt(i))){
+//				s.deleteCharAt(i);
+//				i--;
+//			}
+//		}
+//		for(int i = s.length() - 3; i > 0; i-=3){
+//			s.insert(i, ',');
+//		}
+//		return s.toString();
+//	}
 	private boolean LockOrUnlock(String usrManager, int isLocked){
 		Statement[] stmt = new Statement[] {null};
 		int rows = dbi.insert("update accounts set is_locked = " + isLocked +
@@ -646,14 +652,14 @@ public class AdminPanel extends JFrame {
 			}
 		}
 	}
-	private boolean notSkipCheck(KeyEvent e){
-		int code = e.getKeyCode();
-		if(		code == KeyEvent.VK_LEFT || 
-				code == KeyEvent.VK_UP || 
-				code == KeyEvent.VK_DOWN || 
-				code == KeyEvent.VK_RIGHT){
-			return false;
-		}
-		return true;
-	}
+//	private boolean notSkipCheck(KeyEvent e){
+//		int code = e.getKeyCode();
+//		if(		code == KeyEvent.VK_LEFT || 
+//				code == KeyEvent.VK_UP || 
+//				code == KeyEvent.VK_DOWN || 
+//				code == KeyEvent.VK_RIGHT){
+//			return false;
+//		}
+//		return true;
+//	}
 }
