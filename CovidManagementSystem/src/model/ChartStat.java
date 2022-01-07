@@ -4,6 +4,8 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import javax.swing.JOptionPane;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -163,7 +165,13 @@ public class ChartStat {
 		String[] quan = quanList.split(";");
 		
 		for (int i = 0; i < pkgN.length; i++) {
-			int num = Integer.parseInt(quan[i]);
+			int num = 0;
+			if(!quan[i].equals("")) {
+				num = Integer.parseInt(quan[i]);
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Chưa có lượt tiêu thụ nào");
+			}
 			if(num > 0){
 				dataset.setValue(pkgN[i], num);
 			}
@@ -195,7 +203,13 @@ public class ChartStat {
 		String[] debt = debtList.split(";");
 		
 		for (int i = 0; i < idCard.length; i++) {
-			int num = Integer.parseInt(debt[i]);
+			int num = 0;
+			if(!debt[i].equals("")) {
+				num = Integer.parseInt(debt[i]);
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Chưa có dư nợ nào được ghi lại");
+			}
 			if(num > 0){
 				dataset.setValue("CMND/ CCCD: " + idCard[i], num);
 			}

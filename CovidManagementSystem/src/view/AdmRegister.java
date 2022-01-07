@@ -96,10 +96,10 @@ public class AdmRegister extends JDialog {
 		setResizable(false);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		if(num != 0){
-			setBounds(100, 100, 450, 258);
+			setBounds(100, 100,	500, 258);
 		}
 		else{
-			setBounds(100, 100, 900, 464);
+			setBounds(100, 100, 1100, 464);
 		}
 		addControls();
 		addEvents();

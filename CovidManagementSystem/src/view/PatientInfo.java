@@ -158,7 +158,7 @@ public class PatientInfo extends JDialog {
 			{
 				txtQrtPos = new JTextField();
 				pnState_QrtPos.add(txtQrtPos);
-				txtQrtPos.setColumns(15);
+				txtQrtPos.setColumns(20);
 			}
 		}
 		{
